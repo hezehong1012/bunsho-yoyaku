@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI要約ツール｜無料・登録不要で文章を自動要約</title>
+<meta name="description" content="AIが文章・文書・記事を自動で要約。無料・登録不要・1クリックで要約文を作成。長文・議事録・論文にも対応。">
+<meta name="keywords" content="AI要約,文章要約,文書要約,AI要約ツール,無料,登録不要">
+<meta property="og:title" content="AI要約ツール｜無料・登録不要で文章を自動要約">
+<meta property="og:description" content="AIが文章・文書・記事を自動で要約。無料・登録不要。">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:#f4f4f8;color:#333;line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:20px}
+header{background:#fff;border-bottom:1px solid #e0e0e0;padding:15px 0;margin-bottom:30px}
+header .container{display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.logo{font-size:22px;font-weight:bold;background:#000;color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none}
+.logo span{color:#4ecdc4}
+nav a{margin-left:15px;text-decoration:none;color:#247a8c;font-size:14px}
+nav a:hover{text-decoration:underline}
+h1{font-size:28px;margin-bottom:10px;color:#1a1a1a}
+.subtitle{color:#666;margin-bottom:30px;font-size:15px}
+.tool-box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:30px}
+textarea{width:100%;min-height:180px;padding:15px;border:2px solid #e0e0e0;border-radius:8px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit}
+textarea:focus{outline:none;border-color:#2c89a0}
+.options{display:flex;gap:15px;margin:15px 0;flex-wrap:wrap;align-items:center}
+.options label{font-size:14px;color:#555}
+.options select{padding:6px 10px;border:1px solid #ddd;border-radius:5px;font-size:14px}
+button{background:#2c89a0;color:#fff;border:none;padding:12px 30px;border-radius:6px;font-size:16px;cursor:pointer;font-weight:bold;transition:background .2s}
+button:hover{background:#247a8c}
+button:disabled{background:#aaa;cursor:not-allowed}
+.result-box{margin-top:20px;padding:20px;background:#f8f9fa;border-radius:8px;border-left:4px solid #4ecdc4;display:none}
+.result-box h3{font-size:16px;margin-bottom:10px;color:#247a8c}
+.result-box p{font-size:15px;line-height:1.8}
+.char-count{text-align:right;font-size:12px;color:#999;margin-top:5px}
+h2{font-size:22px;margin:35px 0 15px;color:#1a1a1a;border-left:4px solid #2c89a0;padding-left:12px}
+.section{background:#fff;border-radius:10px;padding:25px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.section p{margin-bottom:12px;font-size:15px}
+.section a{color:#2c89a0}
+.faq-item{margin-bottom:15px}
+.faq-item h4{font-size:15px;margin-bottom:8px;color:#247a8c}
+.faq-item p{font-size:14px;color:#555}
+footer{background:#fff;border-top:1px solid #e0e0e0;padding:25px 0;margin-top:50px;text-align:center;font-size:13px;color:#888}
+footer a{color:#247a8c;text-decoration:none;margin:0 8px}
+.badge{display:inline-block;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:12px;font-size:12px;margin-left:8px}
+.loading{display:none;text-align:center;padding:20px;color:#2c89a0}
+@media(max-width:600px){.container{padding:15px}h1{font-size:22px}button{width:100%}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+<a href="/" class="logo">AI<span>要約</span>くん</a>
+<nav>
+<a href="/bunsho-yoyaku/">文章要約</a>
+<a href="/#faq">FAQ</a>
+<a href="/privacy.html">プライバシー</a>
+</nav>
+</div>
+</header>
+
+<div class="container">
+
+<h1>AIで文章を自動要約 <span class="badge">無料・登録不要</span></h1>
+<p class="subtitle">長文・議事録・論文・記事をAIが瞬時に要約します。会員登録は不要です。</p>
+
+<div class="tool-box">
+<textarea id="inputText" placeholder="ここに要約したい文章を貼り付けてください（最大5000文字）..."></textarea>
+<div class="char-count" id="charCount">0 / 5000文字</div>
+
+<div class="options">
+<label>要約の長さ：
+<select id="length">
+<option value="short">短い（100文字程度）</option>
+<option value="medium" selected>中程度（300文字程度）</option>
+<option value="long">長い（500文字程度）</option>
+</select>
+</label>
+<label>スタイル：
+<select id="style">
+<option value="normal" selected>標準</option>
+<option value="business">ビジネス</option>
+<option value="simple">簡潔</option>
+</select>
+</label>
+</div>
+
+<button id="submitBtn" onclick="summarize()">要約する</button>
+
+<div class="loading" id="loading">
+<p>⏳ AIが要約中です... 数秒お待ちください</p>
+</div>
+
+<div class="result-box" id="resultBox">
+<h3>📝 要約結果</h3>
+<p id="resultText"></p>
+<button onclick="copyResult()" style="margin-top:15px;padding:8px 20px;font-size:14px">コピーする</button>
+</div>
+</div>
+
+<h2>文書要約AIとは</h2>
+<div class="section">
+<p>文書要約AIは、長文の資料・議事録・論文・記事などをAIが自動的に短くまとめるツールです。</p>
+<p>「文章を読む時間がない」「議事録を要点だけ知りたい」「論文の概要を素早く把握したい」——そんな悩みを解決します。</p>
+<p>本ツールは無料で、登録や会員登録なしですぐにご利用いただけます。</p>
+</div>
+
+<h2>文章要約AIの使い方</h2>
+<div class="section">
+<p><strong>使い方は簡単3ステップ：</strong></p>
+<p>1. 上のテキストボックスに要約したい文章を貼り付け</p>
+<p>2. 要約の長さとスタイルを選択</p>
+<p>3. 「要約する」ボタンをクリック</p>
+<p>数秒でAIが要約文を生成します。</p>
+</div>
+
+<h2 id="faq">よくある質問</h2>
+<div class="section">
+<div class="faq-item">
+<h4>Q. 無料で使えますか？</h4>
+<p>A. はい。完全無料でご利用いただけます。1日の利用回数制限はありますが、登録不要です。</p>
+</div>
+<div class="faq-item">
+<h4>Q. どんな文章に対応していますか？</h4>
+<p>A. 日本語の文章全般に対応しています。ビジネス文書、議事録、論文、ブログ記事、ニュースなど。</p>
+</div>
+<div class="faq-item">
+<h4>Q. 入力した文章は保存されますか？</h4>
+<p>A. いいえ。入力いただいた文章は要約処理のみに使用し、保存・蓄積することはありません。詳しくは<a href="/privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+</div>
+<div class="faq-item">
+<h4>Q. 何文字まで入力できますか？</h4>
+<p>A. 最大5000文字まで対応しています。それ以上の場合は分割して要約してください。</p>
+</div>
+</div>
+
+</div>
+
+<footer>
+<div class="container">
+<p>&copy; 2026 AI要約くん. All rights reserved.</p>
+<p>
+<a href="/privacy.html">プライバシーポリシー</a>
+<a href="/terms.html">利用規約</a>
+<a href="/bunsho-yoyaku/">文章要約ツール</a>
+</p>
+</div>
+</footer>
+
+<script>
+const input = document.getElementById('inputText');
+const charCount = document.getElementById('charCount');
+const submitBtn = document.getElementById('submitBtn');
+const loading = document.getElementById('loading');
+const resultBox = document.getElementById('resultBox');
+const resultText = document.getElementById('resultText');
+
+input.addEventListener('input', () => {
+  const len = input.value.length;
+  charCount.textContent = len + ' / 5000文字';
+  if (len > 5000) {
+    input.value = input.value.substring(0, 5000);
+    charCount.textContent = '5000 / 5000文字';
+  }
+});
+
+async function summarize() {
+  const text = input.value.trim();
+  if (!text) { alert('文章を入力してください'); return; }
+  if (text.length < 50) { alert('50文字以上入力してください'); return; }
+
+  submitBtn.disabled = true;
+  loading.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/summarize', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        text: text,
+        length: document.getElementById('length').value,
+        style: document.getElementById('style').value
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    resultText.textContent = data.summary;
+    resultBox.style.display = 'block';
+  } catch (e) {
+    alert('エラーが発生しました: ' + e.message);
+  } finally {
+    submitBtn.disabled = false;
+    loading.style.display = 'none';
+  }
+}
+
+function copyResult() {
+  navigator.clipboard.writeText(resultText.textContent);
+  alert('コピーしました');
+}
+</script>
+
+</body>
+</html>
