@@ -41,13 +41,14 @@
       if (!text) { alert('要約する文章を入力してください。'); return; }
       if (text.length < 50) { alert('50文字以上入力してください。'); return; }
 
+      var toneEl = document.querySelector('input[name="tone"]:checked');
       var payload = {
         text: text,
-        max_length: parseInt($('maxLength').value, 10),
-        tone: $('tone').value,
-        keyword: $('keyword').value,
-        ngword: $('ngword').value,
-        scene: $('scene').value
+        max_length: parseInt(($('maxLength') || {}).value, 10) || 200,
+        tone: toneEl ? toneEl.value : 'desu',
+        keyword: $('keyword') ? $('keyword').value : '',
+        ngword: $('ngword') ? $('ngword').value : '',
+        scene: $('scene') ? $('scene').value : 'general'
       };
 
       submitBtn.disabled = true;
