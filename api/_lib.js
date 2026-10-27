@@ -131,25 +131,49 @@ function jevConfigured() {
 
 function extractProb(data, key) {
   const node = data?.answers?.[key] ?? data?.questions?.[key] ?? data?.[key];
-  const candidates = [];
-  const scan = (v) => {
-    if (v == null) return;
-    if (typeof v === 'boolean') candidates.push(v ? 1 : 0);
-    else if (typeof v === 'number') candidates.push(v);
-    else if (typeof v === 'string') {
-      const n = Number(v);
-      if (!Number.isNaN(n)) candidates.push(n > 1 ? n / 100 : n);
-      else if (/^(true|yes|はい|該当|スパム|ゴミ)/i.test(v.trim())) candidates.push(1);
-      else if (/^(false|no|いいえ)/i.test(v.trim())) candidates.push(0);
-    } else if (typeof v === 'object') {
-      ['probability', 'prob', 'score', 'confidence', 'answer', 'value', 'choice'].forEach((k) => {
-        if (k in v) scan(v[k]);
-      });
+  if (node == null) return 0;
+  if (typeof node === 'number') return clamp01(node);
+  if (typeof node === 'boolean') return node ? 1 : 0;
+  if (typeof node === 'string') return clamp01(stringToProb(node));
+
+  // オブジェクト形: { type:'noul', noul:0.96 } / { probability|prob|score|confidence|answer|value }
+  const PRIORITY = [
+    node.type, // 型名キー（実API: noul）
+    'noul', 'probability', 'prob', 'score', 'confidence', 'answer', 'value', 'choice', 'result'
+  ].filter(Boolean);
+
+  for (const k of PRIORITY) {
+    if (k in node && k !== 'type') {
+      const p = toProb(node[k]);
+      if (p != null) return clamp01(p);
     }
-  };
-  scan(node);
-  if (!candidates.length) return 0;
-  return Math.max(0, Math.min(1, candidates[0]));
+  }
+  for (const [k, v] of Object.entries(node)) {
+    if (k === 'type' || typeof v === 'string') continue;
+    const p = toProb(v);
+    if (p != null) return clamp01(p);
+  }
+  return 0;
+}
+
+function clamp01(n) {
+  const x = Number(n);
+  if (!Number.isFinite(x)) return 0;
+  return Math.max(0, Math.min(1, x > 1 ? x / 100 : x));
+}
+function stringToProb(s) {
+  const t = String(s).trim();
+  const n = Number(t);
+  if (!Number.isNaN(n)) return n;
+  if (/^(true|yes|はい|該当|スパム|ゴミ)/i.test(t)) return 1;
+  if (/^(false|no|いいえ)/i.test(t)) return 0;
+  return null;
+}
+function toProb(v) {
+  if (typeof v === 'boolean') return v ? 1 : 0;
+  if (typeof v === 'number') return v;
+  if (typeof v === 'string') return stringToProb(v);
+  return null;
 }
 
 export async function jevGuard(rawText) {

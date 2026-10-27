@@ -1,4 +1,5 @@
 // Vercel Serverless Function: 情報抽出（フィールド抽出）API V1.2
+// 入力文章と抽出したいフィールド（カンマ/改行区切り）を受け取り、JSONで返す
 import {
   MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jsonFromMarkdown, jevGuard
 } from './_lib.js';
@@ -32,10 +33,11 @@ export default async function handler(req, res) {
   const rawText = typeof body.text === 'string' ? body.text.trim() : '';
   const fields = parseFields(body.fields);
 
-  if (!rawText || rawText.length < MIN_CHARS) {
-    return res.status(400).json({ error: `抽出対象の文章またはURLを${MIN_CHARS}文字以上入力してください。` });
+  const hasUrl = extractUrls(rawText).length > 0;
+  if (!rawText || (rawText.length < MIN_CHARS && !hasUrl)) {
+    return res.status(400).json({ error: `抽出対象の文章またはURLを${MIN_CHARS}文字以上入力してください。URLのみの場合は短くても構いません。` });
   }
-  if (rawText.length > MAX_CHARS && extractUrls(rawText).length === 0) {
+  if (rawText.length > MAX_CHARS && !hasUrl) {
     return res.status(400).json({ error: `${MAX_CHARS}文字以内で入力してください。` });
   }
   if (fields.length < 1) {

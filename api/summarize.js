@@ -44,10 +44,11 @@ export default async function handler(req, res) {
   const ngword = typeof body.ngword === 'string' ? body.ngword.trim().slice(0, 30) : '';
   const scene = sceneMap[body.scene] ? body.scene : 'general';
 
-  if (!rawText || rawText.length < MIN_CHARS) {
-    return res.status(400).json({ error: `要約する文章またはURLを${MIN_CHARS}文字以上入力してください。` });
+  const hasUrl = extractUrls(rawText).length > 0;
+  if (!rawText || (rawText.length < MIN_CHARS && !hasUrl)) {
+    return res.status(400).json({ error: `要約する文章またはURLを${MIN_CHARS}文字以上入力してください。URLのみの場合は短くても構いません。` });
   }
-  if (rawText.length > MAX_CHARS && extractUrls(rawText).length === 0) {
+  if (rawText.length > MAX_CHARS && !hasUrl) {
     return res.status(400).json({ error: `${MAX_CHARS}文字以内で入力してください。` });
   }
   if (!Number.isFinite(maxLength) || maxLength < 50 || maxLength > 1000) {
