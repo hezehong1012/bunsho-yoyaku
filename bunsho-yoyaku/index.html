@@ -3,95 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文章要約AI｜長文記事・ブログを無料で自動要約</title>
-<meta name="description" content="文章・記事・ブログをAIが自動要約。無料・登録不要。長文コンテンツの要点を数秒で把握。">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:#f4f4f8;color:#333;line-height:1.6}
-.container{max-width:900px;margin:0 auto;padding:20px}
-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:15px 0;margin-bottom:30px}
-header .container{display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.logo{font-size:22px;font-weight:bold;background:#000;color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none}
-.logo span{color:#4ecdc4}
-nav a{margin-left:15px;text-decoration:none;color:#247a8c;font-size:14px}
-h1{font-size:26px;margin-bottom:10px;color:#1a1a1a}
-.subtitle{color:#666;margin-bottom:25px}
-.tool-box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:30px}
-textarea{width:100%;min-height:200px;padding:15px;border:2px solid #e0e0e0;border-radius:8px;font-size:14px;resize:vertical;font-family:inherit}
-button{background:#2c89a0;color:#fff;border:none;padding:12px 30px;border-radius:6px;font-size:16px;cursor:pointer;font-weight:bold}
-button:hover{background:#247a8c}
-.result-box{margin-top:20px;padding:20px;background:#f8f9fa;border-radius:8px;border-left:4px solid #4ecdc4;display:none}
-h2{font-size:20px;margin:30px 0 12px;border-left:4px solid #2c89a0;padding-left:10px}
-.section{background:#fff;border-radius:10px;padding:20px;margin-bottom:15px}
-footer{background:#fff;border-top:1px solid #e0e0e0;padding:20px 0;margin-top:40px;text-align:center;font-size:13px;color:#888}
-footer a{color:#247a8c;text-decoration:none;margin:0 8px}
-</style>
+<title>文章要約AI｜長文・記事・レポートを無料で要約【登録不要】</title>
+<meta name="description" content="長い文章・記事・レポートをAIが無料で要約。登録不要で、要約字数や敬体常体、キーワードを指定可能。文章要約のコツと具体的な活用例も解説。">
+<meta name="keywords" content="文章要約AI,文章要約,AI要約,文書要約,無料,長文要約,テキスト要約">
+<link rel="canonical" href="https://ai-yoyaku.example.com/bunsho-yoyaku/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="文章要約AI｜長文・記事・レポートを無料で要約【登録不要】">
+<meta property="og:description" content="長い文章・記事・レポートをAIが無料で要約。登録不要ですぐ使えます。">
+<meta property="og:locale" content="ja_JP">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://ai-yoyaku.example.com/"},
+    {"@type":"ListItem","position":2,"name":"文章要約AI","item":"https://ai-yoyaku.example.com/bunsho-yoyaku/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"文章要約AI（AI要約くん）",
+  "url":"https://ai-yoyaku.example.com/bunsho-yoyaku/",
+  "applicationCategory":"BusinessApplication",
+  "operatingSystem":"Web",
+  "inLanguage":"ja",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}
+}
+</script>
 </head>
 <body>
+
 <header>
-<div class="container">
-<a href="/" class="logo">AI<span>要約</span>くん</a>
-<nav>
-<a href="/">ホーム</a>
-<a href="/privacy.html">プライバシー</a>
-</nav>
-</div>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+  </div>
 </header>
 
 <div class="container">
-<h1>文章要約AI</h1>
-<p class="subtitle">ブログ記事・ニュース・論文など、長文の文章をAIが自動で要約します。</p>
+  <section class="hero">
+    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">長文対応</span></div>
+    <h1>文章要約AIで長文・記事・レポートを無料で要約</h1>
+    <p class="lead">まとまった分量の文章を貼るだけで、要点を押さえた要約を自動生成。長さや文体を細かく指定でき、下読みや報告資料の時短に役立ちます。</p>
+  </section>
 
-<div class="tool-box">
-<textarea id="inputText" placeholder="ここに要約したい文章を貼り付けてください..."></textarea>
-<div style="margin-top:15px">
-<button onclick="summarize()">文章を要約する</button>
-</div>
-<div class="result-box" id="resultBox">
-<h3>📝 要約結果</h3>
-<p id="resultText"></p>
-</div>
-</div>
+  <div class="card">
+    <textarea id="inputText" placeholder="要約したい文章・記事・レポートをここに貼り付けてください（50〜5000文字）"></textarea>
+    <div class="char-count" id="charCount">0 / 5000文字</div>
 
-<h2>文章要約とは</h2>
-<div class="section">
-<p>文章要約とは、長い文章を短くまとめることです。ビジネスの現場では、議事録・報告書・メールなど、要約する必要のある文章が日常的に発生します。</p>
-<p>AI要約ツールを使えば、人間が要約するよりも速く、客観的な要約を得ることができます。</p>
-</div>
+    <div class="presets">
+      <input type="hidden" id="scene" value="general">
+      <button type="button" data-scene="general" class="active">通常</button>
+      <button type="button" data-scene="report">レポート</button>
+      <button type="button" data-scene="minutes">議事録</button>
+      <button type="button" data-scene="daily">日報</button>
+      <button type="button" data-scene="email">メール</button>
+    </div>
 
-<h2>こんな方におすすめ</h2>
-<div class="section">
-<p>• 長いニュース記事を短く知りたい方</p>
-<p>• 議事録の要点だけサクッと知りたい方</p>
-<p>• 論文・学術論文の概要を素早く把握したい方</p>
-<p>• ブログを書くときに、前書き・要約部分をAIに作らせたい方</p>
-</div>
+    <div class="row">
+      <div class="field">
+        <label for="maxLength">要約字数</label>
+        <input type="number" id="maxLength" min="50" max="1000" step="10" value="250">
+      </div>
+      <div class="field">
+        <label>文体</label>
+        <div class="seg">
+          <label><input type="radio" name="tone" value="desu" checked><span>敬体（です・ます）</span></label>
+          <label><input type="radio" name="tone" value="dearu"><span>常体（だ・である）</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="keyword">含めたいキーワード（任意）</label>
+        <input type="text" id="keyword" maxlength="30" placeholder="例：四半期決算">
+      </div>
+      <div class="field">
+        <label for="ngword">NGワード（任意）</label>
+        <input type="text" id="ngword" maxlength="30" placeholder="例：憶測">
+      </div>
+    </div>
 
+    <button class="btn" id="submitBtn">文章を要約する</button>
+    <div class="loading" id="loading">⏳ AIが要約しています…数秒お待ちください</div>
+
+    <div class="result" id="resultBox">
+      <h3>要約結果</h3>
+      <p class="out" id="resultText"></p>
+      <div class="meta" id="resultCount"></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn">コピーする</button>
+        <button class="btn secondary" id="retryBtn">やり直す</button>
+      </div>
+    </div>
+  </div>
+
+  <h2>文章要約とは</h2>
+  <div class="sec">
+    <p>文章要約とは、元の文章の論点や結論を保ったまま、文字数を大幅に減らして短くまとめることです。ビジネスの現場では、調査レポート・報告書・長いメール・会議メモなど、要約が必要な文章が日々大量に発生します。</p>
+    <p>文章要約AIを使えば、人が読み込んでまとめるよりもはるかに短時間で、抜け・重複の少ない要約を得られます。AI要約くんは<strong>日本語の文章に最適化</strong>しており、「結論を先に出す」「数字を残す」といった要望を、キーワード指定である程度反映できます。</p>
+  </div>
+
+  <h2>文章要約のコツ（仕上がりを良くする4つのポイント）</h2>
+  <div class="sec">
+    <p><strong>1. 不要な装飾を除いてから貼る。</strong>広告文・メニュー・重複するあいさつなどが混ざると要点がぶれるため、本文だけを貼ると精度が上がります。</p>
+    <p><strong>2. 用途に合った長さを指定する。</strong>全体把握なら元の1〜2割程度、上司への一報なら100〜200文字が目安です。</p>
+    <p><strong>3. 残したい数字・固有名詞をキーワードにする。</strong>金額・日付・プロジェクト名などを指定すると、重要情報が抜けにくくなります。</p>
+    <p><strong>4. 必ず原文と突き合わせる。</strong>AI要約は要点を取りこぼすことがあります。社外提出前の最終確認は人の手で行ってください。</p>
+  </div>
+
+  <h2>どんな文章に使えるか</h2>
+  <table>
+    <tr><th>文章の種類</th><th>要約の使い道</th></tr>
+    <tr><td>ニュース記事・業界レポート</td><td>情報収集の時短、要点メモの作成</td></tr>
+    <tr><td>報告書・調査資料</td><td>結論と根拠の把握、上司への共有</td></tr>
+    <tr><td>議事録・会話メモ</td><td>決定事項と宿題の抽出</td></tr>
+    <tr><td>論文・学術資料</td><td>下読み・全体像の把握（正確性は原文で確認）</td></tr>
+    <tr><td>長いメール・回覧文</td><td>対応が必要かどうかの素早い判断</td></tr>
+  </table>
+
+  <p style="margin-top:18px">汎用のAI要約ツールは<a href="/">トップページ</a>、AI要約の仕組みやツールの選び方は<a href="/columns/ai-yoyaku-no-tsukurikata/">使い方ガイド</a>をご覧ください。</p>
 </div>
 
 <footer>
-<div class="container">
-<p>&copy; 2026 AI要約くん. All rights reserved.</p>
-<p><a href="/">ホーム</a><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a></p>
-</div>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/">ホーム</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
 </footer>
 
-<script>
-async function summarize() {
-  const text = document.getElementById('inputText').value.trim();
-  if (!text) { alert('文章を入力してください'); return; }
-  try {
-    const res = await fetch('/api/summarize', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ text: text, length: 'medium', style: 'normal' })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    document.getElementById('resultText').textContent = data.summary;
-    document.getElementById('resultBox').style.display = 'block';
-  } catch (e) { alert('エラー: ' + e.message); }
-}
-</script>
+<script src="/assets/tool.js"></script>
 </body>
 </html>

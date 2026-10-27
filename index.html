@@ -3,213 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI要約ツール｜無料・登録不要で文章を自動要約</title>
-<meta name="description" content="AIが文章・文書・記事を自動で要約。無料・登録不要・1クリックで要約文を作成。長文・議事録・論文にも対応。">
-<meta name="keywords" content="AI要約,文章要約,文書要約,AI要約ツール,無料,登録不要">
-<meta property="og:title" content="AI要約ツール｜無料・登録不要で文章を自動要約">
-<meta property="og:description" content="AIが文章・文書・記事を自動で要約。無料・登録不要。">
+<title>AI要約くん｜登録不要・無料の文章要約AIツール（日本語対応）</title>
+<meta name="description" content="文章やテキストをAIが数秒で要約。登録不要・無料ですぐ使える日本語特化の要約ツール。要約字数・敬体常体・キーワード指定に対応。レポート・議事録・日報・メールに。">
+<meta name="keywords" content="AI要約,文章要約,文書要約,AI要約ツール,無料,登録不要,テキスト要約,自動要約">
+<link rel="canonical" href="https://ai-yoyaku.example.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI要約くん｜登録不要・無料の文章要約AIツール">
+<meta property="og:description" content="文章やテキストをAIが数秒で要約。登録不要・無料ですぐ使える日本語特化の要約ツール。">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
 <meta name="google-site-verification" content="Z1vua0Vo7S6XuQMPogmaM0mN5b5TAKBMX3Vg7AgblTs" />
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JW29T6ZXGG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-JW29T6ZXGG');
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AI要約くん",
+  "url": "https://ai-yoyaku.example.com/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ja",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "description": "登録不要・無料で使える日本語特化のAI文章要約ツール。要約字数・敬体常体・キーワード指定に対応。"
+}
 </script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:#f4f4f8;color:#333;line-height:1.6}
-.container{max-width:900px;margin:0 auto;padding:20px}
-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:15px 0;margin-bottom:30px}
-header .container{display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.logo{font-size:22px;font-weight:bold;background:#000;color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none}
-.logo span{color:#4ecdc4}
-nav a{margin-left:15px;text-decoration:none;color:#247a8c;font-size:14px}
-nav a:hover{text-decoration:underline}
-h1{font-size:28px;margin-bottom:10px;color:#1a1a1a}
-.subtitle{color:#666;margin-bottom:30px;font-size:15px}
-.tool-box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:30px}
-textarea{width:100%;min-height:180px;padding:15px;border:2px solid #e0e0e0;border-radius:8px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit}
-textarea:focus{outline:none;border-color:#2c89a0}
-.options{display:flex;gap:15px;margin:15px 0;flex-wrap:wrap;align-items:center}
-.options label{font-size:14px;color:#555}
-.options select{padding:6px 10px;border:1px solid #ddd;border-radius:5px;font-size:14px}
-button{background:#2c89a0;color:#fff;border:none;padding:12px 30px;border-radius:6px;font-size:16px;cursor:pointer;font-weight:bold;transition:background .2s}
-button:hover{background:#247a8c}
-button:disabled{background:#aaa;cursor:not-allowed}
-.result-box{margin-top:20px;padding:20px;background:#f8f9fa;border-radius:8px;border-left:4px solid #4ecdc4;display:none}
-.result-box h3{font-size:16px;margin-bottom:10px;color:#247a8c}
-.result-box p{font-size:15px;line-height:1.8}
-.char-count{text-align:right;font-size:12px;color:#999;margin-top:5px}
-h2{font-size:22px;margin:35px 0 15px;color:#1a1a1a;border-left:4px solid #2c89a0;padding-left:12px}
-.section{background:#fff;border-radius:10px;padding:25px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
-.section p{margin-bottom:12px;font-size:15px}
-.section a{color:#2c89a0}
-.faq-item{margin-bottom:15px}
-.faq-item h4{font-size:15px;margin-bottom:8px;color:#247a8c}
-.faq-item p{font-size:14px;color:#555}
-footer{background:#fff;border-top:1px solid #e0e0e0;padding:25px 0;margin-top:50px;text-align:center;font-size:13px;color:#888}
-footer a{color:#247a8c;text-decoration:none;margin:0 8px}
-.badge{display:inline-block;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:12px;font-size:12px;margin-left:8px}
-.loading{display:none;text-align:center;padding:20px;color:#2c89a0}
-@media(max-width:600px){.container{padding:15px}h1{font-size:22px}button{width:100%}}
-</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"AI要約くんは無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大5000文字までの文章を要約できます。"}},
+    {"@type":"Question","name":"何文字まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"1回あたり50文字以上5000文字以下の文章に対応しています。要約文の長さは50〜1000文字の間で指定できます。"}},
+    {"@type":"Question","name":"入力した文章は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。入力内容は要約の生成処理にのみ使用し、サーバーに保存・蓄積することはありません。詳しくはプライバシーポリシーをご確認ください。"}},
+    {"@type":"Question","name":"文体（敬体・常体）は選べますか？","acceptedAnswer":{"@type":"Answer","text":"はい。です・ます調（敬体）とだ・である調（常体）を選択できるほか、必ず含めたいキーワードや使いたくない言葉（NGワード）も指定できます。"}},
+    {"@type":"Question","name":"どんな文章に向いていますか？","acceptedAnswer":{"@type":"Answer","text":"レポート・報告書、議事録、業務日報、ビジネスメール、ニュース記事、論文の下読みなど、日本語の文章全般に向いています。用途別のプリセットも用意しています。"}},
+    {"@type":"Question","name":"要約の精度が不安です。注意点は？","acceptedAnswer":{"@type":"Answer","text":"AIによる要約は要点を取りこぼす可能性があります。議事録や社外に出す文書など正確性が必要な場面では、必ずご自身で原文と照合して最終確認を行ってください。"}},
+    {"@type":"Question","name":"スマートフォンでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ブラウザ上で動作するため、スマートフォン・タブレット・PCのいずれからでも、アプリのインストールなしで利用できます。"}}
+  ]
+}
+</script>
 </head>
 <body>
 
 <header>
-<div class="container">
-<a href="/" class="logo">AI<span>要約</span>くん</a>
-<nav>
-<a href="/bunsho-yoyaku/">文章要約</a>
-<a href="/#faq">FAQ</a>
-<a href="/privacy.html">プライバシー</a>
-</nav>
-</div>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+  </div>
 </header>
 
 <div class="container">
+  <section class="hero">
+    <div class="badges">
+      <span class="badge">登録不要</span><span class="badge">完全無料</span>
+      <span class="badge">日本語特化</span><span class="badge">データ保存なし</span>
+    </div>
+    <h1>無料で使える日本語のAI文章要約ツール</h1>
+    <p class="lead">長いレポート・議事録・記事・メールを貼り付けるだけで、AIが数秒で要点をまとめます。会員登録は不要で、すぐに使えます。</p>
+  </section>
 
-<h1>AIで文章を自動要約 <span class="badge">無料・登録不要</span></h1>
-<p class="subtitle">長文・議事録・論文・記事をAIが瞬時に要約します。会員登録は不要です。</p>
+  <div class="card">
+    <textarea id="inputText" placeholder="ここに要約したい文章を貼り付けてください（50〜5000文字）&#10;例）会議の議事録、長いメール、ニュース記事、レポートなど"></textarea>
+    <div class="char-count" id="charCount">0 / 5000文字</div>
 
-<div class="tool-box">
-<textarea id="inputText" placeholder="ここに要約したい文章を貼り付けてください（最大5000文字）..."></textarea>
-<div class="char-count" id="charCount">0 / 5000文字</div>
+    <div class="presets" aria-label="用途プリセット">
+      <input type="hidden" id="scene" value="general">
+      <button type="button" data-scene="general" class="active">通常</button>
+      <button type="button" data-scene="report">レポート</button>
+      <button type="button" data-scene="minutes">議事録</button>
+      <button type="button" data-scene="daily">日報</button>
+      <button type="button" data-scene="email">メール</button>
+    </div>
 
-<div class="options">
-<label>要約の長さ：
-<select id="length">
-<option value="short">短い（100文字程度）</option>
-<option value="medium" selected>中程度（300文字程度）</option>
-<option value="long">長い（500文字程度）</option>
-</select>
-</label>
-<label>スタイル：
-<select id="style">
-<option value="normal" selected>標準</option>
-<option value="business">ビジネス</option>
-<option value="simple">簡潔</option>
-</select>
-</label>
-</div>
+    <div class="row">
+      <div class="field">
+        <label for="maxLength">要約字数</label>
+        <input type="number" id="maxLength" min="50" max="1000" step="10" value="200">
+      </div>
+      <div class="field">
+        <label>文体</label>
+        <div class="seg">
+          <label><input type="radio" name="tone" value="desu" checked><span>敬体（です・ます）</span></label>
+          <label><input type="radio" name="tone" value="dearu"><span>常体（だ・である）</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="keyword">含めたいキーワード（任意）</label>
+        <input type="text" id="keyword" maxlength="30" placeholder="例：売上目標">
+      </div>
+      <div class="field">
+        <label for="ngword">使わない言葉 NGワード（任意）</label>
+        <input type="text" id="ngword" maxlength="30" placeholder="例：売上減少">
+      </div>
+    </div>
 
-<button id="submitBtn" onclick="summarize()">要約する</button>
+    <button class="btn" id="submitBtn">要約する</button>
+    <div class="loading" id="loading">⏳ AIが要約しています…数秒お待ちください</div>
 
-<div class="loading" id="loading">
-<p>⏳ AIが要約中です... 数秒お待ちください</p>
-</div>
+    <div class="result" id="resultBox">
+      <h3>要約結果</h3>
+      <p class="out" id="resultText"></p>
+      <div class="meta" id="resultCount"></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn">コピーする</button>
+        <button class="btn secondary" id="retryBtn">やり直す</button>
+      </div>
+    </div>
+  </div>
 
-<div class="result-box" id="resultBox">
-<h3>📝 要約結果</h3>
-<p id="resultText"></p>
-<button onclick="copyResult()" style="margin-top:15px;padding:8px 20px;font-size:14px">コピーする</button>
-</div>
-</div>
+  <ul class="trust">
+    <li>✅ 登録不要</li><li>✅ 入力データを保存しない</li>
+    <li>✅ 日本語の要約に最適化</li><li>✅ 50〜1000文字で長さ指定</li>
+  </ul>
 
-<h2>文書要約AIとは</h2>
-<div class="section">
-<p>文書要約AIは、長文の資料・議事録・論文・記事などをAIが自動的に短くまとめるツールです。</p>
-<p>「文章を読む時間がない」「議事録を要点だけ知りたい」「論文の概要を素早く把握したい」——そんな悩みを解決します。</p>
-<p>本ツールは無料で、登録や会員登録なしですぐにご利用いただけます。</p>
-</div>
+  <h2>AI要約くんの使い方（3ステップ）</h2>
+  <div class="steps">
+    <div class="step"><div><b>文章を貼り付ける</b><br><span style="color:#5b6470;font-size:14px">要約したいレポート・議事録・記事・メールを入力欄に貼り付けます（50〜5000文字）。</span></div></div>
+    <div class="step"><div><b>条件を選ぶ</b><br><span style="color:#5b6470;font-size:14px">要約字数、敬体・常体、用途プリセット、キーワード／NGワードを必要に応じて指定します。</span></div></div>
+    <div class="step"><div><b>「要約する」を押す</b><br><span style="color:#5b6470;font-size:14px">数秒で要約文が表示されます。コピーボタンでそのまま資料に貼り付けられます。</span></div></div>
+  </div>
 
-<h2>文章要約AIの使い方</h2>
-<div class="section">
-<p><strong>使い方は簡単3ステップ：</strong></p>
-<p>1. 上のテキストボックスに要約したい文章を貼り付け</p>
-<p>2. 要約の長さとスタイルを選択</p>
-<p>3. 「要約する」ボタンをクリック</p>
-<p>数秒でAIが要約文を生成します。</p>
-</div>
+  <h2>こんな場面で活用できます</h2>
+  <div class="scenes">
+    <div class="scene"><b>レポート・報告書</b><span>長い調査資料や報告書の結論と根拠を短く把握。</span></div>
+    <div class="scene"><b>議事録</b><span>会議の文字起こしから決定事項・宿題・期限を抽出。</span></div>
+    <div class="scene"><b>業務日報</b><span>その日の作業メモから、読みやすい日報を下書き。</span></div>
+    <div class="scene"><b>メール</b><span>長いメールや回覧文を丁寧に要約して素早く確認。</span></div>
+  </div>
 
-<h2 id="faq">よくある質問</h2>
-<div class="section">
-<div class="faq-item">
-<h4>Q. 無料で使えますか？</h4>
-<p>A. はい。完全無料でご利用いただけます。1日の利用回数制限はありますが、登録不要です。</p>
-</div>
-<div class="faq-item">
-<h4>Q. どんな文章に対応していますか？</h4>
-<p>A. 日本語の文章全般に対応しています。ビジネス文書、議事録、論文、ブログ記事、ニュースなど。</p>
-</div>
-<div class="faq-item">
-<h4>Q. 入力した文章は保存されますか？</h4>
-<p>A. いいえ。入力いただいた文章は要約処理のみに使用し、保存・蓄積することはありません。詳しくは<a href="/privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-</div>
-<div class="faq-item">
-<h4>Q. 何文字まで入力できますか？</h4>
-<p>A. 最大5000文字まで対応しています。それ以上の場合は分割して要約してください。</p>
-</div>
-</div>
+  <h2>AI要約とは</h2>
+  <div class="sec">
+    <p>AI要約とは、大規模言語モデル（LLM）を用いて、長い文章の要点を自動で短くまとめる技術です。人が読む時間を大きく減らせるため、情報収集や議事録作成、論文・資料の下読みなどで広く使われています。</p>
+    <p>AI要約くんは<strong>日本語の要約に特化</strong>し、要約する長さや文体、含めたいキーワードまで細かく指定できるのが特徴です。長文の文章要約は<a href="/bunsho-yoyaku/">文章要約AIページ</a>、具体的な使い方や選び方は<a href="/columns/ai-yoyaku-no-tsukurikata/">AI要約の使い方ガイド</a>をご覧ください。</p>
+  </div>
 
+  <h2 id="faq">よくある質問</h2>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大5000文字までの文章を要約できます。</p></details>
+  <details><summary>何文字まで要約できますか？</summary><p>入力は50文字以上5000文字以下、要約文の長さは50〜1000文字で指定できます。5000文字を超える文章は分割してご利用ください。</p></details>
+  <details><summary>入力した文章は保存されますか？</summary><p>いいえ。入力内容は要約の生成処理にのみ使用し、サーバーに保存・蓄積しません。ただし機密情報や個人情報の入力はご自身の判断でお控えください。<a href="/privacy.html">プライバシーポリシー</a></p></details>
+  <details><summary>文体やキーワードは指定できますか？</summary><p>です・ます調（敬体）とだ・である調（常体）を選べるほか、必ず含めたいキーワードと、使いたくないNGワードを1つずつ指定できます。</p></details>
+  <details><summary>要約結果をそのまま社外に出してもいいですか？</summary><p>要約はあくまで下書きとしてご利用ください。正確性が求められる文書では、必ず原文と照合して最終確認を行ってください。著作権のある文章の要約を配布・公開する際は、利用範囲にもご注意ください。</p></details>
+  <details><summary>スマートフォンでも使えますか？</summary><p>はい。ブラウザ上で動くため、スマートフォン・タブレット・PCのいずれでもアプリのインストールなしで利用できます。</p></details>
+
+  <div class="cta">
+    <a class="btn" href="#inputText">↑ このページの先頭で要約する</a>
+  </div>
 </div>
 
 <footer>
-<div class="container">
-<p>&copy; 2026 AI要約くん. All rights reserved.</p>
-<p>
-<a href="/privacy.html">プライバシーポリシー</a>
-<a href="/terms.html">利用規約</a>
-<a href="/bunsho-yoyaku/">文章要約ツール</a>
-</p>
-</div>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方ガイド</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
 </footer>
 
+<div id="cookiebar">
+  <span>当サイトではアクセス解析のためCookieを使用しています。詳しくは<a href="/privacy.html" style="color:#7fe3d8">プライバシーポリシー</a>をご確認ください。</span>
+  <button class="btn" id="cookieok">同意する</button>
+</div>
+
+<script src="/assets/tool.js"></script>
 <script>
-const input = document.getElementById('inputText');
-const charCount = document.getElementById('charCount');
-const submitBtn = document.getElementById('submitBtn');
-const loading = document.getElementById('loading');
-const resultBox = document.getElementById('resultBox');
-const resultText = document.getElementById('resultText');
-
-input.addEventListener('input', () => {
-  const len = input.value.length;
-  charCount.textContent = len + ' / 5000文字';
-  if (len > 5000) {
-    input.value = input.value.substring(0, 5000);
-    charCount.textContent = '5000 / 5000文字';
+(function(){
+  function loadGA(){
+    var s=document.createElement('script');
+    s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-JW29T6ZXGG';
+    s.onload=function(){window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments)}g('js',new Date());g('config','G-JW29T6ZXGG');};
+    document.head.appendChild(s);
   }
-});
-
-async function summarize() {
-  const text = input.value.trim();
-  if (!text) { alert('文章を入力してください'); return; }
-  if (text.length < 50) { alert('50文字以上入力してください'); return; }
-
-  submitBtn.disabled = true;
-  loading.style.display = 'block';
-  resultBox.style.display = 'none';
-
-  try {
-    const res = await fetch('/api/summarize', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        text: text,
-        length: document.getElementById('length').value,
-        style: document.getElementById('style').value
-      })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    resultText.textContent = data.summary;
-    resultBox.style.display = 'block';
-  } catch (e) {
-    alert('エラーが発生しました: ' + e.message);
-  } finally {
-    submitBtn.disabled = false;
-    loading.style.display = 'none';
-  }
-}
-
-function copyResult() {
-  navigator.clipboard.writeText(resultText.textContent);
-  alert('コピーしました');
-}
+  var bar=document.getElementById('cookiebar');
+  if(localStorage.getItem('cookie_ok')==='1'){loadGA();}
+  else{bar.style.display='flex';}
+  document.getElementById('cookieok').addEventListener('click',function(){
+    localStorage.setItem('cookie_ok','1');bar.style.display='none';loadGA();
+  });
+})();
 </script>
-
 </body>
 </html>
