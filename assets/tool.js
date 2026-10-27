@@ -94,17 +94,35 @@
       } else { el.style.display = 'none'; }
     }
 
+    var formError = $('formError');
+    function showError(msg) {
+      if (!formError) { if (window.alert) alert(msg); return; }
+      formError.textContent = msg;
+      formError.classList.add('show');
+      formError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      input.focus();
+    }
+    function clearError() {
+      if (formError) formError.classList.remove('show');
+    }
+    input.addEventListener('input', clearError);
+
     function run() {
+      clearError();
       var text = input.value.trim();
-      if (!text) { alert('文章またはURLを入力してください。'); return; }
-      if (text.length < 50 && !/https?:\/\//.test(text)) { alert('50文字以上入力してください（URLが含まれる場合は短くても構いません）。'); return; }
+      var hasUrl = /https?:\/\//.test(text);
+      if (!text) { showError('文章またはURLを入力してください。'); return; }
+      if (text.length < 50 && !hasUrl) {
+        showError('50文字以上入力してください（現在 ' + text.length + ' 文字）。URLが含まれる場合は短くても構いません。');
+        return;
+      }
 
       var isExtract = mode === 'extract';
       var payload = basePayload();
       var endpoint = '/api/summarize';
       if (isExtract) {
         payload.fields = $('fields').value;
-        if (!String(payload.fields || '').trim()) { alert('抽出したい項目（フィールド）を入力してください。'); return; }
+        if (!String(payload.fields || '').trim()) { showError('抽出したい項目（フィールド）を1つ以上入力してください。'); return; }
         endpoint = '/api/extract';
       }
 
@@ -131,7 +149,7 @@
           resultBox.style.display = 'block';
           resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         })
-        .catch(function (e) { alert(e.message); })
+        .catch(function (e) { showError(e.message); })
         .finally(function () {
           submitBtn.disabled = false;
           loading.style.display = 'none';
@@ -154,15 +172,40 @@
     }
 
     submitBtn.addEventListener('click', run);
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+    function flashCopied(ok) {
+      var oldTxt = 'コピーする';
+      copyBtn.textContent = ok ? 'コピー済み ✓' : 'コピーできませんでした';
+      copyBtn.classList.toggle('copied', ok);
+      setTimeout(function () {
+        copyBtn.textContent = oldTxt;
+        copyBtn.classList.remove('copied');
+      }, 1500);
+    }
     if (copyBtn) {
       copyBtn.addEventListener('click', function () {
         var data = mode === 'extract'
           ? (function () { var rows = resultTable.querySelectorAll('tr'); var o = {}; rows.forEach(function (r) { o[r.cells[0].textContent] = r.cells[1].textContent; }); return JSON.stringify(o, null, 2); })()
           : resultText.textContent;
-        navigator.clipboard.writeText(data).then(function () {
-          copyBtn.textContent = 'コピーしました';
-          setTimeout(function () { copyBtn.textContent = 'コピーする'; }, 1500);
-        });
+        var done = function (ok) { flashCopied(ok); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(data)
+            .then(function () { done(true); })
+            .catch(function () { done(fallbackCopy(data)); });
+        } else {
+          done(fallbackCopy(data));
+        }
       });
     }
     if (retryBtn) retryBtn.addEventListener('click', run);
