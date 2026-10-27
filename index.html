@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI要約くん｜登録不要・無料の文章要約AIツール（日本語対応）</title>
-<meta name="description" content="文章やテキストをAIが数秒で要約。登録不要・無料ですぐ使える日本語特化の要約ツール。要約字数・敬体常体・キーワード指定に対応。レポート・議事録・日報・メールに。">
-<meta name="keywords" content="AI要約,文章要約,文書要約,AI要約ツール,無料,登録不要,テキスト要約,自動要約">
+<title>AI要約くん｜登録不要・無料の文章要約＆情報抽出AIツール（URL対応）</title>
+<meta name="description" content="文章・WebページURLをAIが数秒で要約、必要項目を自動抽出。登録不要・無料の日本語AIツール。要約字数・敬体常体・キーワード指定、情報抽出表に対応。レポート・議事録・メールに。">
+<meta name="keywords" content="AI要約,文章要約,情報抽出,フィールド抽出,URL要約,Web要約,AI要約ツール,無料,登録不要">
 <link rel="canonical" href="https://bunsho-yoyaku.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AI要約くん｜登録不要・無料の文章要約AIツール">
@@ -39,7 +39,9 @@
     {"@type":"Question","name":"文体（敬体・常体）は選べますか？","acceptedAnswer":{"@type":"Answer","text":"はい。です・ます調（敬体）とだ・である調（常体）を選択できるほか、必ず含めたいキーワードや使いたくない言葉（NGワード）も指定できます。"}},
     {"@type":"Question","name":"どんな文章に向いていますか？","acceptedAnswer":{"@type":"Answer","text":"レポート・報告書、議事録、業務日報、ビジネスメール、ニュース記事、論文の下読みなど、日本語の文章全般に向いています。用途別のプリセットも用意しています。"}},
     {"@type":"Question","name":"要約の精度が不安です。注意点は？","acceptedAnswer":{"@type":"Answer","text":"AIによる要約は要点を取りこぼす可能性があります。議事録や社外に出す文書など正確性が必要な場面では、必ずご自身で原文と照合して最終確認を行ってください。"}},
-    {"@type":"Question","name":"スマートフォンでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ブラウザ上で動作するため、スマートフォン・タブレット・PCのいずれからでも、アプリのインストールなしで利用できます。"}}
+    {"@type":"Question","name":"スマートフォンでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ブラウザ上で動作するため、スマートフォン・タブレット・PCのいずれからでも、アプリのインストールなしで利用できます。"}},
+    {"@type":"Question","name":"URLを入れるとどうなりますか？","acceptedAnswer":{"@type":"Answer","text":"入力にURLが含まれると、そのWebページの本文を自動取得して要約または情報抽出を行います。ログインが必要なページや非公開ページは取得できません。取得本文は処理のみに使用し保存しません。"}},
+    {"@type":"Question","name":"情報抽出は何ができますか？","acceptedAnswer":{"@type":"Answer","text":"抽出したい項目（会社名・金額・納期・連絡先など）を指定すると、文章から該当する値だけを抜き出して表で返します。見つからない項目は「なし」と表示されます。"}}
   ]
 }
 </script>
@@ -63,14 +65,21 @@
       <span class="badge">登録不要</span><span class="badge">完全無料</span>
       <span class="badge">日本語特化</span><span class="badge">データ保存なし</span>
     </div>
-    <h1>無料で使える日本語のAI文章要約ツール</h1>
-    <p class="lead">長いレポート・議事録・記事・メールを貼り付けるだけで、AIが数秒で要点をまとめます。会員登録は不要で、すぐに使えます。</p>
+    <h1>無料で使える日本語のAI要約＆情報抽出ツール</h1>
+    <p class="lead">文章を貼るだけでAIが数秒で要約。URLを入れればWebページ本文を自動取得してまとめ、必要な項目だけを表で抜き出す「情報抽出」も無料。登録不要ですぐ使えます。</p>
   </section>
 
   <div class="card">
-    <textarea id="inputText" placeholder="ここに要約したい文章を貼り付けてください（50〜5000文字）&#10;例）会議の議事録、長いメール、ニュース記事、レポートなど"></textarea>
+    <textarea id="inputText" placeholder="要約したい文章を貼り付けるか、WebページのURLを入力してください&#10;例）議事録・長いメール・記事、または https://… のURL"></textarea>
     <div class="char-count" id="charCount">0 / 5000文字</div>
+    <div class="urlhint" id="urlHint"></div>
 
+    <div class="tabs" role="tablist">
+      <button type="button" data-mode="summary" class="active">📝 AI要約</button>
+      <button type="button" data-mode="extract">🔎 情報抽出</button>
+    </div>
+
+    <div id="summaryPanel">
     <div class="presets" aria-label="用途プリセット">
       <input type="hidden" id="scene" value="general">
       <button type="button" data-scene="general" class="active">通常</button>
@@ -103,13 +112,30 @@
         <input type="text" id="ngword" maxlength="30" placeholder="例：売上減少">
       </div>
     </div>
+    </div><!-- /summaryPanel -->
+
+    <div id="extractPanel" style="display:none">
+      <label for="fields" style="font-size:13px;color:#5b6470;display:block;margin-bottom:5px">抽出したい項目（カンマまたは改行で複数指定、最大12個）</label>
+      <textarea id="fields" placeholder="例：会社名, 担当者名, 金額, 納期, 連絡先"></textarea>
+      <div class="field-chips">
+        <button type="button" data-fields="会社名, 担当者名, 金額, 納期, 連絡先">📋 商談メモ</button>
+        <button type="button" data-fields="開催日時, 参加者, 決定事項, 宿題, 期限">🗒️ 議事録</button>
+        <button type="button" data-fields="商品名, 価格, 送料, 発売日, 仕様">🛒 商品情報</button>
+        <button type="button" data-fields="応募締切, 必要書類, 提出先, 問い合わせ先">📢 募集案内</button>
+      </div>
+      <p style="font-size:12.5px;color:#8b94a0">入力文章から各項目の値を抜き出して表で返します。見つからない項目は「なし」。URLを貼ればそのページ本文から抽出します。</p>
+    </div><!-- /extractPanel -->
 
     <button class="btn" id="submitBtn">要約する</button>
-    <div class="loading" id="loading">⏳ AIが要約しています…数秒お待ちください</div>
+    <div class="loading" id="loading">⏳ AIが処理しています…数秒お待ちください</div>
 
     <div class="result" id="resultBox">
-      <h3>要約結果</h3>
+      <h3 id="resultTitle">結果</h3>
+      <div class="fetchedinfo" id="fetchedInfo"></div>
       <p class="out" id="resultText"></p>
+      <div id="resultTableWrap" style="display:none;margin-top:12px">
+        <table id="resultTable"></table>
+      </div>
       <div class="meta" id="resultCount"></div>
       <div class="actions">
         <button class="btn" id="copyBtn">コピーする</button>
@@ -120,14 +146,20 @@
 
   <ul class="trust">
     <li>✅ 登録不要</li><li>✅ 入力データを保存しない</li>
-    <li>✅ 日本語の要約に最適化</li><li>✅ 50〜1000文字で長さ指定</li>
+    <li>✅ URL貼るだけでWeb要約</li><li>✅ 項目指定の情報抽出</li>
   </ul>
 
   <h2>AI要約くんの使い方（3ステップ）</h2>
   <div class="steps">
-    <div class="step"><div><b>文章を貼り付ける</b><br><span style="color:#5b6470;font-size:14px">要約したいレポート・議事録・記事・メールを入力欄に貼り付けます（50〜5000文字）。</span></div></div>
-    <div class="step"><div><b>条件を選ぶ</b><br><span style="color:#5b6470;font-size:14px">要約字数、敬体・常体、用途プリセット、キーワード／NGワードを必要に応じて指定します。</span></div></div>
-    <div class="step"><div><b>「要約する」を押す</b><br><span style="color:#5b6470;font-size:14px">数秒で要約文が表示されます。コピーボタンでそのまま資料に貼り付けられます。</span></div></div>
+    <div class="step"><div><b>文章またはURLを入力</b><br><span style="color:#5b6470;font-size:14px">レポート・議事録・メールを貼るか、まとめたいWebページのURLを入力します。URLは自動で本文を取得します。</span></div></div>
+    <div class="step"><div><b>「AI要約」か「情報抽出」を選ぶ</b><br><span style="color:#5b6470;font-size:14px">要約なら字数・文体・シーン、情報抽出なら抜き出したい項目（会社名・金額・期限など）を指定します。</span></div></div>
+    <div class="step"><div><b>実行してコピー</b><br><span style="color:#5b6470;font-size:14px">数秒で要約文、または項目別の表が表示され、そのまま資料に貼り付けられます。</span></div></div>
+  </div>
+
+  <h2>情報抽出（フィールド抽出）とは</h2>
+  <div class="sec">
+    <p>長い文章の中から「会社名」「金額」「納期」「連絡先」のような<strong>必要な項目だけを抜き出して表にまとめる</strong>機能です。商談メモから取引条件を整理したり、募集案内から締切と提出先を拾ったり、議事録から決定事項と宿題を取り出す場面で、目視で探す手間を減らせます。</p>
+    <p>使い方は「🔎 情報抽出」タブを選び、抽出したい項目をカンマ区切りで入力するだけ。見つからない項目は「なし」と表示され、WebページのURLからもそのまま抽出できます。</p>
   </div>
 
   <h2>こんな場面で活用できます</h2>
@@ -151,6 +183,9 @@
   <details><summary>文体やキーワードは指定できますか？</summary><p>です・ます調（敬体）とだ・である調（常体）を選べるほか、必ず含めたいキーワードと、使いたくないNGワードを1つずつ指定できます。</p></details>
   <details><summary>要約結果をそのまま社外に出してもいいですか？</summary><p>要約はあくまで下書きとしてご利用ください。正確性が求められる文書では、必ず原文と照合して最終確認を行ってください。著作権のある文章の要約を配布・公開する際は、利用範囲にもご注意ください。</p></details>
   <details><summary>スマートフォンでも使えますか？</summary><p>はい。ブラウザ上で動くため、スマートフォン・タブレット・PCのいずれでもアプリのインストールなしで利用できます。</p></details>
+  <details><summary>URLを入れるとどうなりますか？</summary><p>入力にhttp(s)のURLが含まれると、そのWebページの本文を自動で取得し、要約または情報抽出を行います。ログインが必要なページや非公開ページは取得できません。取得した本文は処理のみに使い、保存しません。</p></details>
+  <details><summary>「情報抽出」は何ができますか？</summary><p>抽出したい項目（例：会社名、金額、納期、連絡先）を指定すると、文章の中から該当する値だけを抜き出して表で返します。見つからない項目は「なし」と表示されます。商談メモ・議事録・募集案内・商品ページの整理に便利です。</p></details>
+  <details><summary>Webページ取得に外部サービスを使っていますか？</summary><p>URL入力時の本文取得には外部のWeb取得サービスを利用します。取得対象は利用者が入力したURLのページ内容のみで、取得データは要約・抽出処理にのみ使用し保存しません。詳しくは<a href="/privacy.html">プライバシーポリシー</a>をご確認ください。</p></details>
 
   <div class="cta">
     <a class="btn" href="#inputText">↑ このページの先頭で要約する</a>
