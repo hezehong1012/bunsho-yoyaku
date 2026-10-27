@@ -1,7 +1,6 @@
 // Vercel Serverless Function: 情報抽出（フィールド抽出）API V1.2
-// 入力文章と抽出したいフィールド（カンマ/改行区切り）を受け取り、JSONで返す
 import {
-  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jsonFromMarkdown
+  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jsonFromMarkdown, jevGuard
 } from './_lib.js';
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -43,6 +42,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '抽出したい項目（フィールド）を1つ以上入力してください。' });
   }
 
+  // 無料判定モデルでゴミ/乱用を前段ブロック（失敗時は放行）
+  const guard = await jevGuard(rawText);
+  if (guard.blocked) {
+    return res.status(422).json({
+      error: '入力内容が意味のある文章ではないと判定されました。抽出対象の本文（またはURL）を入力してください。',
+      guarded: true
+    });
+  }
+
   let source = rawText;
   let fetched = [];
   if (extractUrls(rawText).length) {
@@ -80,7 +88,6 @@ JSON:`;
   try {
     const out = await callLlm(system, prompt, { maxTokens: 1200, temperature: 0 });
     const obj = jsonFromMarkdown(out);
-    // 指定された全フィールドを保証
     const result = {};
     for (const f of fields) result[f] = (obj[f] != null && String(obj[f]).trim()) ? String(obj[f]).trim() : 'なし';
     return res.status(200).json({ fields: fields, result, fetched });

@@ -1,6 +1,6 @@
 // Vercel Serverless Function: AI要約 API（URL自動取得対応 V1.2）
 import {
-  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm
+  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jevGuard
 } from './_lib.js';
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -54,7 +54,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '要約字数は50〜1000文字の間で指定してください。' });
   }
 
-  // URLを含む場合はWeb本文を取得
+  // 無料判定モデルでゴミ/乱用を前段ブロック（失敗時は放行）
+  const guard = await jevGuard(rawText);
+  if (guard.blocked) {
+    return res.status(422).json({
+      error: '入力内容が意味のある文章ではないと判定されました。要約したい本文（またはURL）を入力してください。',
+      guarded: true
+    });
+  }
+
   let source = rawText;
   let fetched = [];
   const urls = extractUrls(rawText);

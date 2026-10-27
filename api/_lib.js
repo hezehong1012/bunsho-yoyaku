@@ -113,9 +113,80 @@ export async function callLlm(system, prompt, { maxTokens = 1600, temperature = 
 export function jsonFromMarkdown(raw) {
   let s = raw.trim();
   s = s.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  // 最初の { から最後の } まで
   const a = s.indexOf('{');
   const b = s.lastIndexOf('}');
   if (a >= 0 && b > a) s = s.slice(a, b + 1);
   return JSON.parse(s);
+}
+
+// ---- 無料の判定モデル Ateve Jev（ateve-jev-v1）による前置フィルタ ----
+//   JEV_API_KEY（未設定なら無効＝常に放行）/ JEV_API_URL / JEV_MODEL / JEV_ENABLED / JEV_BLOCK_PROB
+// 失敗・タイムアウト時は必ず放行（fail-open）。通常の要約・抽出は壊さない。
+const JEV_TIMEOUT_MS = 2500;
+
+function jevConfigured() {
+  if (process.env.JEV_ENABLED === '0' || process.env.JEV_ENABLED === 'false') return false;
+  return !!(process.env.JEV_API_KEY || process.env.GATEWAY_API_KEY);
+}
+
+function extractProb(data, key) {
+  const node = data?.answers?.[key] ?? data?.questions?.[key] ?? data?.[key];
+  const candidates = [];
+  const scan = (v) => {
+    if (v == null) return;
+    if (typeof v === 'boolean') candidates.push(v ? 1 : 0);
+    else if (typeof v === 'number') candidates.push(v);
+    else if (typeof v === 'string') {
+      const n = Number(v);
+      if (!Number.isNaN(n)) candidates.push(n > 1 ? n / 100 : n);
+      else if (/^(true|yes|はい|該当|スパム|ゴミ)/i.test(v.trim())) candidates.push(1);
+      else if (/^(false|no|いいえ)/i.test(v.trim())) candidates.push(0);
+    } else if (typeof v === 'object') {
+      ['probability', 'prob', 'score', 'confidence', 'answer', 'value', 'choice'].forEach((k) => {
+        if (k in v) scan(v[k]);
+      });
+    }
+  };
+  scan(node);
+  if (!candidates.length) return 0;
+  return Math.max(0, Math.min(1, candidates[0]));
+}
+
+export async function jevGuard(rawText) {
+  if (!jevConfigured()) return { blocked: false };
+  const preview = rawText.replace(URL_RE, ' ').replace(/\s+/g, ' ').trim().slice(0, 1500);
+  if (!preview) return { blocked: false };
+
+  const endpoint = process.env.JEV_API_URL || 'https://tokendance.space/gateway/typesafe/v1/systemone';
+  const key = process.env.JEV_API_KEY || process.env.GATEWAY_API_KEY;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), JEV_TIMEOUT_MS);
+
+  try {
+    const r = await fetch(endpoint, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        model: process.env.JEV_MODEL || 'ateve-jev-v1',
+        state: `これは「AI要約/情報抽出ツール」にユーザーが入力したテキストです。\n\n${preview}`,
+        questions: {
+          is_spam_or_garbage: {
+            type: 'noul',
+            instructions: 'Is this input spam, gibberish, random repeated characters, pure punctuation, advertising, abuse, or otherwise NOT meaningful text a real person would want summarized or have fields extracted from? Return true ONLY when clearly junk/abuse. Short-but-meaningful notes, code, a URL with real context, and non-English (including Japanese) text must be false.'
+          }
+        }
+      })
+    });
+    if (!r.ok) return { blocked: false };
+    const data = await r.json().catch(() => null);
+    const prob = extractProb(data, 'is_spam_or_garbage');
+    const t = Number(process.env.JEV_BLOCK_PROB);
+    const threshold = Number.isFinite(t) && t > 0 && t <= 1 ? t : 0.8;
+    return { blocked: prob >= threshold, prob };
+  } catch {
+    return { blocked: false };
+  } finally {
+    clearTimeout(timer);
+  }
 }
