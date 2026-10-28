@@ -137,17 +137,20 @@ function extractProb(data, key) {
   if (typeof node === 'string') return clamp01(stringToProb(node));
 
   // オブジェクト形: { type:'noul', noul:0.96 } / { probability|prob|score|confidence|answer|value }
+  // 実績フィールド名を優先し、その中から [0,1] の数値（または真偽/文字列）を取る。
   const PRIORITY = [
-    node.type, // 型名キー（実API: noul）
+    node.type,                 // 'noul' / 'choice' / 'score' 等の型名キー（実API: noul）
     'noul', 'probability', 'prob', 'score', 'confidence', 'answer', 'value', 'choice', 'result'
   ].filter(Boolean);
 
   for (const k of PRIORITY) {
     if (k in node && k !== 'type') {
-      const p = toProb(node[k]);
+      const v = node[k];
+      const p = toProb(v);
       if (p != null) return clamp01(p);
     }
   }
+  // フォールバック: オブジェクト内の最初の [0,1] 数値（'type' のような文字列キーは除外）
   for (const [k, v] of Object.entries(node)) {
     if (k === 'type' || typeof v === 'string') continue;
     const p = toProb(v);

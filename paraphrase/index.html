@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI言い換えツール｜文章を無料でリライト・丁寧に言い換え【登録不要】</title>
+<meta name="description" content="貼った文章の意味を保ったままAIが自然に言い換え。標準・丁寧（ビジネス）・やさしくの3モード。登録不要・無料の日本語リライト・パラフレーズツール。メール・報告書・言い回しの修正に。">
+<meta name="keywords" content="言い換え,AI 言い換え,文章 言い換え,リライト,パラフレーズ,ビジネス言い換え,無料,登録不要,日本語">
+<link rel="canonical" href="https://bunsho-yoyaku.com/paraphrase/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI言い換えツール｜文章を無料でリライト【登録不要】">
+<meta property="og:description" content="意味を保ったまま自然・丁寧に言い換え。登録不要・無料の日本語リライトツール。">
+<meta property="og:locale" content="ja_JP">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://bunsho-yoyaku.com/"},
+    {"@type":"ListItem","position":2,"name":"AI言い換えツール","item":"https://bunsho-yoyaku.com/paraphrase/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"AI言い換えツール（AI要約くん）",
+  "url":"https://bunsho-yoyaku.com/paraphrase/",
+  "applicationCategory":"BusinessApplication",
+  "operatingSystem":"Web",
+  "inLanguage":"ja",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"言い換えと要約の違いは何ですか？","acceptedAnswer":{"@type":"Answer","text":"言い換え（リライト）は元の文章の長さと情報量をおおむね保ったまま表現だけを自然に整えます。要約は内容を短く縮めます。当ツールは意味・数値を変えずに言い回しを改善したい場面に向いています。"}},
+    {"@type":"Question","name":"どんな文章を言い換えられますか？","acceptedAnswer":{"@type":"Answer","text":"ビジネスメール、報告書、チャットの連絡、案内文、自分で書いた下書きなど、日本語の文章全般に使えます。標準・丁寧（ビジネス）・やさしくの3モードがあります。"}},
+    {"@type":"Question","name":"元の意味は変わりませんか？","acceptedAnswer":{"@type":"Answer","text":"元の論点・事実・数値を保ち、表現だけを整えるよう設計しています。ただしAI出力のため、社外送付や契約に関わる文面では必ずご自身で内容を確認してください。"}},
+    {"@type":"Question","name":"無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録不要で無料でご利用いただけます。入力内容は言い換え処理にのみ使用し保存しません。"}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/pdf-yoyaku/">PDF要約</a>
+      <a href="/paraphrase/">言い換え</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">意味を変えない</span><span class="badge">日本語特化</span></div>
+    <h1>文章の意味を保ったまま無料で言い換えできるAI</h1>
+    <p class="lead">メールや報告書の下書きを貼るだけで、語句と語順を自然に組み替えて読みやすく整えます。「標準」「丁寧（ビジネス）」「やさしく」の3モード。登録不要で、入力内容は保存しません。</p>
+  </section>
+
+  <div class="card">
+    <textarea id="inputText" placeholder="言い換えしたい文章をここに貼り付けてください（50〜5000文字）&#10;例）ビジネスメールの本文、報告書の下書き、硬すぎる／分かりにくい表現 など"></textarea>
+    <div class="char-count" id="charCount">0 / 5000文字</div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" data-mode="standard" class="active">🔄 標準</button>
+      <button type="button" data-mode="polite">💼 丁寧・ビジネス</button>
+      <button type="button" data-mode="easy">😊 やさしく</button>
+    </div>
+
+    <div class="form-error" id="formError" role="alert" aria-live="assertive"></div>
+
+    <button class="btn" id="submitBtn">言い換えする</button>
+    <div class="loading" id="loading">⏳ AIが言い換えています…数秒お待ちください</div>
+
+    <div class="result" id="resultBox">
+      <h3>言い換え結果</h3>
+      <p class="out" id="resultText"></p>
+      <div class="meta" id="resultCount"></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn">コピーする</button>
+        <button class="btn secondary" id="retryBtn">やり直す</button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="trust">
+    <li>✅ 登録不要</li><li>✅ 意味・数値を変えない</li>
+    <li>✅ ビジネス丁寧モード</li><li>✅ データ保存なし</li>
+  </ul>
+
+  <h2>3つの言い換えモード</h2>
+  <div class="scenes">
+    <div class="scene"><b>🔄 標準</b><span>語句と語順を自然に組み替え、読みやすく整えます。</span></div>
+    <div class="scene"><b>💼 丁寧・ビジネス</b><span>敬語やクッション言葉を使い、失礼のない表現に。</span></div>
+    <div class="scene"><b>😊 やさしく</b><span>難しい用語を避け、短い文で誰にでも分かるように。</span></div>
+    <div class="scene"><b>📝 要約はこちら</b><span><a href="/">長文を短くまとめたい</a>場合はAI要約をご利用ください。</span></div>
+  </div>
+
+  <h2>こんなときに使えます</h2>
+  <div class="sec">
+    <p>・ビジネスメールを、角が立たない丁寧な表現に整えたいとき</p>
+    <p>・報告書や連絡文の言い回しが硬い・分かりにくいと感じたとき</p>
+    <p>・同じ言葉の連続や冗長な表現を自然に直したいとき</p>
+    <p>・専門用語の多い文章を、相手に伝わるやさしい表現にしたいとき</p>
+  </div>
+
+  <h2 id="faq">よくある質問</h2>
+  <details><summary>言い換えと要約はどう違いますか？</summary><p>言い換えは長さと情報量を保ったまま表現だけを整え、要約は内容を短く縮めます。長文をまとめたい場合は<a href="/">AI要約</a>、PDFなら<a href="/pdf-yoyaku/">PDF要約</a>が便利です。</p></details>
+  <details><summary>元の意味は変わりませんか？</summary><p>論点・事実・数値を保つよう設計していますが、AI出力のため社外送付前には内容をご確認ください。</p></details>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。登録不要・無料で、入力内容は処理にのみ使用し保存しません。</p></details>
+
+  <div class="cta">
+    <a class="btn" href="#inputText">↑ この場で言い換えする</a>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/">ホーム</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
+</footer>
+
+<script src="/assets/paraphrase.js"></script>
+</body>
+</html>

@@ -75,10 +75,12 @@
 
     function basePayload() {
       var toneEl = document.querySelector('input[name="tone"]:checked');
+      var formEl = document.querySelector('input[name="outputform"]:checked');
       return {
         text: input.value.trim(),
         max_length: parseInt(($('maxLength') || {}).value, 10) || 200,
         tone: toneEl ? toneEl.value : 'desu',
+        output_form: formEl ? formEl.value : 'paragraph',
         keyword: $('keyword') ? $('keyword').value : '',
         ngword: $('ngword') ? $('ngword').value : '',
         scene: $('scene') ? $('scene').value : 'general'

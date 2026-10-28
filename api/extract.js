@@ -1,5 +1,4 @@
 // Vercel Serverless Function: 情報抽出（フィールド抽出）API V1.2
-// 入力文章と抽出したいフィールド（カンマ/改行区切り）を受け取り、JSONで返す
 import {
   MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jsonFromMarkdown, jevGuard
 } from './_lib.js';

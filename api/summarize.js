@@ -43,6 +43,7 @@ export default async function handler(req, res) {
   const keyword = typeof body.keyword === 'string' ? body.keyword.trim().slice(0, 30) : '';
   const ngword = typeof body.ngword === 'string' ? body.ngword.trim().slice(0, 30) : '';
   const scene = sceneMap[body.scene] ? body.scene : 'general';
+  const outputForm = body.output_form === 'bullets' ? 'bullets' : 'paragraph';
 
   const hasUrl = extractUrls(rawText).length > 0;
   if (!rawText || (rawText.length < MIN_CHARS && !hasUrl)) {
@@ -90,6 +91,11 @@ export default async function handler(req, res) {
   ];
   if (keyword) rules.push(`・キーワード「${keyword}」を自然に含める`);
   if (ngword) rules.push(`・「${ngword}」という語句は使わない`);
+  if (outputForm === 'bullets') {
+    rules.push('・出力形式は「箇条書き」とし、要点を4〜8個の「・」始まりの短い行で列挙する（接続の文章は付けない）');
+  } else {
+    rules.push('・出力形式は自然につながった1つの段落（まとまった文章）にする');
+  }
 
   const prompt = `あなたは日本語の要約専門家です。次の文章（Webページ本文を含む）をルールに沿って要約してください。
 ${rules.join('\n')}

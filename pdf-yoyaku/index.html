@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF要約AI｜論文・レポート・議事録PDFを無料で要約【登録不要・アップロードのみ】</title>
+<meta name="description" content="PDFをアップロードするだけでAIが論文・レポート・議事録の要点を要約。登録不要・無料・ファイルをサーバーに保存しない日本語特化のPDF要約ツール。箇条書き/段落、字数・文体指定も可能。">
+<meta name="keywords" content="PDF要約,PDF 要約 AI,論文 要約,レポート 要約,議事録 PDF,無料,登録不要,日本語">
+<link rel="canonical" href="https://bunsho-yoyaku.com/pdf-yoyaku/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PDF要約AI｜論文・レポートを無料で要約【登録不要】">
+<meta property="og:description" content="PDFをアップロードするだけでAIが要点を要約。登録不要・無料・ファイル保存なし。">
+<meta property="og:locale" content="ja_JP">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://bunsho-yoyaku.com/"},
+    {"@type":"ListItem","position":2,"name":"PDF要約AI","item":"https://bunsho-yoyaku.com/pdf-yoyaku/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"PDF要約AI（AI要約くん）",
+  "url":"https://bunsho-yoyaku.com/pdf-yoyaku/",
+  "applicationCategory":"BusinessApplication",
+  "operatingSystem":"Web",
+  "inLanguage":"ja",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"PDF要約は無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録は不要で無料でご利用いただけます。PDFをアップロードすると、ブラウザ内で文字を抽出しAIが要約します。"}},
+    {"@type":"Question","name":"アップロードしたPDFはサーバーに保存されますか？","acceptedAnswer":{"@type":"Answer","text":"PDFのテキスト抽出はお使いのブラウザ内で行い、ファイル自体をサーバーへ保存することはありません。抽出した本文は要約生成にのみ使用します。"}},
+    {"@type":"Question","name":"スキャンした画像PDFにも対応していますか？","acceptedAnswer":{"@type":"Answer","text":"文字が埋め込まれたテキストPDFが対象です。画像として取り込まれたスキャンPDF（OCRなし）からは文字を抽出できません。"}},
+    {"@type":"Question","name":"どんなPDFに向いていますか？","acceptedAnswer":{"@type":"Answer","text":"学術論文、調査レポート、議事録、契約書、業務資料など、文字情報を含む長いPDFの要点把握に向いています。箇条書きと段落、字数・文体を指定できます。"}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/pdf-yoyaku/">PDF要約</a>
+      <a href="/paraphrase/">言い換え</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">ファイル保存なし</span><span class="badge">日本語特化</span></div>
+    <h1>PDFをアップロードして無料で要約できるAI</h1>
+    <p class="lead">論文・レポート・議事録のPDFをドラッグ不要のワンクリックで解析し、要点を数秒で要約します。テキスト抽出はブラウザ内で行いファイルを保存しないため、業務資料にも比較的安心してご利用いただけます。</p>
+  </section>
+
+  <div class="card">
+    <label for="pdfFile" class="uploadzone" id="uploadZone">
+      <input type="file" id="pdfFile" accept="application/pdf,.pdf" style="display:none">
+      <span class="uploadicon">📄</span>
+      <span class="uploadmain">PDFを選択してアップロード（20MB以内）</span>
+      <span class="uploadsub">クリックしてファイルを選択。テキスト埋め込みPDFに対応（スキャン画像PDFは除く）</span>
+    </label>
+    <div id="fileName" class="filename"></div>
+
+    <textarea id="inputText" placeholder="PDFをアップロードすると、ここに抽出した本文が入ります。手動で文章を貼り付けて要約することも可能です。"></textarea>
+    <div class="char-count" id="charCount">0 / 20000文字</div>
+
+    <div class="presets" aria-label="用途プリセット">
+      <input type="hidden" id="scene" value="general">
+      <button type="button" data-scene="general" class="active">通常</button>
+      <button type="button" data-scene="report">レポート</button>
+      <button type="button" data-scene="minutes">議事録</button>
+      <button type="button" data-scene="daily">日報</button>
+      <button type="button" data-scene="email">メール</button>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="maxLength">要約字数</label>
+        <input type="number" id="maxLength" min="50" max="1500" step="10" value="300">
+      </div>
+      <div class="field">
+        <label>文体</label>
+        <div class="seg">
+          <label><input type="radio" name="tone" value="desu" checked><span>敬体（です・ます）</span></label>
+          <label><input type="radio" name="tone" value="dearu"><span>常体（だ・である）</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>出力形式</label>
+        <div class="seg">
+          <label><input type="radio" name="outputform" value="paragraph" checked><span>まとまった文章</span></label>
+          <label><input type="radio" name="outputform" value="bullets"><span>箇条書き</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="keyword">含めたいキーワード（任意）</label>
+        <input type="text" id="keyword" maxlength="30" placeholder="例：実験結果">
+      </div>
+      <div class="field">
+        <label for="ngword">NGワード（任意）</label>
+        <input type="text" id="ngword" maxlength="30" placeholder="例：憶測">
+      </div>
+    </div>
+
+    <div class="form-error" id="formError" role="alert" aria-live="assertive"></div>
+
+    <button class="btn" id="submitBtn">PDFを要約する</button>
+    <div class="loading" id="loading">⏳ AIがPDFを要約しています…数秒お待ちください</div>
+
+    <div class="result" id="resultBox">
+      <h3>要約結果</h3>
+      <p class="out" id="resultText"></p>
+      <div class="meta" id="resultCount"></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn">コピーする</button>
+        <button class="btn secondary" id="retryBtn">やり直す</button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="trust">
+    <li>✅ 登録不要</li><li>✅ ファイルを保存しない</li>
+    <li>✅ 論文・レポート対応</li><li>✅ 箇条書き/段落切替</li>
+  </ul>
+
+  <h2>PDF要約の使い方（3ステップ）</h2>
+  <div class="steps">
+    <div class="step"><div><b>PDFを選択</b><br><span style="color:#5b6470;font-size:14px">論文・レポート・議事録など、文字が埋め込まれたPDFを選びます。ブラウザ内で本文を抽出します。</span></div></div>
+    <div class="step"><div><b>形式を指定</b><br><span style="color:#5b6470;font-size:14px">箇条書きか段落か、字数と文体、用途シーンを選びます。キーワード指定も可能です。</span></div></div>
+    <div class="step"><div><b>要約をコピー</b><br><span style="color:#5b6470;font-size:14px">数秒で要点が出力され、レポートや社内共有にそのまま貼り付けられます。</span></div></div>
+  </div>
+
+  <h2>PDF要約が役立つ場面</h2>
+  <div class="scenes">
+    <div class="scene"><b>学術論文の下読み</b><span>結論・手法・主張を短時間で把握。</span></div>
+    <div class="scene"><b>調査レポート</b><span>長い報告書の根拠と結論を素早く把握。</span></div>
+    <div class="scene"><b>議事録PDF</b><span>決定事項・宿題・期限を箇条書きで抽出。</span></div>
+    <div class="scene"><b>契約・業務資料</b><span>主要条項や論点の見落としを減らす（最終確認は原文で）。</span></div>
+  </div>
+
+  <h2 id="faq">よくある質問</h2>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。登録不要・無料です。PDFを選ぶだけで要約できます。</p></details>
+  <details><summary>アップロードしたPDFは保存されますか？</summary><p>テキスト抽出はブラウザ内で行い、ファイル自体をサーバーに保存しません。抽出した本文は要約処理にのみ使用します。詳しくは<a href="/privacy.html">プライバシーポリシー</a>。</p></details>
+  <details><summary>スキャン画像PDFは要約できますか？</summary><p>文字埋め込みのPDFが対象で、OCRのないスキャン画像PDFからは抽出できません。その場合は必要な本文をコピーしてテキストボックスに貼り付けてください。</p></details>
+  <details><summary>要約はそのまま提出していいですか？</summary><p>要約は下書きとしてご利用ください。正確性が必要な場面では必ず原文と照合してください。</p></details>
+
+  <div class="cta">
+    <a class="btn" href="#uploadZone">↑ PDFをアップロードして要約する</a>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/">ホーム</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="/assets/pdf.js"></script>
+</body>
+</html>
