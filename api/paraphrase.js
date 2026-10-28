@@ -1,17 +1,6 @@
 // Vercel Serverless Function: 言い換え（リライト/Paraphrase）API
 // 文章の意味を保ったまま表現を言い換える。モード: standard / polite / easy
-import { MAX_CHARS, MIN_CHARS, clientIp, callLlm, jevGuard } from './_lib.js';
-
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 8;
-const ipHits = new Map();
-function rateLimited(ip) {
-  const now = Date.now();
-  const rec = ipHits.get(ip);
-  if (!rec || now - rec.start > RATE_LIMIT_WINDOW_MS) { ipHits.set(ip, { start: now, count: 1 }); return false; }
-  rec.count += 1;
-  return rec.count > RATE_LIMIT_MAX;
-}
+import { MAX_CHARS, MIN_CHARS, clientIp, jevGuard, enforceRateLimit, cachedLlm } from './_lib.js';
 
 const modeMap = {
   standard: {
@@ -30,8 +19,12 @@ const modeMap = {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (rateLimited(clientIp(req))) {
-    return res.status(429).json({ error: 'リクエストが多すぎます。しばらく待ってから再度お試しください。' });
+  const limit = enforceRateLimit(clientIp(req));
+  if (!limit.allowed) {
+    const msg = limit.reason === 'day'
+      ? `本日のご利用回数が上限（${limit.limit}回）に達しました。日付が変わってから再度お試しください。`
+      : 'リクエストが短時間に多すぎます。少し待ってから再度お試しください。';
+    return res.status(429).json({ error: msg });
   }
 
   const body = req.body || {};
@@ -69,8 +62,8 @@ ${rawText}
 言い換え後の本文:`;
 
   try {
-    const result = await callLlm(system, prompt, { maxTokens: 1600, temperature: 0.5 });
-    return res.status(200).json({ result, mode });
+    const { value: result, cached } = await cachedLlm(system, prompt, { maxTokens: 1600, temperature: 0.5 });
+    return res.status(200).json({ result, mode, cached });
   } catch (e) {
     if (e.message === 'LLM_NO_KEY') {
       return res.status(200).json({ result: '（デモ:LLM未設定）Vercel環境変数 LLM_API_KEY を設定すると本番の言い換えが有効になります。', demo: true, mode });

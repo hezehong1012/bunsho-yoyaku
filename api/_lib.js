@@ -217,3 +217,109 @@ export async function jevGuard(rawText) {
     clearTimeout(timer);
   }
 }
+
+// ---- コスト対策：短時間レート制限 ＋ 1IP/日の回数上限 ＋ LLM結果キャッシュ ----
+//   Vercel Serverless のインスタンスメモリ上なのでbest-effort（再起動・複数インスタンスで
+//   リセットされうる）。それでも乱用対策・同一入力の重複呼び出し削減には十分効く。
+//   環境変数で上限を上書き可能:
+//     RATE_LIMIT_MAX（60秒あたり）/ DAILY_LIMIT_MAX（1IP・1日あたり、0で無制限）
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const shortHits = new Map();   // ip -> {start,count}
+const dayHits = new Map();     // ip -> {day:'YYYY-MM-DD',count}
+
+function jstDayString(d = new Date()) {
+  // JST(UTC+9) の日付。サーバーTZに依らず一定にする。
+  const t = d.getTime() + 9 * 3600_000;
+  return new Date(t).toISOString().slice(0, 10);
+}
+
+export function enforceRateLimit(ip, {
+  perMinute = Number(process.env.RATE_LIMIT_MAX) || 8,
+  perDay = (() => { const v = Number(process.env.DAILY_LIMIT_MAX); return Number.isFinite(v) ? v : 60; })()
+} = {}) {
+  const now = Date.now();
+
+  // 短時間（60秒）
+  const s = shortHits.get(ip);
+  let minuteCount;
+  if (!s || now - s.start > RATE_LIMIT_WINDOW_MS) {
+    shortHits.set(ip, { start: now, count: 1 });
+    minuteCount = 1;
+  } else {
+    s.count += 1;
+    minuteCount = s.count;
+  }
+
+  // 1日（JST）
+  const today = jstDayString();
+  const d = dayHits.get(ip);
+  let dayCount;
+  if (!d || d.day !== today) {
+    dayHits.set(ip, { day: today, count: 1 });
+    dayCount = 1;
+  } else {
+    d.count += 1;
+    dayCount = d.count;
+  }
+
+  // 定期的に古いエントリを掃除
+  if (shortHits.size > 5000) {
+    for (const [k, v] of shortHits) if (now - v.start > RATE_LIMIT_WINDOW_MS * 10) shortHits.delete(k);
+  }
+  if (dayHits.size > 5000) {
+    for (const [k, v] of dayHits) if (v.day !== today) dayHits.delete(k);
+  }
+
+  if (perMinute > 0 && minuteCount > perMinute) {
+    return { allowed: false, reason: 'minute', minuteCount, dayCount };
+  }
+  if (perDay > 0 && dayCount > perDay) {
+    return { allowed: false, reason: 'day', minuteCount, dayCount, limit: perDay };
+  }
+  return { allowed: true, minuteCount, dayCount };
+}
+
+// 同一入力の重複LLM呼び出しを省く、シンプルなTTL/LRUキャッシュ
+const CACHE_TTL_MS = 6 * 3600_000; // 6時間
+const CACHE_MAX = 500;
+const llmCache = new Map();       // key -> {at, value}
+
+function hashString(str) {
+  // 衝突リスクの低いFNV-1a 32bit（キャッシュ専用、暗号用途ではない）
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return ('0000000' + h.toString(16)).slice(-8);
+}
+
+export function cachedLlm(system, prompt, opts = {}) {
+  const cacheKey = hashString([
+    process.env.LLM_MODEL || 'deepseek-chat',
+    opts.maxTokens ?? 1600,
+    opts.temperature ?? 0.2,
+    system,
+    prompt
+  ].join(' '));
+
+  const hit = llmCache.get(cacheKey);
+  const now = Date.now();
+  if (hit && now - hit.at < CACHE_TTL_MS) {
+    // LRU: 参照を最新に
+    llmCache.delete(cacheKey);
+    llmCache.set(cacheKey, hit);
+    return Promise.resolve({ value: hit.value, cached: true });
+  }
+
+  return callLlm(system, prompt, opts).then((value) => {
+    if (llmCache.size >= CACHE_MAX) {
+      const oldest = llmCache.keys().next().value;
+      llmCache.delete(oldest);
+    }
+    llmCache.set(cacheKey, { at: now, value });
+    return { value, cached: false };
+  });
+}
+

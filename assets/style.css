@@ -92,6 +92,13 @@ footer .links a{margin:0 8px;text-decoration:none}
 .uploadzone .uploadmain{display:block;font-weight:700;color:var(--brand);font-size:15px}
 .uploadzone .uploadsub{display:block;font-size:12px;color:#8b94a0;margin-top:4px}
 .filename{font-size:12.5px;color:#15704a;margin:2px 0 8px;word-break:break-all}
+.toolgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.toolcard{display:block;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 16px;text-decoration:none;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+.toolcard:hover{border-color:var(--brand2);box-shadow:0 4px 14px rgba(20,60,80,.10);transform:translateY(-2px)}
+.toolcard .tc-icon{font-size:26px;display:block;margin-bottom:8px}
+.toolcard b{display:block;font-size:15.5px;color:var(--brand);margin-bottom:4px}
+.toolcard span{font-size:13px;color:var(--muted);line-height:1.6}
+@media(max-width:600px){.toolgrid{grid-template-columns:1fr}}
 @media(max-width:600px){
   h1{font-size:22px}
   nav a{margin-left:11px;font-size:13px}

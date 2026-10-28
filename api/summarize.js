@@ -1,26 +1,8 @@
 // Vercel Serverless Function: AI要約 API（URL自動取得対応 V1.2）
 import {
-  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, callLlm, jevGuard
+  MAX_CHARS, MIN_CHARS, clientIp, extractUrls, resolveSourceText, jevGuard,
+  enforceRateLimit, cachedLlm
 } from './_lib.js';
-
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 8;
-const ipHits = new Map();
-
-function rateLimited(ip) {
-  const now = Date.now();
-  const rec = ipHits.get(ip);
-  if (!rec || now - rec.start > RATE_LIMIT_WINDOW_MS) {
-    ipHits.set(ip, { start: now, count: 1 });
-    return false;
-  }
-  rec.count += 1;
-  return rec.count > RATE_LIMIT_MAX;
-}
-setInterval(() => {
-  const now = Date.now();
-  for (const [k, v] of ipHits) if (now - v.start > RATE_LIMIT_WINDOW_MS * 5) ipHits.delete(k);
-}, RATE_LIMIT_WINDOW_MS * 5).unref?.();
 
 const sceneMap = {
   report: 'レポート・報告書として、結論と根拠が伝わる構成で',
@@ -32,8 +14,12 @@ const sceneMap = {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (rateLimited(clientIp(req))) {
-    return res.status(429).json({ error: 'リクエストが多すぎます。しばらく待ってから再度お試しください。' });
+  const limit = enforceRateLimit(clientIp(req));
+  if (!limit.allowed) {
+    const msg = limit.reason === 'day'
+      ? `本日のご利用回数が上限（${limit.limit}回）に達しました。日付が変わってから再度お試しください。`
+      : 'リクエストが短時間に多すぎます。少し待ってから再度お試しください。';
+    return res.status(429).json({ error: msg });
   }
 
   const body = req.body || {};
@@ -107,12 +93,12 @@ ${source}
 要約文:`;
 
   try {
-    const summary = await callLlm(
+    const { value: summary, cached } = await cachedLlm(
       'あなたは日本語の要約専門家で、正確で読みやすい要約を書きます。',
       prompt,
       { maxTokens: 1200, temperature: 0.3 }
     );
-    return res.status(200).json({ summary, fetched });
+    return res.status(200).json({ summary, fetched, cached });
   } catch (e) {
     if (e.message === 'LLM_NO_KEY') {
       return res.status(200).json({
