@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bunsho-yoyaku.vercel.app/sitemap.xml
+Sitemap: https://bunsho-yoyaku.com/sitemap.xml

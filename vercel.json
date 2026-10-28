@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.bunsho-yoyaku.com" }],
+      "destination": "https://bunsho-yoyaku.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "bunsho-yoyaku.vercel.app" }],
+      "destination": "https://bunsho-yoyaku.com/$1"
+    }
+  ]
+}
