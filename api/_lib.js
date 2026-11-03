@@ -103,10 +103,17 @@ export async function callLlm(system, prompt, { maxTokens = 1600, temperature = 
       max_tokens: maxTokens
     })
   });
-  if (!r.ok) throw new Error('LLM_HTTP_' + r.status);
+  if (!r.ok) {
+    const errBody = await r.text().catch(() => '');
+    console.error('[LLM_ERROR] HTTP', r.status, 'URL:', apiUrl, 'Body:', errBody.slice(0, 500));
+    throw new Error('LLM_HTTP_' + r.status);
+  }
   const data = await r.json();
   const out = data.choices?.[0]?.message?.content?.trim();
-  if (!out) throw new Error('LLM_EMPTY');
+  if (!out) {
+    console.error('[LLM_EMPTY] data:', JSON.stringify(data).slice(0, 500));
+    throw new Error('LLM_EMPTY');
+  }
   return out;
 }
 
