@@ -82,7 +82,7 @@ export async function resolveSourceText(rawText) {
   return { text: parts.join('\n\n'), fetched };
 }
 
-export async function callLlm(system, prompt, { maxTokens = 1600, temperature = 0.2 } = {}) {
+export async function callLlm(system, prompt, { maxTokens = 4000, temperature = 0.2 } = {}) {
   const apiUrl = process.env.LLM_API_URL || 'https://api.deepseek.com/v1/chat/completions';
   const apiKey = process.env.LLM_API_KEY;
   if (!apiKey) throw new Error('LLM_NO_KEY');
@@ -100,7 +100,8 @@ export async function callLlm(system, prompt, { maxTokens = 1600, temperature = 
         { role: 'user', content: prompt }
       ],
       temperature,
-      max_tokens: maxTokens
+      max_tokens: maxTokens,
+        reasoning_effort: 'none'
     })
   });
   if (!r.ok) {
