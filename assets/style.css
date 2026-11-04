@@ -84,6 +84,7 @@ footer .links a{margin:0 8px;text-decoration:none}
 #resultTableWrap th{background:#eef7fa;width:34%;vertical-align:top;text-align:left}
 .form-error{display:none;margin:12px 0;padding:10px 14px;background:#fde8e8;color:#c0392b;border:1px solid #f5c2c2;border-radius:9px;font-size:13.5px;line-height:1.5}
 .form-error.show{display:block}
+.form-error:not(:empty){display:block}
 #submitBtn.copied{background:#15704a}
 .updated{font-size:12px;color:#98a1ad;margin-top:8px}
 .uploadzone{display:block;border:2px dashed #9cc6d0;border-radius:12px;background:#f4fafb;padding:26px 18px;text-align:center;cursor:pointer;margin-bottom:12px;transition:border-color .15s,background .15s}
@@ -98,7 +99,7 @@ footer .links a{margin:0 8px;text-decoration:none}
 .toolcard .tc-icon{font-size:26px;display:block;margin-bottom:8px}
 .toolcard b{display:block;font-size:15.5px;color:var(--brand);margin-bottom:4px}
 .toolcard span{font-size:13px;color:var(--muted);line-height:1.6}
-@media(max-width:600px){.toolgrid{grid-template-columns:1fr}}
+@media(max-width:600px){.toolgrid{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tabs button{flex:1 1 30%;font-size:13px;padding:8px}}
 @media(max-width:600px){
   h1{font-size:22px}
   nav a{margin-left:11px;font-size:13px}
