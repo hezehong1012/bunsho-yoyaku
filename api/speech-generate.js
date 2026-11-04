@@ -2,6 +2,21 @@
 // シーン選択（歓迎会/送別会/忘年会/新年会/結婚式・二次会/懇親会）＋任意の主賓名・伝えたいこと
 import { clientIp, jevGuard, enforceRateLimit, cachedLlm } from './_lib.js';
 
+// 上流LLMゲートウェイの一時的な失敗（5xx/429/空応答/ネットワーク断）は1回だけ自動リトライ
+async function cachedLlmRetry(system, prompt, opts) {
+  try {
+    return await cachedLlm(system, prompt, opts);
+  } catch (e) {
+    const m = String((e && e.message) || '');
+    if (m !== 'LLM_NO_KEY' && m.indexOf('LLM_') === 0) {
+      console.error('[LLM_RETRY]', m);
+      await new Promise((ok) => setTimeout(ok, 1200));
+      return await cachedLlm(system, prompt, opts);
+    }
+    throw e;
+  }
+}
+
 export const config = { maxDuration: 60 };
 
 const SCENE_MAP = {
@@ -85,7 +100,7 @@ ${scene.rule}
 挨拶例文:`;
 
   try {
-    const { value: result, cached } = await cachedLlm(system, prompt, { maxTokens: 1400, temperature: 0.7 });
+    const { value: result, cached } = await cachedLlmRetry(system, prompt, { maxTokens: 1400, temperature: 0.7 });
     return res.status(200).json({ result, cached, scene: sceneKey });
   } catch (e) {
     if (e.message === 'LLM_NO_KEY') {
@@ -96,6 +111,6 @@ ${scene.rule}
       });
     }
     console.error('[SPEECH_FAIL]', e && e.message, e && e.stack);
-    return res.status(500).json({ error: '挨拶例文の生成に失敗しました。再度お試しください。', debug: String(e && e.message) });
+    return res.status(500).json({ error: '挨拶例文の生成に失敗しました。再度お試しください。' });
   }
 }
