@@ -6,7 +6,36 @@
       <a href="/weekly-report/">週報</a>
       <a href="/speech-example/">挨拶</a>
       <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
-    </nav></div></header><div class="container"><section class="hero"><div class="badges"><span class="badge">無料</span><span class="badge">シーン別</span><span class="badge">短い例文</span><span class="badge">そのまま使える</span></div><h1>シーン別・すぐ使える乾杯挨拶例文集</h1><p class="lead">歓迎会・送別会・忘年会・結婚式など、シチュエーション別に使える乾杯の挨拶を紹介します。短くて分かりやすく、そのまま読むだけでOK。無料ですぐ使えます。</p></section><div class="card"><h2>🥂 乾杯挨拶の例文</h2><p>歓迎会・送別会・忘年会など、シーン別に使える乾杯の挨拶を紹介します。短くて分かりやすく、そのまま読むだけでOK。</p></div>  <div class="toolgrid">
+    </nav></div></header><div class="container"><section class="hero"><div class="badges"><span class="badge">無料</span><span class="badge">シーン別</span><span class="badge">短い例文</span><span class="badge">そのまま使える</span></div><h1>シーン別・すぐ使える乾杯挨拶例文集</h1><p class="lead">歓迎会・送別会・忘年会・結婚式など、シチュエーション別に使える乾杯の挨拶を紹介します。短くて分かりやすく、そのまま読むだけでOK。無料ですぐ使えます。</p></section><div class="card"><h2>🥂 乾杯挨拶の例文</h2><p>歓迎会・送別会・忘年会など、シーン別に使える乾杯の挨拶を紹介します。短くて分かりやすく、そのまま読むだけでOK。</p></div>  <div class="card" id="toolCard">
+  <h2>🥂 シーンを選んで例文を作る</h2>
+  <div class="tabs" id="sceneTabs" role="tablist">
+    <button type="button" data-scene="welcome" class="active">👋 歓迎会</button>
+    <button type="button" data-scene="farewell">🎁 送別会</button>
+    <button type="button" data-scene="bonenkai">🍶 忘年会</button>
+    <button type="button" data-scene="shinnenkai">🎍 新年会</button>
+    <button type="button" data-scene="wedding">💐 結婚式</button>
+    <button type="button" data-scene="party">🥂 懇親会</button>
+  </div>
+  <div class="field" style="margin:14px 0 12px;">
+    <label for="guest">主賓の名前・会社名（任意・100文字以内）</label>
+    <input type="text" id="guest" maxlength="100" placeholder="例：田中様（営業部）">
+  </div>
+  <textarea id="note" maxlength="500" placeholder="伝えたいこと・エピソード（任意）&#10;例：3年間一緒にプロジェクトを進めてきました。いつも笑顔で場を和ませてくれる存在でした。"></textarea>
+  <div class="char-count" id="charCount">0 / 500文字</div>
+  <div class="form-error" id="formError" role="alert" aria-live="assertive"></div>
+  <button class="btn" id="submitBtn">例文を生成する</button>
+  <div class="loading" id="loading">⏳ AIが挨拶例文を作成しています…10秒ほどお待ちください</div>
+  <div class="result" id="resultBox">
+    <h3>生成結果</h3>
+    <p class="out" id="resultText"></p>
+    <div class="meta" id="resultCount"></div>
+    <div class="actions">
+      <button class="btn" id="copyBtn">コピーする</button>
+      <button class="btn secondary" id="retryBtn">シーンを変えて再生成</button>
+    </div>
+  </div>
+</div>
+  <div class="toolgrid">
     <a class="toolcard" href="/bunsho-yoyaku/">
       <span class="tc-icon">📝</span>
       <b>文章要約AI</b>
@@ -47,4 +76,58 @@
       <b>ブログ記事生成</b>
       <span>テーマを入力するだけでSEO対応の記事下書き。</span>
     </a>
-  </div></div><footer><div class="container"><a href="/about.html">運営者情報</a><a href="/contact.html">お問い合わせ</a><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><p>© 2026 AI要約くん</p></div></footer></body></html>
+  </div></div><footer><div class="container"><a href="/about.html">運営者情報</a><a href="/contact.html">お問い合わせ</a><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><p>© 2026 AI要約くん</p></div></footer><script>
+(function(){
+  var sceneTabs=document.getElementById('sceneTabs'), guest=document.getElementById('guest');
+  var note=document.getElementById('note'), charCount=document.getElementById('charCount');
+  var formError=document.getElementById('formError'), submitBtn=document.getElementById('submitBtn');
+  var loading=document.getElementById('loading'), resultBox=document.getElementById('resultBox');
+  var resultText=document.getElementById('resultText'), resultCount=document.getElementById('resultCount');
+  var copyBtn=document.getElementById('copyBtn'), retryBtn=document.getElementById('retryBtn');
+
+  var currentScene='welcome';
+
+  function showError(msg){ formError.textContent=msg; formError.classList.add('show'); }
+  function clearError(){ formError.textContent=''; formError.classList.remove('show'); }
+
+  sceneTabs.addEventListener('click', function(e){
+    var btn=e.target.closest('button[data-scene]');
+    if(!btn) return;
+    sceneTabs.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentScene=btn.dataset.scene;
+  });
+
+  note.addEventListener('input', function(){
+    charCount.textContent=note.value.length+' / 500文字';
+    charCount.style.color = note.value.length>500 ? '#e53e3e' : '';
+  });
+
+  submitBtn.addEventListener('click', async function(){
+    clearError();
+    if(guest.value.trim().length>100){ showError('主賓の名前・会社名は100文字以内で入力してください。'); return; }
+    if(note.value.trim().length>500){ showError('伝えたいことは500文字以内で入力してください。'); return; }
+
+    submitBtn.disabled=true; loading.style.display='block'; resultBox.style.display='none';
+    try{
+      var r=await fetch('/api/speech-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scene:currentScene,guest:guest.value.trim(),note:note.value.trim()})});
+      var data=await r.json();
+      if(!r.ok){ showError(data.error||'エラーが発生しました。'); return; }
+      resultText.textContent=data.result;
+      resultCount.textContent=(data.cached?'⚡ キャッシュ応答 / ':'')+data.result.length+'文字';
+      resultBox.style.display='block';
+    }catch(e){ showError('通信エラーが発生しました。再度お試しください。'); }
+    finally{ submitBtn.disabled=false; loading.style.display='none'; }
+  });
+
+  copyBtn.addEventListener('click', function(){
+    navigator.clipboard.writeText(resultText.textContent).then(function(){
+      copyBtn.textContent='✓ コピーしました';
+      setTimeout(function(){ copyBtn.textContent='コピーする'; },2000);
+    });
+  });
+
+  retryBtn.addEventListener('click', function(){ resultBox.style.display='none'; note.focus(); });
+})();
+</script>
+</body></html>
