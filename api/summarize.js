@@ -68,8 +68,9 @@ export default async function handler(req, res) {
   }
 
   const toneText = tone === 'desu' ? '敬体（です・ます調）' : '常体（だ・である調）';
+  const minLen = Math.max(40, Math.floor(maxLength * 0.8));
   const rules = [
-    `・出力は約${maxLength}文字（前後20%程度まで許容）にまとめる`,
+    `・出力は${maxLength}文字を目標とし、原則として${minLen}文字以上${maxLength}文字以内に収める（元の文章の情報量が足りない場合を除く）`,
     `・文体は${toneText}`,
     `・${sceneMap[scene]}要約する`,
     '・要点と結論を漏らさず、重複を省く',
