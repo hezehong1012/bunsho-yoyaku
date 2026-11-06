@@ -35,6 +35,40 @@
   "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+{"@type":"Question","name":"文章要約AIは無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。登録もクレジットカードも不要で、完全無料でご利用いただけます。1つのIPあたり1日60回まで要約できます。"}},
+{"@type":"Question","name":"登録やログインは必要ですか？","acceptedAnswer":{"@type":"Answer","text":"必要ありません。ページを開いて文章を貼り付け、「文章を要約する」を押すだけですぐに結果が表示されます。"}},
+{"@type":"Question","name":"何文字くらいの文章まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"50〜5,000文字に対応しています。それより長い資料は、章や節ごとに分けて要約すると精度が上がります。"}},
+{"@type":"Question","name":"要約の文字数は指定できますか？","acceptedAnswer":{"@type":"Answer","text":"はい。50〜1,000文字の範囲で10文字刻みに指定できます。全体像の把握なら250〜400文字、共有用なら100〜200文字が目安です。"}},
+{"@type":"Question","name":"「です・ます」と「だ・である」を選べますか？","acceptedAnswer":{"@type":"Answer","text":"はい。文体は敬体（です・ます）と常体（だ・である）から選べます。社外文書は敬体、社内メモは常体が使いやすいです。"}},
+{"@type":"Question","name":"残したいキーワードや避けたい表現を指定できますか？","acceptedAnswer":{"@type":"Answer","text":"「含めたいキーワード」と「NGワード」を各30文字まで指定できます。金額・日付・プロジェクト名などを入れると、重要情報が抜けにくくなります。"}},
+{"@type":"Question","name":"議事録やレポートにも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。通常・レポート・議事録・日報・メールの5モードを用意しており、モードを切り替えると出力の構成が変わります。"}},
+{"@type":"Question","name":"英語や中国語の文章も要約できますか？","acceptedAnswer":{"@type":"Answer","text":"本ツールは日本語の文章に最適化しています。英語・中国語でも要約は可能ですが、日本語ほどの精度は保証できないため、重要文書は原文と照合してください。"}},
+{"@type":"Question","name":"要約の精度が良くないときはどうすればいいですか？","acceptedAnswer":{"@type":"Answer","text":"広告やメニューなど本文以外を除く、文字数を短くする、キーワードを指定する、の3点を試してください。結果に満足できない場合は「やり直す」で再生成できます。"}},
+{"@type":"Question","name":"入力した文章は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"入力内容は要約の処理にのみ使用します。生成結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。"}},
+{"@type":"Question","name":"PDFやWebページの要約もできますか？","acceptedAnswer":{"@type":"Answer","text":"PDFはPDF要約ページ、URLで指定するWeb記事はトップページのURL要約をご利用ください。"}},
+{"@type":"Question","name":"スマートフォンでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。スマートフォン・タブレットでも同じようにご利用いただけます。"}}
+  ]
+}
+</script>
+<style>
+.trust{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;justify-content:center}
+.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.ex{grid-template-columns:1fr}}
+.ex-col{background:#fafafa;border:1px solid #e6e6e6;border-radius:10px;padding:12px}
+.ex-label{font-size:12px;color:#666;margin-bottom:6px}
+.ex-col p{margin:0;font-size:14px;line-height:1.7}
+.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}
+.faq summary{cursor:pointer;font-weight:600;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"Q. ";color:#2a5bd7}
+.faq details p{margin:10px 0 0;color:#333;line-height:1.8;font-size:14px}
+</style>
 </head>
 <body>
 
@@ -60,6 +94,9 @@
     <p class="lead">まとまった分量の文章を貼るだけで、要点を押さえた要約を自動生成。長さや文体を細かく指定でき、下読みや報告資料の時短に役立ちます。</p>
   </section>
 
+  <div class="trust">
+    <span>✅ 登録不要</span><span>✅ 完全無料</span><span>✅ 1日60回まで</span><span>✅ 日本語に最適化</span>
+  </div>
   <div class="card">
     <textarea id="inputText" placeholder="要約したい文章・記事・レポートをここに貼り付けてください（50〜5000文字）"></textarea>
     <div class="char-count" id="charCount">0 / 5000文字</div>
@@ -117,6 +154,13 @@
     <p>文章要約AIを使えば、人が読み込んでまとめるよりもはるかに短時間で、抜け・重複の少ない要約を得られます。AI要約くんは<strong>日本語の文章に最適化</strong>しており、「結論を先に出す」「数字を残す」といった要望を、キーワード指定である程度反映できます。</p>
   </div>
 
+  <h2>出力イメージ（例）</h2>
+  <div class="sec">
+    <div class="ex">
+      <div class="ex-col"><div class="ex-label">入力（抜粋）</div><p>今期の売上は前年比108%となり、主因は新規顧客の獲得と単価の改善でした。一方で物流費の高騰により粗利率は1.2ポイント低下しています。来期は物流網の見直しと、新規顧客の継続率改善に注力する方針です。</p></div>
+      <div class="ex-col"><div class="ex-label">出力（要約・約100文字）</div><p>今期売上は前年比108%。新規顧客獲得と単価改善が寄与。物流費高騰で粗利率は1.2ポイント低下。来期は物流網見直しと継続率改善に注力する。</p></div>
+    </div>
+  </div>
   <h2>文章要約のコツ（仕上がりを良くする4つのポイント）</h2>
   <div class="sec">
     <p><strong>1. 不要な装飾を除いてから貼る。</strong>広告文・メニュー・重複するあいさつなどが混ざると要点がぶれるため、本文だけを貼ると精度が上がります。</p>
@@ -177,6 +221,22 @@
       <b>ブログ記事生成</b>
       <span>テーマを入力するだけでSEO対応の記事下書き。</span>
     </a>
+  </div>
+
+  <h2 id="faq">よくある質問（FAQ）</h2>
+  <div class="faq">
+    <details><summary>文章要約AIは無料で使えますか？</summary><p>はい。登録もクレジットカードも不要で、完全無料でご利用いただけます。1つのIPあたり1日60回まで要約できます。</p></details>
+    <details><summary>登録やログインは必要ですか？</summary><p>必要ありません。ページを開いて文章を貼り付け、「文章を要約する」を押すだけですぐに結果が表示されます。</p></details>
+    <details><summary>何文字くらいの文章まで要約できますか？</summary><p>50〜5,000文字に対応しています。それより長い資料は、章や節ごとに分けて要約すると精度が上がります。</p></details>
+    <details><summary>要約の文字数は指定できますか？</summary><p>はい。50〜1,000文字の範囲で10文字刻みに指定できます。全体像の把握なら250〜400文字、共有用なら100〜200文字が目安です。</p></details>
+    <details><summary>「です・ます」と「だ・である」を選べますか？</summary><p>はい。文体は敬体（です・ます）と常体（だ・である）から選べます。社外文書は敬体、社内メモは常体が使いやすいです。</p></details>
+    <details><summary>残したいキーワードや避けたい表現を指定できますか？</summary><p>「含めたいキーワード」と「NGワード」を各30文字まで指定できます。金額・日付・プロジェクト名などを入れると、重要情報が抜けにくくなります。</p></details>
+    <details><summary>議事録やレポートにも使えますか？</summary><p>はい。通常・レポート・議事録・日報・メールの5モードを用意しており、モードを切り替えると出力の構成が変わります。</p></details>
+    <details><summary>英語や中国語の文章も要約できますか？</summary><p>本ツールは日本語の文章に最適化しています。英語・中国語でも要約は可能ですが、日本語ほどの精度は保証できないため、重要文書は原文と照合してください。</p></details>
+    <details><summary>要約の精度が良くないときはどうすればいいですか？</summary><p>広告やメニューなど本文以外を除く、文字数を短くする、キーワードを指定する、の3点を試してください。結果に満足できない場合は「やり直す」で再生成できます。</p></details>
+    <details><summary>入力した文章は保存されますか？</summary><p>入力内容は要約の処理にのみ使用します。生成結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。</p></details>
+    <details><summary>PDFやWebページの要約もできますか？</summary><p>PDFはPDF要約ページ、URLで指定するWeb記事はトップページのURL要約をご利用ください。</p></details>
+    <details><summary>スマートフォンでも使えますか？</summary><p>はい。スマートフォン・タブレットでも同じようにご利用いただけます。</p></details>
   </div>
 
   <p style="margin-top:18px">汎用のAI要約ツールは<a href="/">トップページ</a>、AI要約の仕組みやツールの選び方は<a href="/columns/ai-yoyaku-no-tsukurikata/">使い方ガイド</a>をご覧ください。</p>
