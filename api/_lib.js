@@ -87,23 +87,32 @@ export async function callLlm(system, prompt, { maxTokens = 4000, temperature = 
   const apiKey = process.env.LLM_API_KEY;
   if (!apiKey) throw new Error('LLM_NO_KEY');
 
-  const r = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: process.env.LLM_MODEL || 'deepseek-chat',
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: prompt }
-      ],
-      temperature,
-      max_tokens: maxTokens,
+  let r;
+  try {
+    r = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: process.env.LLM_MODEL || 'deepseek-chat',
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: prompt }
+        ],
+        temperature,
+        max_tokens: maxTokens,
         reasoning_effort: 'none'
-    })
-  });
+      }),
+      signal: AbortSignal.timeout(LLM_TIMEOUT_MS)
+    });
+  } catch (e) {
+    const nm = (e && e.name) || 'ERROR';
+    console.error('[LLM_NET_ERROR]', nm, e && e.message);
+    throw new Error(nm === 'TimeoutError' || nm === 'AbortError' ? 'LLM_TIMEOUT' : 'LLM_NET_' + nm);
+  }
+
   if (!r.ok) {
     const errBody = await r.text().catch(() => '');
     console.error('[LLM_ERROR] HTTP', r.status, 'URL:', apiUrl, 'Body:', errBody.slice(0, 500));
@@ -303,6 +312,39 @@ function hashString(str) {
   return ('0000000' + h.toString(16)).slice(-8);
 }
 
+const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 25000);
+const LLM_MAX_RETRY = Number(process.env.LLM_MAX_RETRY || 1);
+const LLM_RETRY_DELAY_MS = Number(process.env.LLM_RETRY_DELAY_MS || 1200);
+
+// 上流ゲートウェイの一時障害だけを再試行する（キー未設定・4xx は即失敗）
+function llmRetryable(err) {
+  const m = String((err && err.message) || '');
+  if (m === 'LLM_NO_KEY') return false;
+  const http = /^LLM_HTTP_(\d+)$/.exec(m);
+  if (http) {
+    const code = Number(http[1]);
+    return code === 408 || code === 425 || code === 429 || code >= 500;
+  }
+  return m === 'LLM_EMPTY' || m === 'LLM_TIMEOUT' || m.indexOf('LLM_NET_') === 0;
+}
+
+async function callLlmWithRetry(system, prompt, opts) {
+  let lastErr;
+  for (let i = 0; i <= LLM_MAX_RETRY; i++) {
+    try {
+      return await callLlm(system, prompt, opts);
+    } catch (e) {
+      lastErr = e;
+      const m = String((e && e.message) || '');
+      if (!llmRetryable(e) || i === LLM_MAX_RETRY) throw e;
+      console.error('[LLM_RETRY]', m, 'attempt', i + 1);
+      await new Promise((ok) => setTimeout(ok, LLM_RETRY_DELAY_MS * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
+
 export function cachedLlm(system, prompt, opts = {}) {
   const cacheKey = hashString([
     process.env.LLM_MODEL || 'deepseek-chat',
@@ -310,7 +352,7 @@ export function cachedLlm(system, prompt, opts = {}) {
     opts.temperature ?? 0.2,
     system,
     prompt
-  ].join(' '));
+  ].join('\u0000'));
 
   const hit = llmCache.get(cacheKey);
   const now = Date.now();
@@ -321,7 +363,7 @@ export function cachedLlm(system, prompt, opts = {}) {
     return Promise.resolve({ value: hit.value, cached: true });
   }
 
-  return callLlm(system, prompt, opts).then((value) => {
+  return callLlmWithRetry(system, prompt, opts).then((value) => {
     if (llmCache.size >= CACHE_MAX) {
       const oldest = llmCache.keys().next().value;
       llmCache.delete(oldest);
@@ -330,4 +372,3 @@ export function cachedLlm(system, prompt, opts = {}) {
     return { value, cached: false };
   });
 }
-
