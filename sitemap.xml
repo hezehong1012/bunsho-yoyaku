@@ -7,7 +7,7 @@
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/bunsho-yoyaku/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
@@ -58,6 +58,11 @@
   <url>
     <loc>https://bunsho-yoyaku.com/columns/gijiroku-yoyaku/</loc>
     <lastmod>2026-11-02</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/columns/kousei-no-yarikata/</loc>
+    <lastmod>2026-11-06</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
