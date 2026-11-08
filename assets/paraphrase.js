@@ -23,6 +23,21 @@
     });
     charCount.textContent = '0 / ' + MAX + '文字';
 
+    // 要約ページからの受け渡し（要約結果をそのまま言い換え）
+    (function applyHandoff() {
+      var h = null;
+      try { h = localStorage.getItem('aiyoyaku_handoff'); } catch (e) { return; }
+      if (!h) return;
+      try { localStorage.removeItem('aiyoyaku_handoff'); } catch (e) { /* noop */ }
+      try {
+        var data = JSON.parse(h);
+        if (!data || typeof data.text !== 'string' || !data.text.trim()) return;
+        input.value = data.text.slice(0, MAX);
+        charCount.textContent = input.value.length + ' / ' + MAX + '文字';
+        input.focus();
+      } catch (e) { /* 壊れたデータは無視 */ }
+    })();
+
     var mode = 'standard';
     document.querySelectorAll('[data-mode]').forEach(function (b) {
       b.addEventListener('click', function () {
