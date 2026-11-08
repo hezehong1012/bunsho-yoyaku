@@ -33,8 +33,8 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"AI要約くんは無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大5000文字までの文章を要約できます。"}},
-    {"@type":"Question","name":"何文字まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"1回あたり50文字以上5000文字以下の文章に対応しています。要約文の長さは50〜1000文字の間で指定できます。"}},
+    {"@type":"Question","name":"AI要約くんは無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大15,000文字までの文章を要約できます。"}},
+    {"@type":"Question","name":"何文字まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"1回あたり50文字以上15,000文字以下の文章に対応しています。要約文の長さは50〜1000文字の間で指定できます。"}},
     {"@type":"Question","name":"入力した文章は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。入力内容は要約の生成処理にのみ使用し、サーバーに保存・蓄積することはありません。詳しくはプライバシーポリシーをご確認ください。"}},
     {"@type":"Question","name":"文体（敬体・常体）は選べますか？","acceptedAnswer":{"@type":"Answer","text":"はい。です・ます調（敬体）とだ・である調（常体）を選択できるほか、必ず含めたいキーワードや使いたくない言葉（NGワード）も指定できます。"}},
     {"@type":"Question","name":"どんな文章に向いていますか？","acceptedAnswer":{"@type":"Answer","text":"レポート・報告書、議事録、業務日報、ビジネスメール、ニュース記事、論文の下読みなど、日本語の文章全般に向いています。用途別のプリセットも用意しています。"}},
@@ -78,7 +78,7 @@
 
   <div class="card">
     <textarea id="inputText" placeholder="要約したい文章を貼り付けるか、WebページのURLを入力してください&#10;例）議事録・長いメール・記事、または https://… のURL"></textarea>
-    <div class="char-count" id="charCount">0 / 5000文字</div>
+    <div class="char-count" id="charCount">0 / 15000文字</div>
     <div class="urlhint" id="urlHint"></div>
 
     <div class="tabs" role="tablist">
@@ -114,7 +114,7 @@
         <label>出力形式</label>
         <div class="seg">
           <label><input type="radio" name="outputform" value="paragraph" checked><span>まとまった文章</span></label>
-          <label><input type="radio" name="outputform" value="bullets"><span>箇条書き</span></label>
+          <label><input type="radio" name="outputform" value="bullets"><span>リスト形式</span></label>
         </div>
       </div>
     </div>
@@ -199,7 +199,7 @@
     <a class="toolcard" href="/bunsho-yoyaku/">
       <span class="tc-icon">📝</span>
       <b>文章要約AI</b>
-      <span>貼った長文・URLを指定した長さと文体で要約。箇条書き/段落も選べます。</span>
+      <span>貼った長文・URLを指定した長さと文体で要約。リスト形式/段落も選べます。</span>
     </a>
     <a class="toolcard" href="/pdf-yoyaku/">
       <span class="tc-icon">📄</span>
@@ -244,8 +244,8 @@
   </div>
 
   <h2 id="faq">よくある質問</h2>
-  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大5000文字までの文章を要約できます。</p></details>
-  <details><summary>何文字まで要約できますか？</summary><p>入力は50文字以上5000文字以下、要約文の長さは50〜1000文字で指定できます。5000文字を超える文章は分割してご利用ください。</p></details>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。会員登録やメールアドレスの入力は不要で、無料でご利用いただけます。1回あたり最大15,000文字までの文章を要約できます。</p></details>
+  <details><summary>何文字まで要約できますか？</summary><p>入力は50文字以上15,000文字以下、要約文の長さは50〜1000文字で指定できます。15,000文字を超える資料は章ごとに分けてご利用ください。</p></details>
   <details><summary>入力した文章は保存されますか？</summary><p>いいえ。入力内容は要約の生成処理にのみ使用し、サーバーに保存・蓄積しません。ただし機密情報や個人情報の入力はご自身の判断でお控えください。<a href="/privacy.html">プライバシーポリシー</a></p></details>
   <details><summary>文体やキーワードは指定できますか？</summary><p>です・ます調（敬体）とだ・である調（常体）を選べるほか、必ず含めたいキーワードと、使いたくないNGワードを1つずつ指定できます。</p></details>
   <details><summary>要約結果をそのまま社外に出してもいいですか？</summary><p>要約はあくまで下書きとしてご利用ください。正確性が求められる文書では、必ず原文と照合して最終確認を行ってください。著作権のある文章の要約を配布・公開する際は、利用範囲にもご注意ください。</p></details>
