@@ -7,7 +7,7 @@ export const MAX_CHARS = 5000;
 export const MIN_CHARS = 50;
 // 要約APIのみ上限を拡張（内部で分割要約→統合する）
 export const SUMMARIZE_MAX_CHARS = 15000;
-export const CHUNK_CHARS = 4500;
+export const CHUNK_CHARS = 8000; // 1回のLLM呼び出しで扱う本文の目安（これ以下は分割せずに要約）
 export const FETCHED_MAX_CHARS = 12000; // 取得したWeb本文の利用上限
 
 const URL_RE = /https?:\/\/[^\s<>"'，。、）)】\]]+/g;
