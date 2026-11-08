@@ -5,6 +5,9 @@
 
 export const MAX_CHARS = 5000;
 export const MIN_CHARS = 50;
+// 要約APIのみ上限を拡張（内部で分割要約→統合する）
+export const SUMMARIZE_MAX_CHARS = 15000;
+export const CHUNK_CHARS = 4500;
 export const FETCHED_MAX_CHARS = 12000; // 取得したWeb本文の利用上限
 
 const URL_RE = /https?:\/\/[^\s<>"'，。、）)】\]]+/g;
@@ -12,6 +15,22 @@ const URL_RE = /https?:\/\/[^\s<>"'，。、）)】\]]+/g;
 export function extractUrls(text) {
   const m = text.match(URL_RE) || [];
   return [...new Set(m)].slice(0, 3); // 最大3件
+}
+
+// 長文を分割して要約するための分割ヘルパー（段落→改行→句点の順に自然な位置で切る）
+export function splitIntoChunks(text, size = CHUNK_CHARS) {
+  const chunks = [];
+  let rest = String(text || '').trim();
+  while (rest.length > size) {
+    let cut = rest.lastIndexOf('\n\n', size);
+    if (cut < size * 0.5) cut = rest.lastIndexOf('\n', size);
+    if (cut < size * 0.5) cut = rest.lastIndexOf('。', size);
+    if (cut < size * 0.5) cut = size - 1;
+    chunks.push(rest.slice(0, cut + 1).trim());
+    rest = rest.slice(cut + 1).trim();
+  }
+  if (rest) chunks.push(rest);
+  return chunks;
 }
 
 export function clientIp(req) {
