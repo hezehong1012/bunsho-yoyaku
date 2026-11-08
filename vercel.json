@@ -3,13 +3,34 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.bunsho-yoyaku.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bunsho-yoyaku.com"
+        }
+      ],
       "destination": "https://bunsho-yoyaku.com/$1"
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "bunsho-yoyaku.vercel.app" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "bunsho-yoyaku.vercel.app"
+        }
+      ],
       "destination": "https://bunsho-yoyaku.com/$1"
     }
-  ]
+  ],
+  "functions": {
+    "api/summarize.js": {
+      "maxDuration": 60
+    },
+    "api/paraphrase.js": {
+      "maxDuration": 60
+    },
+    "api/kousei.js": {
+      "maxDuration": 60
+    }
+  }
 }
