@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube動画をAIで要約する方法｜字幕コピーから要約までの5ステップ</title>
+<meta name="description" content="YouTube動画をAIで要約する手順を解説。字幕のコピー方法、定型句の削り方、5,000字の分割、長さと形式の指定、数字と固有名詞の照合までを5ステップでまとめました。字幕がない動画の扱いも説明します。">
+<meta name="keywords" content="youtube 要約,youtube 要約 ai,動画 要約,字幕 コピー,動画 文字起こし 要約,長い動画 要約">
+<link rel="canonical" href="https://bunsho-yoyaku.com/columns/youtube-yoyaku-no-yarikata/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YouTube動画をAIで要約する方法｜字幕コピーから要約までの5ステップ">
+<meta property="og:description" content="字幕の取り方、定型句の削り方、分割と形式指定、数字の照合まで。動画要約の手順を5ステップで解説。">
+<meta property="og:locale" content="ja_JP">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://bunsho-yoyaku.com/"},
+    {"@type":"ListItem","position":2,"name":"文章要約AI","item":"https://bunsho-yoyaku.com/bunsho-yoyaku/"},
+    {"@type":"ListItem","position":3,"name":"YouTube動画をAIで要約する方法","item":"https://bunsho-yoyaku.com/columns/youtube-yoyaku-no-yarikata/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"YouTube動画をAIで要約する方法｜字幕コピーから要約までの5ステップ",
+  "description":"字幕の取り方、定型句の削り方、5,000字の分割、長さと形式の指定、数字の照合までを5ステップで解説。",
+  "inLanguage":"ja",
+  "datePublished":"2026-11-08",
+  "dateModified":"2026-11-08",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://bunsho-yoyaku.com/columns/youtube-yoyaku-no-yarikata/"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"YouTubeの字幕はどうやってコピーしますか？","acceptedAnswer":{"@type":"Answer","text":"動画の画面右下のメニューから字幕を表示し、字幕パネルの内容を選択してコピーします。タイムスタンプが混ざる場合は字幕の表示設定で外してからコピーしてください。"}},
+    {"@type":"Question","name":"1時間を超える長い動画も要約できますか？","acceptedAnswer":{"@type":"Answer","text":"入力上限が5,000字のため、そのままでは入りません。導入・本論・結論など意味の切れ目で3〜5パートに分けて要約し、最後に各パートの要約を結合すると抜けが減ります。"}},
+    {"@type":"Question","name":"自動生成字幕でも要約の精度は足りますか？","acceptedAnswer":{"@type":"Answer","text":"結論だけを掴む用途なら足りますが、固有名詞と数字は誤変換が多いため要約前に該当箇所を聞き直すか字幕を手で修正してください。"}},
+    {"@type":"Question","name":"動画のURLを貼るだけで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"本サイトの要約ツールはURLからの本文取得に対応していますが、YouTubeの字幕はページ本文に含まれないため、URLだけでは要約できません。字幕テキストを貼り付けてください。"}},
+    {"@type":"Question","name":"要約した内容をそのまま社内共有してもいいですか？","acceptedAnswer":{"@type":"Answer","text":"数字・固有名詞・断定の強さを確認してから共有してください。「検討中」が「決定」に変わっていることがあります。意思決定に関わる内容は該当時刻を併記すると安全です。"}},
+    {"@type":"Question","name":"無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"AI要約くんは無料・登録不要です。50〜5,000文字に対応し、1つのIPあたり1日60回まで利用できます。"}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
+      <a href="/bunsho-yoyaku/">文章要約</a>
+      <a href="/pdf-yoyaku/">PDF要約</a>
+      <a href="/paraphrase/">言い換え</a>
+      <a href="/kousei/">校正</a>
+      <a href="/mail-generator/">メール生成</a>
+      <a href="/weekly-report/">週報</a>
+      <a href="/speech-example/">挨拶</a>
+      <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <h1>YouTube動画をAIで要約する方法｜字幕コピーから要約までの5ステップ</h1>
+    <p class="lead">動画は情報量が多いのに、要点を探すのに時間がかかります。この記事では、YouTube動画を<strong>字幕テキストに変換してから要約する</strong>手順を、取得・整形・分割・指定・照合の5ステップに分けて解説します。字幕がない動画の扱いと、AI要約で事故が起きやすい箇所もまとめました。</p>
+    <p class="updated">最終更新日：2026年11月8日</p>
+  </section>
+
+  <div class="card" style="text-align:center">
+    <p style="margin-bottom:14px">字幕テキストが手元にあれば、すぐ試せます。</p>
+    <a class="btn" href="/bunsho-yoyaku/">字幕を貼って無料で要約する</a>
+  </div>
+
+  <h2>動画の要約が向く場面</h2>
+  <div class="sec">
+    <p>動画を見直す時間を短くしたい場面では、字幕を要約するほうが速く正確です。特に効くのは次の3つです。</p>
+    <p><strong>登壇・講演の内容確認</strong>　1時間の講演から、社内共有に必要な要点だけを10分で読める長さに落とす。　<strong>製品紹介動画の比較</strong>　複数社の動画から「機能に触れている部分」だけを横断的に拾う。　<strong>講義・研修の復習</strong>　動画を読めるテキストに変えて、あとから検索できる形にする。</p>
+    <p>逆に、画面の動きや図表が主役の動画は、字幕だけを要約すると情報が落ちます。手元に資料がある場合は、資料のテキストも一緒に貼って要約させるほうが実用的です。</p>
+  </div>
+
+  <h2>要約までの5ステップ</h2>
+  <div class="sec">
+    <p>基本線は「動画をAIに渡す」のではなく、<strong>字幕というテキストに変換してから渡す</strong>ことです。テキストにすれば、長さ・文体・出力形式をすべて指定できます。</p>
+    <div class="scene"><b>1. 字幕を取得する</b><span>字幕を表示し、タイムスタンプを外した状態でコピーします。字幕が用意されている動画なら、この一手間だけで要約の材料が揃います。</span></div>
+    <div class="scene"><b>2. 定型句を落とす</b><span>「ご視聴ありがとうございました」「チャンネル登録よろしくお願いします」などの繰り返し、笑い声や相づちの表記を削ります。ここを削るだけで、要約に残る情報の密度が上がります。</span></div>
+    <div class="scene"><b>3. 5,000字以内に分割する</b><span>要約ツールの入力上限は5,000字です。長い動画は「導入・本論・結論」など意味の切れ目で2〜5パートに分け、パートごとに要約してから最後に結合します。</span></div>
+    <div class="scene"><b>4. 長さと形式を同時に指定する</b><span>「300字で箇条書き5点」「1,000字で段落3つ」のように、文字数と形式をセットで指定します。片方だけ指定すると、長すぎる要約や薄い要約になりがちです。</span></div>
+    <div class="scene"><b>5. 数字と固有名詞を照合する</b><span>要約に出た数値・人名・製品名・日付は、元の字幕と照合します。音声認識の誤変換は、要約の段階では直りません。</span></div>
+  </div>
+
+  <h2>字幕を用意する3つの方法</h2>
+  <div class="sec">
+    <p>動画の種類によって、取れる字幕と精度が変わります。目的に合わせて選んでください。</p>
+    <table>
+      <tr><th>方法</th><th>向いている動画</th><th>注意点</th></tr>
+      <tr><td>字幕をそのままコピー</td><td>字幕が付いている動画</td><td>自動生成字幕は誤変換が多い。固有名詞は特に確認が必要</td></tr>
+      <tr><td>字幕ファイル（.vtt / .srt）を使う</td><td>長い動画、繰り返し見る動画</td><td>時刻やタグを除去してから貼る。改行は残してよい</td></tr>
+      <tr><td>音声を文字起こしして貼る</td><td>字幕がない動画、社内録画</td><td>文字起こしの精度に依存。専門用語は辞書登録が有効</td></tr>
+    </table>
+  </div>
+
+  <h2>要約の質を上げる3つの指定</h2>
+  <div class="sec">
+    <p><strong>用途を一行で書く</strong>　「社内共有用に」「視聴するか判断するために3行で」のように目的を添えると、残す情報の選び方が変わります。　<strong>残す要素を列挙する</strong>　「主張・根拠・数字・結論」のように、残したい要素を先に決めておくと抜けが出ません。　<strong>書かないことを決める</strong>　前置き、雑談、商品紹介の定型文は含めないと指示すると、要点だけが残ります。</p>
+    <p>話者が複数いる動画では、「発言者ごとに分けて」と指定すると、誰の意見かを落とさずに済みます。</p>
+  </div>
+
+  <h2>字幕がない動画・音声だけの動画</h2>
+  <div class="sec">
+    <p>字幕も字幕ファイルもない場合は、音声を文字起こしする必要があります。動画編集ソフトの自動字幕、クラウドの文字起こしサービス、スマートフォンの音声メモなどが使えます。どの方法でも、<strong>話者ごとに改行を入れておく</strong>と、要約したときに発言の主が分かる形で残ります。</p>
+    <p>社内会議の録画なら、文字起こしのあと「決定事項・宿題・期限」の3項目を指定して整理すると、議事録としてそのまま使える形になります。</p>
+  </div>
+
+  <h2>AI要約で事故が起きやすい3箇所</h2>
+  <div class="sec">
+    <p>AIは書かれていることを圧縮するのは得意ですが、書かれていない前提を補うのは苦手です。次の3つは、要約の段階で意味が変わることがあります。</p>
+    <p><strong>断定の強さ</strong>　「検討中」「可能性がある」が「決定」「実施する」に変わることがあります。意思決定に関わる動画は、要約の表現をそのまま引用しないでください。　<strong>数字の桁</strong>　「3万円」と「30万円」の取り違えは、要約では検出できません。　<strong>条件付きの主張</strong>　「〜の場合に限り」という条件が削られると、無条件の主張に見えます。</p>
+    <p>確認のコストを下げるには、要約に<strong>該当時刻</strong>を併記させるのが有効です。「要点＋動画内の時刻」の形で出させると、疑わしい箇所だけ聞き直せます。</p>
+  </div>
+
+  <h2>まとめ</h2>
+  <div class="sec">
+    <p>動画の要約は、<strong>字幕をテキストにする → 定型句を落とす → 5,000字以内に分割する → 長さと形式を指定する → 数字と固有名詞を照合する</strong>の順で進めると安定します。動画をそのまま扱うより、テキストにしてから渡すほうが、出力の長さも文体も制御できます。</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <p style="margin-bottom:14px">字幕テキストを貼るだけで、指定した長さと形式で要約できます。</p>
+    <a class="btn" href="/bunsho-yoyaku/">文章要約AIを無料で使う</a>
+  </div>
+
+  <h2>関連記事</h2>
+  <div class="toolgrid">
+    <a class="toolcard" href="/columns/kousei-no-yarikata/">
+      <span class="tc-icon">📘</span>
+      <b>文章校正のやり方</b>
+      <span>要約した文章をそのまま共有する前に、表記と敬語を整える手順。</span>
+    </a>
+    <a class="toolcard" href="/columns/gijiroku-yoyaku/">
+      <span class="tc-icon">📘</span>
+      <b>議事録をAIで要約する方法</b>
+      <span>録画・文字起こしから決定事項と宿題を残す整理のしかた。</span>
+    </a>
+    <a class="toolcard" href="/kousei/">
+      <span class="tc-icon">✅</span>
+      <b>AI文章校正</b>
+      <span>誤字脱字・表記ゆれ・敬語をチェック。3モードの校正ツール。</span>
+    </a>
+  </div>
+
+  <h2 id="faq">よくある質問</h2>
+  <details><summary>YouTubeの字幕はどうやってコピーしますか？</summary><p>動画の画面右下のメニューから字幕を表示し、字幕パネルの内容を選択してコピーします。タイムスタンプが混ざる場合は字幕の表示設定で外してからコピーしてください。</p></details>
+  <details><summary>1時間を超える長い動画も要約できますか？</summary><p>入力上限が5,000字のため、そのままでは入りません。導入・本論・結論など意味の切れ目で3〜5パートに分けて要約し、最後に各パートの要約を結合すると抜けが減ります。</p></details>
+  <details><summary>自動生成字幕でも要約の精度は足りますか？</summary><p>結論だけを掴む用途なら足りますが、固有名詞と数字は誤変換が多いため、要約前に該当箇所を聞き直すか字幕を手で修正してください。</p></details>
+  <details><summary>動画のURLを貼るだけで要約できますか？</summary><p>本サイトの要約ツールはURLからの本文取得に対応していますが、YouTubeの字幕はページ本文に含まれないため、URLだけでは要約できません。字幕テキストを貼り付けてください。</p></details>
+  <details><summary>要約した内容をそのまま社内共有してもいいですか？</summary><p>数字・固有名詞・断定の強さを確認してから共有してください。「検討中」が「決定」に変わっていることがあります。意思決定に関わる内容は該当時刻を併記すると安全です。</p></details>
+  <details><summary>無料で使えますか？</summary><p><a href="/bunsho-yoyaku/">文章要約AI</a>は無料・登録不要です。50〜5,000文字に対応し、1つのIPあたり1日60回まで利用できます。</p></details>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/">ホーム</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
+</footer>
+
+</body>
+</html>
