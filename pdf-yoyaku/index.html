@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF要約AI｜論文・レポート・議事録PDFを無料で要約【登録不要・アップロードのみ】</title>
-<meta name="description" content="PDFをアップロードするだけでAIが論文・レポート・議事録の要点を要約。登録不要・無料・ファイルをサーバーに保存しない日本語特化のPDF要約ツール。箇条書き/段落、字数・文体指定も可能。">
+<meta name="description" content="PDFをアップロードするだけでAIが論文・レポート・議事録の要点を要約。登録不要・無料・ファイルをサーバーに保存しない日本語特化のPDF要約ツール。リスト形式/段落、字数・文体指定も可能。">
 <meta name="keywords" content="PDF要約,PDF 要約 AI,論文 要約,レポート 要約,議事録 PDF,無料,登録不要,日本語">
 <link rel="canonical" href="https://bunsho-yoyaku.com/pdf-yoyaku/">
 <meta property="og:type" content="website">
@@ -43,7 +43,7 @@
     {"@type":"Question","name":"PDF要約は無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録は不要で無料でご利用いただけます。PDFをアップロードすると、ブラウザ内で文字を抽出しAIが要約します。"}},
     {"@type":"Question","name":"アップロードしたPDFはサーバーに保存されますか？","acceptedAnswer":{"@type":"Answer","text":"PDFのテキスト抽出はお使いのブラウザ内で行い、ファイル自体をサーバーへ保存することはありません。抽出した本文は要約生成にのみ使用します。"}},
     {"@type":"Question","name":"スキャンした画像PDFにも対応していますか？","acceptedAnswer":{"@type":"Answer","text":"文字が埋め込まれたテキストPDFが対象です。画像として取り込まれたスキャンPDF（OCRなし）からは文字を抽出できません。"}},
-    {"@type":"Question","name":"どんなPDFに向いていますか？","acceptedAnswer":{"@type":"Answer","text":"学術論文、調査レポート、議事録、契約書、業務資料など、文字情報を含む長いPDFの要点把握に向いています。箇条書きと段落、字数・文体を指定できます。"}}
+    {"@type":"Question","name":"どんなPDFに向いていますか？","acceptedAnswer":{"@type":"Answer","text":"学術論文、調査レポート、議事録、契約書、業務資料など、文字情報を含む長いPDFの要点把握に向いています。リスト形式と段落、字数・文体を指定できます。"}}
   ]
 }
 </script>
@@ -69,7 +69,7 @@
   <section class="hero">
     <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">ファイル保存なし</span><span class="badge">日本語特化</span></div>
     <h1>PDFをアップロードして無料で要約できるAI</h1>
-    <p class="lead">論文・レポート・議事録のPDFをドラッグ不要のワンクリックで解析し、要点を数秒で要約します。テキスト抽出はブラウザ内で行いファイルを保存しないため、業務資料にも比較的安心してご利用いただけます。</p>
+    <p class="lead">論文・レポート・議事録のPDFをワンクリックで解析し、要点を数秒で要約します。テキスト抽出はブラウザ内で行いファイルを保存しないため、業務資料にも比較的安心してご利用いただけます。</p>
   </section>
 
   <div class="card">
@@ -82,7 +82,7 @@
     <div id="fileName" class="filename"></div>
 
     <textarea id="inputText" placeholder="PDFをアップロードすると、ここに抽出した本文が入ります。手動で文章を貼り付けて要約することも可能です。"></textarea>
-    <div class="char-count" id="charCount">0 / 20000文字</div>
+    <div class="char-count" id="charCount">0 / 15000文字</div>
 
     <div class="presets" aria-label="用途プリセット">
       <input type="hidden" id="scene" value="general">
@@ -96,7 +96,7 @@
     <div class="row">
       <div class="field">
         <label for="maxLength">要約字数</label>
-        <input type="number" id="maxLength" min="50" max="1500" step="10" value="300">
+        <input type="number" id="maxLength" min="50" max="1000" step="10" value="300">
       </div>
       <div class="field">
         <label>文体</label>
@@ -111,7 +111,7 @@
         <label>出力形式</label>
         <div class="seg">
           <label><input type="radio" name="outputform" value="paragraph" checked><span>まとまった文章</span></label>
-          <label><input type="radio" name="outputform" value="bullets"><span>箇条書き</span></label>
+          <label><input type="radio" name="outputform" value="bullets"><span>リスト形式</span></label>
         </div>
       </div>
     </div>
@@ -144,13 +144,13 @@
 
   <ul class="trust">
     <li>✅ 登録不要</li><li>✅ ファイルを保存しない</li>
-    <li>✅ 論文・レポート対応</li><li>✅ 箇条書き/段落切替</li>
+    <li>✅ 論文・レポート対応</li><li>✅ リスト形式/段落切替</li>
   </ul>
 
   <h2>PDF要約の使い方（3ステップ）</h2>
   <div class="steps">
     <div class="step"><div><b>PDFを選択</b><br><span style="color:#5b6470;font-size:14px">論文・レポート・議事録など、文字が埋め込まれたPDFを選びます。ブラウザ内で本文を抽出します。</span></div></div>
-    <div class="step"><div><b>形式を指定</b><br><span style="color:#5b6470;font-size:14px">箇条書きか段落か、字数と文体、用途シーンを選びます。キーワード指定も可能です。</span></div></div>
+    <div class="step"><div><b>形式を指定</b><br><span style="color:#5b6470;font-size:14px">リスト形式か段落か、字数と文体、用途シーンを選びます。キーワード指定も可能です。</span></div></div>
     <div class="step"><div><b>要約をコピー</b><br><span style="color:#5b6470;font-size:14px">数秒で要点が出力され、レポートや社内共有にそのまま貼り付けられます。</span></div></div>
   </div>
 
@@ -158,7 +158,7 @@
   <div class="scenes">
     <div class="scene"><b>学術論文の下読み</b><span>結論・手法・主張を短時間で把握。</span></div>
     <div class="scene"><b>調査レポート</b><span>長い報告書の根拠と結論を素早く把握。</span></div>
-    <div class="scene"><b>議事録PDF</b><span>決定事項・宿題・期限を箇条書きで抽出。<a href="/columns/gijiroku-yoyaku/">議事録の要約方法はこちら</a>。</span></div>
+    <div class="scene"><b>議事録PDF</b><span>決定事項・宿題・期限をリスト形式で抽出。<a href="/columns/gijiroku-yoyaku/">議事録の要約方法はこちら</a>。</span></div>
     <div class="scene"><b>契約・業務資料</b><span>主要条項や論点の見落としを減らす（最終確認は原文で）。</span></div>
   </div>
 
@@ -167,7 +167,7 @@
     <a class="toolcard" href="/bunsho-yoyaku/">
       <span class="tc-icon">📝</span>
       <b>文章要約AI</b>
-      <span>貼った長文・URLを指定した長さと文体で要約。箇条書き/段落も選べます。</span>
+      <span>貼った長文・URLを指定した長さと文体で要約。リスト形式/段落も選べます。</span>
     </a>
     <a class="toolcard" href="/pdf-yoyaku/">
       <span class="tc-icon">📄</span>
@@ -235,6 +235,7 @@
   <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。登録不要・無料です。PDFを選ぶだけで要約できます。</p></details>
   <details><summary>アップロードしたPDFは保存されますか？</summary><p>テキスト抽出はブラウザ内で行い、ファイル自体をサーバーに保存しません。抽出した本文は要約処理にのみ使用します。詳しくは<a href="/privacy.html">プライバシーポリシー</a>。</p></details>
   <details><summary>スキャン画像PDFは要約できますか？</summary><p>文字埋め込みのPDFが対象で、OCRのないスキャン画像PDFからは抽出できません。その場合は必要な本文をコピーしてテキストボックスに貼り付けてください。</p></details>
+  <details><summary>長いPDFの場合はどうなりますか？</summary><p>本文が15,000文字を超える場合は先頭15,000文字を対象にします。章ごとに分けてアップロードすると精度が上がります。15,000文字以内なら自動で分割して要約します。</p></details>
   <details><summary>要約はそのまま提出していいですか？</summary><p>要約は下書きとしてご利用ください。正確性が必要な場面では必ず原文と照合してください。</p></details>
 
   <div class="cta">
