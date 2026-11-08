@@ -42,7 +42,7 @@
   "mainEntity":[
 {"@type":"Question","name":"文章要約AIは無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。登録もクレジットカードも不要で、完全無料でご利用いただけます。1つのIPあたり1日60回まで要約できます。"}},
 {"@type":"Question","name":"登録やログインは必要ですか？","acceptedAnswer":{"@type":"Answer","text":"必要ありません。ページを開いて文章を貼り付け、「文章を要約する」を押すだけですぐに結果が表示されます。"}},
-{"@type":"Question","name":"何文字くらいの文章まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"50〜5,000文字に対応しています。それより長い資料は、章や節ごとに分けて要約すると精度が上がります。"}},
+{"@type":"Question","name":"何文字くらいの文章まで要約できますか？","acceptedAnswer":{"@type":"Answer","text":"50〜15,000文字に対応しています。長い資料は自動で分割して要約しますが、章ごとに分けると精度がさらに上がります。"}},
 {"@type":"Question","name":"要約の文字数は指定できますか？","acceptedAnswer":{"@type":"Answer","text":"はい。50〜1,000文字の範囲で10文字刻みに指定できます。全体像の把握なら250〜400文字、共有用なら100〜200文字が目安です。"}},
 {"@type":"Question","name":"「です・ます」と「だ・である」を選べますか？","acceptedAnswer":{"@type":"Answer","text":"はい。文体は敬体（です・ます）と常体（だ・である）から選べます。社外文書は敬体、社内メモは常体が使いやすいです。"}},
 {"@type":"Question","name":"残したいキーワードや避けたい表現を指定できますか？","acceptedAnswer":{"@type":"Answer","text":"「含めたいキーワード」と「NGワード」を各30文字まで指定できます。金額・日付・プロジェクト名などを入れると、重要情報が抜けにくくなります。"}},
@@ -99,8 +99,8 @@
     <span>✅ 登録不要</span><span>✅ 完全無料</span><span>✅ 1日60回まで</span><span>✅ 日本語に最適化</span>
   </div>
   <div class="card">
-    <textarea id="inputText" placeholder="要約したい文章・記事・レポートをここに貼り付けてください（50〜5000文字）"></textarea>
-    <div class="char-count" id="charCount">0 / 5000文字</div>
+    <textarea id="inputText" placeholder="要約したい文章・記事・レポートをここに貼り付けてください（50〜15,000文字）"></textarea>
+    <div class="char-count" id="charCount">0 / 15000文字</div>
 
     <div class="presets">
       <input type="hidden" id="scene" value="general">
@@ -185,7 +185,7 @@
     <a class="toolcard" href="/bunsho-yoyaku/">
       <span class="tc-icon">📝</span>
       <b>文章要約AI</b>
-      <span>貼った長文・URLを指定した長さと文体で要約。箇条書き/段落も選べます。</span>
+      <span>貼った長文・URLを指定した長さと文体で要約。リスト形式/段落も選べます。</span>
     </a>
     <a class="toolcard" href="/pdf-yoyaku/">
       <span class="tc-icon">📄</span>
@@ -238,7 +238,7 @@
   <div class="faq">
     <details><summary>文章要約AIは無料で使えますか？</summary><p>はい。登録もクレジットカードも不要で、完全無料でご利用いただけます。1つのIPあたり1日60回まで要約できます。</p></details>
     <details><summary>登録やログインは必要ですか？</summary><p>必要ありません。ページを開いて文章を貼り付け、「文章を要約する」を押すだけですぐに結果が表示されます。</p></details>
-    <details><summary>何文字くらいの文章まで要約できますか？</summary><p>50〜5,000文字に対応しています。それより長い資料は、章や節ごとに分けて要約すると精度が上がります。</p></details>
+    <details><summary>何文字くらいの文章まで要約できますか？</summary><p>50〜15,000文字に対応しています。長い資料は自動で分割して要約しますが、章ごとに分けると精度がさらに上がります。</p></details>
     <details><summary>要約の文字数は指定できますか？</summary><p>はい。50〜1,000文字の範囲で10文字刻みに指定できます。全体像の把握なら250〜400文字、共有用なら100〜200文字が目安です。</p></details>
     <details><summary>「です・ます」と「だ・である」を選べますか？</summary><p>はい。文体は敬体（です・ます）と常体（だ・である）から選べます。社外文書は敬体、社内メモは常体が使いやすいです。</p></details>
     <details><summary>残したいキーワードや避けたい表現を指定できますか？</summary><p>「含めたいキーワード」と「NGワード」を各30文字まで指定できます。金額・日付・プロジェクト名などを入れると、重要情報が抜けにくくなります。</p></details>
