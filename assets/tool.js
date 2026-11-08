@@ -1,6 +1,7 @@
-// AI要約くん 共通フロント V1.2（要約 / 情報抽出 タブ、URL自動検出）
+// AI要約くん 共通フロント V1.3（要約 / 情報抽出 タブ、URL自動検出、長文15,000文字対応）
 (function () {
-  var MAX = 5000;
+  var MAX_SUMMARY = 15000; // 要約APIの上限（サーバー側で分割要約）
+  var MAX_EXTRACT = 5000;  // 情報抽出APIの上限
   function $(id) { return document.getElementById(id); }
 
   function init() {
@@ -8,9 +9,12 @@
     var charCount = $('charCount');
     if (!input) return;
 
+    function currentMax() { return mode === 'extract' ? MAX_EXTRACT : MAX_SUMMARY; }
+
     function renderCount() {
-      if (input.value.length > MAX) input.value = input.value.substring(0, MAX);
-      charCount.textContent = input.value.length + ' / ' + MAX + '文字';
+      var m = currentMax();
+      if (input.value.length > m) input.value = input.value.substring(0, m);
+      charCount.textContent = input.value.length + ' / ' + m + '文字';
       detectUrl();
     }
     input.addEventListener('input', renderCount);
@@ -29,6 +33,7 @@
         var btn = $('submitBtn');
         btn.textContent = mode === 'summary' ? '要約する' : '情報を抽出する';
         hideResult();
+        renderCount();
       });
     });
 
@@ -67,10 +72,40 @@
     var retryBtn = $('retryBtn');
     var submitBtn = $('submitBtn');
 
+    // 結果の連携：要約 → 言い換え／校正（localStorage 経由で受け渡し）
+    var chainBar = null;
+    if (resultBox) {
+      var actionsEl = resultBox.querySelector('.actions');
+      if (actionsEl) {
+        chainBar = document.createElement('div');
+        chainBar.id = 'chainBar';
+        chainBar.className = 'actions';
+        chainBar.style.display = 'none';
+        chainBar.style.marginTop = '10px';
+        chainBar.innerHTML =
+          '<button type="button" class="btn secondary" id="chainParaphrase">この要約を言い換える</button>' +
+          '<button type="button" class="btn secondary" id="chainKousei">この要約を校正する</button>';
+        actionsEl.parentNode.insertBefore(chainBar, actionsEl.nextSibling);
+        function goChain(path) {
+          var text = (resultText && resultText.textContent) || '';
+          if (!text) return;
+          try {
+            localStorage.setItem('aiyoyaku_handoff', JSON.stringify({ text: text, ts: Date.now() }));
+          } catch (e) { /* localStorage 不可の環境では遷移のみ */ }
+          location.href = path + '?from=summary';
+        }
+        var cp = document.getElementById('chainParaphrase');
+        var ck = document.getElementById('chainKousei');
+        if (cp) cp.addEventListener('click', function () { goChain('/paraphrase/'); });
+        if (ck) ck.addEventListener('click', function () { goChain('/kousei/'); });
+      }
+    }
+
     function hideResult() {
       resultBox.style.display = 'none';
       if (resultText) resultText.textContent = '';
       if (resultTableWrap) resultTableWrap.style.display = 'none';
+      if (chainBar) chainBar.style.display = 'none';
     }
 
     function basePayload() {
@@ -118,6 +153,11 @@
         showError('50文字以上入力してください（現在 ' + text.length + ' 文字）。URLが含まれる場合は短くても構いません。');
         return;
       }
+      var limit = currentMax();
+      if (text.length > limit) {
+        showError((mode === 'extract' ? '情報抽出は' : '要約は') + limit.toLocaleString() + '文字以内で入力してください（現在 ' + text.length.toLocaleString() + ' 文字）。');
+        return;
+      }
 
       var isExtract = mode === 'extract';
       var payload = basePayload();
@@ -146,7 +186,12 @@
           } else {
             resultText.textContent = out.j.summary;
             if (resultText) resultText.parentElement.style.display = 'block';
-            if (resultCount) resultCount.textContent = out.j.summary.length + '文字';
+            if (resultCount) {
+              resultCount.textContent = out.j.summary.length + '文字' +
+                (out.j.chunked ? '（長文を' + out.j.chunked + '分割して要約）' : '') +
+                (out.j.cached ? '・キャッシュ' : '');
+            }
+            if (chainBar) chainBar.style.display = 'flex';
           }
           resultBox.style.display = 'block';
           resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
