@@ -1,16 +1,183 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>議事録のまとめ方｜AIが会議メモをきれいに整理【無料】</title><meta name="description" content="議事録のまとめ方に悩んでいませんか？会議のメモを貼るだけで、決定事項・宿題・期限を構造化して整理。無料・登録不要ですぐ使えます。"><link rel="canonical" href="https://bunsho-yoyaku.com/minutes-summary/"><link rel="stylesheet" href="/assets/style.css"></head><body><header><div class="container bar"><a href="/" class="logo">AI<span>要約</span>くん</a>    <nav>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録AI｜会議メモから決定事項・宿題・期限を自動整理【無料】</title>
+<meta name="description" content="会議メモを貼るだけで、AIが議事録を決定事項・宿題・期限・次回予定の形に整理。登録不要・無料、最大15,000文字の長い会議ログにも対応。">
+<meta name="keywords" content="議事録,議事録 AI,議事録 自動作成,会議メモ 整理,議事録 まとめ方,無料">
+<link rel="canonical" href="https://bunsho-yoyaku.com/minutes-summary/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="議事録AI｜会議メモから決定事項・宿題・期限を自動整理【無料】">
+<meta property="og:description" content="会議メモを貼るだけで議事録を自動整理。登録不要・無料ですぐ使えます。">
+<meta property="og:locale" content="ja_JP">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://bunsho-yoyaku.com/"},
+    {"@type":"ListItem","position":2,"name":"議事録AI","item":"https://bunsho-yoyaku.com/minutes-summary/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"議事録AI（AI要約くん）",
+  "url":"https://bunsho-yoyaku.com/minutes-summary/",
+  "applicationCategory":"BusinessApplication",
+  "operatingSystem":"Web",
+  "inLanguage":"ja",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+{"@type":"Question","name":"議事録AIは無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。登録もクレジットカードも不要で無料です。1つのIPあたり1日60回までご利用いただけます。"}},
+{"@type":"Question","name":"会議の録音データをそのまま入れられますか？","acceptedAnswer":{"@type":"Answer","text":"音声ファイルのままでは要約できません。文字起こし（音声のテキスト化）を行ったうえで、そのテキストを貼り付けてください。"}},
+{"@type":"Question","name":"どれくらいの長さの会議メモまで対応していますか？","acceptedAnswer":{"@type":"Answer","text":"50文字から15,000文字まで対応しています。15,000文字を超える場合は、前半・後半などに分けて2回処理してください。"}},
+{"@type":"Question","name":"出力はどんな形式になりますか？","acceptedAnswer":{"@type":"Answer","text":"初期設定では「・」始まりのリスト形式で、決定事項・宿題・期限が見分けやすく出力されます。設定を切り替えると、ひとつながりの文章形式でも出力できます。"}},
+{"@type":"Question","name":"入力した会議メモは保存されますか？","acceptedAnswer":{"@type":"Answer","text":"入力内容は処理にのみ使用します。結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。"}},
+{"@type":"Question","name":"社外秘の会議でも使えますか？","acceptedAnswer":{"@type":"Answer","text":"機密性の高い会議では、社内規定を確認のうえご利用ください。本ツールは入力内容をサーバーに恒久保存しませんが、外部LLM APIに処理を依頼する構成です。"}}
+  ]
+}
+</script>
+<style>
+.trust{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;justify-content:center}
+.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px}
+.step{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
+.step-num{flex:0 0 26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#2a5bd7;color:#fff;font-size:13px;font-weight:700}
+.step-body{flex:1;font-size:14px;line-height:1.8;color:#333}
+.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}
+.faq summary{cursor:pointer;font-weight:600;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"Q. ";color:#2a5bd7}
+.faq details p{margin:10px 0 0;color:#333;line-height:1.8;font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container bar">
+    <a href="/" class="logo">AI<span>要約</span>くん</a>
+    <nav>
       <a href="/bunsho-yoyaku/">文章要約</a>
       <a href="/pdf-yoyaku/">PDF要約</a>
       <a href="/paraphrase/">言い換え</a>
+      <a href="/kousei/">校正</a>
       <a href="/mail-generator/">メール生成</a>
       <a href="/weekly-report/">週報</a>
       <a href="/speech-example/">挨拶</a>
       <a href="/columns/ai-yoyaku-no-tsukurikata/">使い方</a>
-    </nav></div></header><div class="container"><section class="hero"><div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">4項目構成</span><span class="badge">日本語特化</span></div><h1>会議メモを貼るだけ。AIが議事録をきれいに整理</h1><p class="lead">会議で取ったメモを貼り付けるだけで、「決定事項」「宿題・ToDo」「期限」「次回の予定」の4項目に自動整理。見やすい議事録が30秒で完成。登録不要・無料ですぐ使えます。</p></section><div class="card"><h2>📋 議事録のまとめ方</h2><p>会議のメモを貼るだけで、決定事項・宿題・期限を構造化して整理します。見やすい議事録が30秒で完成。</p></div>  <div class="toolgrid">
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">4項目に整理</span><span class="badge">最大15,000文字</span></div>
+    <h1>会議メモを貼るだけで、AIが議事録を整理</h1>
+    <p class="lead">会議で取ったメモや文字起こしを貼り付けると、決定事項・宿題・期限・次回の予定が見分けやすい形でまとまります。議事録づくりに使う時間を、そのまま議論の質に回せます。</p>
+  </section>
+
+  <div class="trust">
+    <span>✅ 登録不要</span><span>✅ 完全無料</span><span>✅ 1日60回まで</span><span>✅ 長文は自動分割</span>
+  </div>
+
+  <div class="card">
+    <textarea id="inputText" placeholder="会議のメモ・文字起こしをここに貼り付けてください（50〜15,000文字）&#10;例）・参加者：営業部3名、開発2名　・決定：リリース日を12月10日に変更　・宿題：Aさんが価格表を修正（期限：11月20日）"></textarea>
+    <div class="char-count" id="charCount">0 / 15000文字</div>
+
+    <input type="hidden" id="scene" value="minutes">
+
+    <div class="row">
+      <div class="field">
+        <label for="maxLength">要約の長さ（文字）</label>
+        <input type="number" id="maxLength" min="50" max="1000" step="10" value="400">
+      </div>
+      <div class="field">
+        <label>文体</label>
+        <div class="seg">
+          <label><input type="radio" name="tone" value="desu" checked><span>敬体（です・ます）</span></label>
+          <label><input type="radio" name="tone" value="dearu"><span>常体（だ・である）</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>出力形式</label>
+        <div class="seg">
+          <label><input type="radio" name="outputform" value="bullets" checked><span>リスト形式</span></label>
+          <label><input type="radio" name="outputform" value="paragraph"><span>文章形式</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="keyword">必ず残したいキーワード（任意）</label>
+        <input type="text" id="keyword" maxlength="30" placeholder="例：リリース日、担当者名">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="ngword">NGワード（任意）</label>
+        <input type="text" id="ngword" maxlength="30" placeholder="例：推測">
+      </div>
+    </div>
+
+    <button class="btn" id="submitBtn">議事録を整理する</button>
+    <div class="loading" id="loading">⏳ AIが議事録を整理しています…数秒お待ちください</div>
+
+    <div class="result" id="resultBox">
+      <h3>整理された議事録</h3>
+      <p class="out" id="resultText"></p>
+      <div class="meta" id="resultCount"></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn">コピーする</button>
+        <button class="btn secondary" id="retryBtn">やり直す</button>
+      </div>
+    </div>
+  </div>
+
+  <h2>議事録AIが整理する4項目</h2>
+  <div class="sec">
+    <p>会議のメモは、書いた本人以外には読み解けないことがよくあります。本ツールは「あとで読む人」が判断できる形に整えることを目的に、次の4点を優先して抽出します。</p>
+    <table>
+      <tr><th>項目</th><th>整理される内容</th></tr>
+      <tr><td>決定事項</td><td>会議で決まったこと（方針、日付、数値、担当の割り当て）</td></tr>
+      <tr><td>宿題・ToDo</td><td>誰が何をするか。担当者名を手がかりに抽出します</td></tr>
+      <tr><td>期限</td><td>「来週金曜」「11月20日まで」などの表現をそのまま残します</td></tr>
+      <tr><td>次回の予定</td><td>次回会議の日時・議題・持ち物などの申し送り</td></tr>
+    </table>
+  </div>
+
+  <h2>使い方は3ステップ</h2>
+  <div class="sec">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><b>会議メモを貼る。</b>手書きメモを打ち直したもの、議事録アプリの文字起こし、チャットのログなど、テキストであれば形式は問いません。長い会議ログは15,000文字までそのまま貼れます。</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><b>長さと形式を選ぶ。</b>共有用の要約なら200〜400文字、議事録として残すなら600〜1,000文字が目安です。決定事項を見分けたい場合はリスト形式を選びます。</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><b>固有名詞を確認して仕上げる。</b>「必ず残したいキーワード」にプロジェクト名や金額を入れると抜けが減ります。生成後は必ず原文と突き合わせてください。</div></div>
+  </div>
+
+  <h2>議事録がまとまらない3つの原因</h2>
+  <div class="sec">
+    <p><strong>1. 発言の記録と決定事項が混ざっている。</strong>「A案とB案のどちらが良いか議論した」という過程と、「B案で進める」という結論が同じ段落にあると、読み手は結論を見失います。貼る前に、決まったことには「決定：」を付けられると精度が上がります。</p>
+    <p><strong>2. 担当者と期限が別の場所に書かれている。</strong>「価格表の修正はAさん」と「11月20日まで」が離れていると、対応関係が崩れます。1行にまとめてから貼ると抜けが減ります。</p>
+    <p><strong>3. 音声の文字起こしをそのまま使っている。</strong>話し言葉の重複や言い換えが大量に含まれると、要点が薄まります。「えーと」「すみません」などのフィラーを削ってから貼るのが最も効果的です。</p>
+  </div>
+
+  <h2>関連ツール</h2>
+  <div class="toolgrid">
     <a class="toolcard" href="/bunsho-yoyaku/">
       <span class="tc-icon">📝</span>
       <b>文章要約AI</b>
-      <span>貼った長文・URLを指定した長さと文体で要約。見出し形式でも段落形式でも出力できます。</span>
+      <span>貼った長文・URLを指定した長さと文体で要約。リスト形式でも段落形式でも出力できます。</span>
     </a>
     <a class="toolcard" href="/pdf-yoyaku/">
       <span class="tc-icon">📄</span>
@@ -21,6 +188,11 @@
       <span class="tc-icon">✍️</span>
       <b>AI言い換え</b>
       <span>意味を変えずに表現を改善。標準・丁寧（ビジネス）・やさしくの3モード。</span>
+    </a>
+    <a class="toolcard" href="/kousei/">
+      <span class="tc-icon">🔍</span>
+      <b>文章校正AI</b>
+      <span>誤字脱字・表記ゆれ・敬語をチェックし、修正点を一覧で表示。</span>
     </a>
     <a class="toolcard" href="/mail-generator/">
       <span class="tc-icon">📧</span>
@@ -37,30 +209,20 @@
       <b>乾杯挨拶例文</b>
       <span>歓迎会・送別会・忘年会などシーン別の例文。</span>
     </a>
-    <a class="toolcard" href="/minutes-summary/">
-      <span class="tc-icon">📋</span>
-      <b>議事録整理</b>
-      <span>会議メモを決定事項・宿題・期限に自動整理。</span>
-    </a>
     <a class="toolcard" href="/blog-generator/">
       <span class="tc-icon">✍️</span>
       <b>ブログ記事生成</b>
       <span>テーマを入力するだけでSEO対応の記事下書き。</span>
     </a>
-    <a class="toolcard" href="/kousei/">
-      <span class="tc-icon">✅</span>
-      <b>AI文章校正</b>
-      <span>誤字脱字・表記ゆれ・敬語をチェック。校正／ビジネス／読みやすさの3モード。</span>
+    <a class="toolcard" href="/columns/gijiroku-yoyaku/">
+      <span class="tc-icon">📘</span>
+      <b>議事録をAIで要約する方法（コラム）</b>
+      <span>決定事項・宿題・期限を抜けなく整理するコツ。</span>
     </a>
     <a class="toolcard" href="/columns/kousei-no-yarikata/">
       <span class="tc-icon">📘</span>
       <b>文章校正のやり方（コラム）</b>
       <span>5ステップ・チェックリスト・よくある誤り7例で校正の手順を整理。</span>
-    </a>
-    <a class="toolcard" href="/columns/gijiroku-yoyaku/">
-      <span class="tc-icon">📘</span>
-      <b>議事録をAIで要約する方法（コラム）</b>
-      <span>決定事項・宿題・期限を抜けなく整理するコツ。</span>
     </a>
     <a class="toolcard" href="/columns/ai-yoyaku-no-tsukurikata/">
       <span class="tc-icon">📘</span>
@@ -72,4 +234,34 @@
       <b>YouTube動画のAI要約（コラム）</b>
       <span>字幕のコピーから分割・形式指定・数字の照合までの5ステップ。</span>
     </a>
-  </div></div><footer><div class="container"><a href="/about.html">運営者情報</a><a href="/contact.html">お問い合わせ</a><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><p>© 2026 AI要約くん</p></div></footer></body></html>
+  </div>
+
+  <h2 id="faq">よくある質問（FAQ）</h2>
+  <div class="faq">
+    <details><summary>議事録AIは無料で使えますか？</summary><p>はい。登録もクレジットカードも不要で無料です。1つのIPあたり1日60回までご利用いただけます。</p></details>
+    <details><summary>会議の録音データをそのまま入れられますか？</summary><p>音声ファイルのままでは要約できません。文字起こし（音声のテキスト化）を行ったうえで、そのテキストを貼り付けてください。</p></details>
+    <details><summary>どれくらいの長さの会議メモまで対応していますか？</summary><p>50文字から15,000文字まで対応しています。15,000文字を超える場合は、前半・後半などに分けて2回処理してください。</p></details>
+    <details><summary>出力はどんな形式になりますか？</summary><p>初期設定では「・」始まりのリスト形式で、決定事項・宿題・期限が見分けやすく出力されます。設定を切り替えると、ひとつながりの文章形式でも出力できます。</p></details>
+    <details><summary>入力した会議メモは保存されますか？</summary><p>入力内容は処理にのみ使用します。結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。</p></details>
+    <details><summary>社外秘の会議でも使えますか？</summary><p>機密性の高い会議では、社内規定を確認のうえご利用ください。本ツールは入力内容をサーバーに恒久保存しませんが、外部LLM APIに処理を依頼する構成です。</p></details>
+  </div>
+
+  <p style="margin-top:18px">議事録の書き方そのものは<a href="/columns/gijiroku-yoyaku/">議事録をAIで要約する方法</a>、文章の表現を整えたい場合は<a href="/kousei/">文章校正AI</a>をご利用ください。</p>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="/about.html">運営者情報</a>
+      <a href="/contact.html">お問い合わせ</a>
+      <a href="/privacy.html">プライバシーポリシー</a>
+      <a href="/terms.html">利用規約</a>
+      <a href="/">ホーム</a>
+    </div>
+    <p style="margin-top:10px">&copy; 2026 AI要約くん</p>
+  </div>
+</footer>
+
+<script src="/assets/tool.js"></script>
+</body>
+</html>
