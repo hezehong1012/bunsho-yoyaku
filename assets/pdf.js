@@ -1,6 +1,6 @@
 // PDF要約ページ専用フロント：pdf.js（CDN）でクライアント側テキスト抽出 → /api/summarize
 (function () {
-  var MAX = 20000; // PDF本文の上限
+  var MAX = 15000; // PDF本文の上限（要約APIの上限に合わせる）
   function $(id) { return document.getElementById(id); }
 
   // pdf.js ワーカー設定
@@ -116,7 +116,9 @@
         .then(function (out) {
           if (!out.ok) throw new Error(out.j.error || 'エラーが発生しました。');
           resultText.textContent = out.j.summary;
-          resultCount.textContent = out.j.summary.length + '文字';
+          resultCount.textContent = out.j.summary.length + '文字' +
+            (out.j.chunked ? '（長文を' + out.j.chunked + '分割して要約）' : '') +
+            (out.j.cached ? '・キャッシュ' : '');
           resultBox.style.display = 'block';
           resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         })
