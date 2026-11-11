@@ -1,53 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://bunsho-yoyaku.com/</loc>
-    <lastmod>2026-11-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/bunsho-yoyaku/</loc>
-    <lastmod>2026-11-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/bunsho-yoyaku/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/summarizer/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/summarizer/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/bunsho-yoyaku/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/summarizer/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/pdf-yoyaku/</loc>
-    <lastmod>2026-11-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/pdf-yoyaku/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/pdf-summary/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/pdf-summary/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/pdf-yoyaku/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/pdf-summary/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/paraphrase/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/paraphrase/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/paraphrase/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/paraphrase/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/paraphrase/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/paraphrase/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/kousei/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/kousei/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/proofreading/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/proofreading/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/kousei/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/proofreading/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/mail-generator/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/mail-generator/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/email-writer/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/email-writer/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/mail-generator/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/email-writer/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/weekly-report/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/weekly-report/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/weekly-report/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/weekly-report/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/weekly-report/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/weekly-report/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/speech-example/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/speech-example/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/speech/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/speech/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/speech-example/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/speech/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/minutes-summary/</loc>
-    <lastmod>2026-11-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/minutes-summary/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/meeting-notes/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/meeting-notes/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/minutes-summary/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/meeting-notes/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/blog-generator/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/blog-generator/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/blog-writer/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/blog-writer/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/blog-generator/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/blog-writer/"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -71,23 +163,70 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://bunsho-yoyaku.com/en/columns/summarize-long-documents/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/columns/meeting-notes-from-transcripts/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/columns/proofreading-checklist/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/columns/summarize-pdfs-and-papers/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bunsho-yoyaku.com/pricing.html</loc>
     <lastmod>2026-11-06</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/about.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/about.html"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/about.html</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/about.html"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/privacy.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/privacy.html"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/privacy.html"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://bunsho-yoyaku.com/terms.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/terms.html"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/terms.html</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/terms.html"/>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.3</priority>
   </url>
 </urlset>

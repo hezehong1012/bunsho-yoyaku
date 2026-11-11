@@ -3,155 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free AI Summarizer — Summarize Articles, Reports &amp; Meeting Notes | AI Summary</title>
-<meta name="description" content="Free AI summarizer with no signup. Paste an article, a report or a meeting transcript (up to 15,000 characters) and get a plain-English summary in the length you choose.">
-<meta name="keywords" content="ai summarizer,free summarizer,article summary,report summary,meeting notes summary,summarize long text">
+<title>Free AI Writing Tools for English Teams — Summarize, Rewrite, Draft | AI Summary</title>
+<meta name="description" content="Nine free AI writing tools with no signup: summarize long documents and PDFs, paraphrase, proofread, draft emails, weekly reports, speeches, meeting notes and blog posts.">
+<meta name="keywords" content="free ai writing tools,ai summarizer,paraphrase tool,proofreader,email writer,meeting notes">
 <link rel="canonical" href="https://bunsho-yoyaku.com/en/">
 <link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/">
 <link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/">
 <link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Free AI Summarizer — Articles, Reports &amp; Meeting Notes">
-<meta property="og:description" content="Paste a long document, get a summary you can send. Free, no signup.">
-<meta property="og:locale" content="en_US">
+<meta property="og:type" content="website"><meta property="og:title" content="Free AI Writing Tools for English Teams"><meta property="og:description" content="Nine free tools, no signup, no card."><meta property="og:locale" content="en_US">
 <link rel="stylesheet" href="/assets/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
-<style>
-.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px}
-.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}
-.faq summary{cursor:pointer;font-weight:600;list-style:none}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::before{content:"Q. ";color:#2a5bd7}
-.faq details p{margin:10px 0 0;color:#333;line-height:1.8;font-size:14px}
-</style>
+<style>.trust{margin:10px 0}.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px;margin:0 6px 6px 0;display:inline-block}.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}.faq summary{cursor:pointer;font-weight:600;list-style:none}.faq summary::-webkit-details-marker{display:none}.faq details p{margin:8px 0 0;color:#333;line-height:1.8;font-size:14px}</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bunsho-yoyaku.com/en/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Summary","url":"https://bunsho-yoyaku.com/en/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No trial clock, no card, no account. One IP gets 60 runs a day."}},{"@type":"Question","name":"Do you store or train on my text?","acceptedAnswer":{"@type":"Answer","text":"No. The text is used only to produce the result, cached in memory for up to six hours so repeat runs are instant, then dropped."}},{"@type":"Question","name":"How accurate is the summary?","acceptedAnswer":{"@type":"Answer","text":"It holds facts and figures well but can still drop a caveat. Read the source once before you publish, file or send it to a client."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AI Summary","url":"https://bunsho-yoyaku.com/en/","inLanguage":"en"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is everything here free?","acceptedAnswer":{"@type":"Answer","text":"Yes — all nine tools, no trial clock, no card, no account. Each IP gets 60 runs per day."}},{"@type":"Question","name":"Do you store or train on what I paste?","acceptedAnswer":{"@type":"Answer","text":"No. Text is used only to produce the result, cached in memory for up to six hours so repeat runs are instant, and never stored or used for training."}},{"@type":"Question","name":"Is the output US or UK English?","acceptedAnswer":{"@type":"Answer","text":"The default is US business English. The proofreader follows whichever spelling you already use, so a UK draft stays UK."}}]}</script>
 </head>
 <body>
-
-<header>
-  <div class="container bar">
-    <a href="/en/" class="logo">AI<span>Summary</span></a>
-    <nav>
-      <a href="/en/summarizer/">Summarizer</a>
-    </nav>
-  </div>
-</header>
-
-<div class="container">
-  <section class="hero">
-    <div class="badges"><span class="badge">Free</span><span class="badge">No signup</span><span class="badge">Long documents</span></div>
-    <h1>Free AI summarizer for articles, reports and meeting notes</h1>
-    <p class="lead">Paste a long article, a quarterly report section or a raw meeting transcript and get a summary you can actually forward. No account, no card, nothing kept.</p>
-  </section>
-
-  <div class="trust">
-    <span>✅ No signup</span><span>✅ Free, forever</span><span>✅ Up to 15,000 characters per run</span><span>✅ Plain English output</span>
-  </div>
-
-  <div class="card">
-    <textarea id="inputText" placeholder="Paste the text you want summarized, or a public article URL (50–15,000 characters)"></textarea>
-    <div class="char-count" id="charCount">0 / 15000</div>
-    <div class="row">
-      <div class="field">
-        <label for="maxWords">Summary length</label>
-        <select id="maxWords">
-          <option value="100">About 100 words — a paragraph</option>
-          <option value="200" selected>About 200 words — an email</option>
-          <option value="350">About 350 words — an exec summary</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="scene">Use it as</label>
-        <select id="scene">
-          <option value="general" selected>General summary</option>
-          <option value="report">Report / analysis</option>
-          <option value="minutes">Meeting notes</option>
-          <option value="email">Email-ready recap</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn" id="runBtn">Summarize</button>
-    <div class="loading" id="loading" style="display:none">⏳ Working on it — a long document takes a few seconds</div>
-    <div id="errBox" style="display:none;color:#c0392b;margin-top:10px;font-size:14px"></div>
-    <div class="result" id="outBox" style="display:none">
-      <h3>Summary</h3>
-      <p class="out" id="resultText"></p>
-      <div class="meta" id="resultMeta"></div>
-      <div class="actions"><button class="btn" id="copyBtn">Copy</button></div>
-    </div>
-  </div>
-
-  <h2>What people actually use it for</h2>
-  <div class="sec">
-    <p>A research analyst triaging thirty industry pieces before a Monday readout. A product manager turning a 55-minute customer call into five lines for the team channel. A graduate student deciding which of fourteen papers deserve a full read. A recruiter pulling the relevant two years out of a five-page résumé.</p>
-    <p>The point is not “AI does the reading”. It is that the reading tax — 40 minutes per document — is removed while the facts, numbers and conclusions survive.</p>
-  </div>
-
-  <h2>Built for English documents and Western workflows</h2>
-  <div class="sec">
-    <p>Output is plain US-style business English: conclusion first, concrete figures kept, hedging and filler cut. Feed it twelve pages of a vendor report and you get something that reads like a colleague wrote it, not like machine translation.</p>
-    <p>Long inputs are split into sections and merged, so a 15,000-character report arrives as one continuous summary instead of four disconnected chunks.</p>
-  </div>
-
-  <h2>Start here</h2>
-  <div class="toolgrid">
-    <a class="toolcard" href="/en/summarizer/"><span class="tc-icon">📝</span><b>Article summarizer</b><span>Full control: length in words, voice, paragraph or bullets, meeting-notes mode, items to keep or avoid.</span></a>
-  </div>
-
-  <h2 id="faq">Frequently asked questions</h2>
-  <div class="faq">
-    <details><summary>Is this really free?</summary><p>Yes. There is no trial clock, no card and no account. A single IP gets 60 runs per day, which is enough for normal reading work.</p></details>
-    <details><summary>Do you store or train on my text?</summary><p>No. Your text is used to produce the summary and nothing else. Results are cached in memory for up to six hours so a repeat request is instant, then dropped.</p></details>
-    <details><summary>How accurate is it?</summary><p>It keeps facts and figures well, but it can still miss a nuance. For anything you will publish, file or send to a client, read the source once before sending the summary.</p></details>
-  </div>
+<header><div class="container bar"><a href="/en/" class="logo">AI<span>Summary</span></a>
+<nav><a href="/en/summarizer/">Summarizer</a><a href="/en/pdf-summary/">PDF</a><a href="/en/paraphrase/">Paraphrase</a><a href="/en/proofreading/">Proofread</a><a href="/en/email-writer/">Email</a><a href="/en/weekly-report/">Weekly report</a><a href="/en/speech/">Speeches</a><a href="/en/meeting-notes/">Meeting notes</a><a href="/en/blog-writer/">Blog</a></nav></div></header>
+<main class="container">
+<section class="hero">
+<div class="badges"><span class="badge">Free</span><span class="badge">No signup</span><span class="badge">No card</span></div>
+<h1>Nine free AI writing tools for people who work in English</h1>
+<p class="lead">Summaries, rewrites, proofreading, emails, weekly updates, speeches, meeting notes and blog drafts. Built around the tasks that actually eat a Western office day, not around a demo.</p>
+</section>
+<div class="trust"><span>No signup</span><span>No card</span><span>60 runs a day per IP</span><span>Nothing stored</span></div>
+<h2>Pick a tool</h2>
+<div class="toolgrid">
+<a class="toolcard" href="/en/summarizer/"><span class="tc-icon">📝</span><b>Article summarizer</b><span>Up to 15,000 characters, length in words, paragraph or bullets, meeting-notes mode.</span></a>
+<a class="toolcard" href="/en/pdf-summary/"><span class="tc-icon">📄</span><b>PDF summarizer</b><span>Paste the text out of a PDF and get the gist — no upload, no account.</span></a>
+<a class="toolcard" href="/en/paraphrase/"><span class="tc-icon">✍️</span><b>Paraphraser</span><span>Clearer, more formal or plainer — with facts and figures kept intact.</span></a>
+<a class="toolcard" href="/en/proofreading/"><span class="tc-icon">🔍</span><b>Proofreader</b><span>Grammar, punctuation and consistency, with every change explained.</span></a>
+<a class="toolcard" href="/en/email-writer/"><span class="tc-icon">📧</span><b>Email writer</b><span>Follow-ups, apologies, cold intros and polite no's, with a subject line.</span></a>
+<a class="toolcard" href="/en/weekly-report/"><span class="tc-icon">📊</span><b>Weekly report</b><span>Scattered notes into highlights, in progress, risks and next week.</span></a>
+<a class="toolcard" href="/en/speech/"><span class="tc-icon">🥂</span><b>Speech &amp; toast</b><span>Wedding toasts, retirement send-offs and short keynotes, timed in minutes.</span></a>
+<a class="toolcard" href="/en/meeting-notes/"><span class="tc-icon">🗒️</span><b>Meeting notes</b><span>A transcript turned into decisions, owners and open questions.</span></a>
+<a class="toolcard" href="/en/blog-writer/"><span class="tc-icon">📰</span><b>Blog draft</b><span>A 600–900 word draft with H2s, a checklist and an FAQ to edit.</span></a>
 </div>
-
-<footer>
-  <div class="container">
-    <p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p>
-  </div>
-</footer>
-
-<script>
-(function () {
-  var btn = document.getElementById('runBtn');
-  var out = document.getElementById('outBox');
-  var t = document.getElementById('inputText'), c = document.getElementById('charCount');
-  function up() { c.textContent = t.value.length + ' / 15000'; }
-  t.addEventListener('input', up); up();
-  function showErr(m) { var e = document.getElementById('errBox'); e.textContent = m; e.style.display = 'block'; }
-  btn.addEventListener('click', function () {
-    var text = t.value.trim();
-    document.getElementById('errBox').style.display = 'none';
-    if (!text) { showErr('Paste some text or a public URL first.'); return; }
-    if (text.length < 50 && !/https?:\/\//.test(text)) { showErr('At least 50 characters, please. A URL on its own is fine.'); return; }
-    var words = parseInt(document.getElementById('maxWords').value, 10) || 200;
-    btn.disabled = true;
-    document.getElementById('loading').style.display = 'block';
-    out.style.display = 'none';
-    fetch('/api/en-tool', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'summarize', text: text, max_length: Math.min(1000, words * 6),
-        scene: document.getElementById('scene').value, style: 'desu', format: 'paragraph' }) })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-      .then(function (res) {
-        if (!res.ok) throw new Error(res.j.error || 'Something went wrong. Please try again.');
-        var body = res.j.result || '';
-        document.getElementById('resultText').textContent = body;
-        var words2 = (body.match(/\S+/g) || []).length;
-        document.getElementById('resultMeta').textContent = words2 + ' words' + (res.j.chunked ? ' · split into ' + res.j.chunked + ' sections' : '');
-        out.style.display = 'block';
-        out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      })
-      .catch(function (e) { showErr(e.message); })
-      .finally(function () { btn.disabled = false; document.getElementById('loading').style.display = 'none'; });
-  });
-  document.getElementById('copyBtn').addEventListener('click', function () {
-    var b = this, txt = document.getElementById('resultText').textContent;
-    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); });
-  });
-})();
-</script>
+<h2>Why these exist</h2>
+<p>The reading tax is real: forty minutes to find the three paragraphs that mattered in a report, twenty minutes to make a transcript look like notes, thirty minutes to write an email that takes three minutes to read. These tools do the first pass. You still make the judgement — that part is not outsourced.</n<p>Each tool has one job and a fixed prompt written natively in English, for a US or European reader: conclusion first, numbers kept, hedging cut, no translated-Japanese phrasing.</p>
+<h2>Guides</h2>
+<p><a href="/en/columns/summarize-long-documents/">Summarizing a long document without losing the numbers</a><br>
+<a href="/en/columns/meeting-notes-from-transcripts/">Turning transcripts into decisions and owners</a><br>
+<a href="/en/columns/proofreading-checklist/">A proofreading checklist for non-native writers</a><br>
+<a href="/en/columns/summarize-pdfs-and-papers/">Summarizing papers and PDFs without uploading them</a></p>
+<h2 id="faq">FAQ</h2>
+<div class="faq">
+<details><summary>Is everything here free?</summary><p>Yes — all nine tools, no trial clock, no card, no account. One IP gets 60 runs per day.</p></details>
+<details><summary>Do you store or train on what I paste?</summary><p>No. Text is used to produce the result, cached in memory for up to six hours, then dropped. Nothing is stored long-term.</p></details>
+<details><summary>US or UK English?</summary><p>Default output is US business English. The proofreader follows the spelling you already use, so a UK draft stays UK.</p></details>
+</div>
+</main>
+<footer><div class="container"><div class="links"><a href="/en/about.html">About</a><a href="/en/privacy.html">Privacy</a><a href="/en/terms.html">Terms</a><a href="/en/contact.html">Contact</a></div><p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p></div></footer>
 </body>
 </html>
