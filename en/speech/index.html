@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Speech &amp; Toast Writer — Weddings, Retirements, Keynotes | AI Summary</title>
+<meta name="description" content="Write a toast, a retirement send-off, a welcome or a short keynote with AI — timed in minutes and written to be spoken, not read. Free, no signup.">
+<meta name="keywords" content="ai speech writer,wedding toast,retirement speech,best man speech,keynote draft">
+<link rel="canonical" href="https://bunsho-yoyaku.com/en/speech/">
+<link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/speech/">
+<link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/speech-example/">
+<link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/speech-example/">
+<meta property="og:type" content="website"><meta property="og:title" content="AI Speech &amp; Toast Writer"><meta property="og:locale" content="en_US">
+<link rel="stylesheet" href="/assets/style.css">
+<style>.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}.faq summary{cursor:pointer;font-weight:600;list-style:none}.faq summary::-webkit-details-marker{display:none}.faq details p{margin:8px 0 0;color:#333;line-height:1.8;font-size:14px}.trust{margin:10px 0}.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px;margin:0 6px 6px 0;display:inline-block}</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bunsho-yoyaku.com/en/"},{"@type":"ListItem","position":2,"name":"Speech Writer","item":"https://bunsho-yoyaku.com/en/speech/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Speech & Toast Writer","url":"https://bunsho-yoyaku.com/en/speech/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long is a “2 minute” speech really?","acceptedAnswer":{"@type":"Answer","text":"About 260–300 words at a relaxed pace, which is roughly one page double-spaced and read aloud in 12-point type. Toasts should be shorter than people plan: 90 seconds is plenty."}},{"@type":"Question","name":"Will the jokes land?","acceptedAnswer":{"@type":"Answer","text":"Safe, mild humour lands; clever wordplay delivered by a nervous speaker often does not. Test any line on one person before the event, and cut anything that needs explaining."}},{"@type":"Question","name":"Does it know anything about my friend or colleague?","acceptedAnswer":{"@type":"Answer","text":"Only what you supply. Give it two specific moments — a habit, an incident, a phrase they always use — and the draft stops sounding generic. Specific detail is the whole difference."}}]}</script>
+</head>
+<body>
+<header><div class="container bar"><a href="/en/" class="logo">AI<span>Summary</span></a>
+<nav><a href="/en/summarizer/">Summarizer</a><a href="/en/pdf-summary/">PDF</a><a href="/en/paraphrase/">Paraphrase</a><a href="/en/proofreading/">Proofread</a><a href="/en/email-writer/">Email</a><a href="/en/weekly-report/">Weekly report</a><a href="/en/speech/">Speeches</a><a href="/en/meeting-notes/">Meeting notes</a><a href="/en/blog-writer/">Blog</a></nav></div></header>
+<main class="container">
+<h1>Speech and toast writer — written to be said out loud</h1>
+<p class="lead">Best-man toast, retirement send-off, welcome to a new team, two minutes at a conference. Give it the occasion and two real details; get something that sounds spoken rather than read.</p>
+<div class="trust"><span>Free</span><span>No signup</span><span>Timed in minutes</span><span>No stage directions</span></div>
+<div class="card">
+<textarea id="inputText" placeholder="Who is it for, what is the occasion, and one or two specific details — a habit, an incident, a phrase they always say"></textarea>
+<div class="char-count" id="charCount">0 / 15000</div>
+<div class="row">
+<div class="field"><label for="occasion">Occasion</label><select id="occasion"><option value="a wedding toast" selected>Wedding toast</option><option value="a retirement send-off">Retirement send-off</option><option value="a welcome speech for a new colleague">Welcome to a new colleague</option><option value="an award presentation">Award presentation</option><option value="a short keynote at a team offsite">Team offsite keynote</option><option value="a graduation or end-of-programme speech">Graduation / end of programme</option></select></div>
+<div class="field"><label for="minutes">Length</label><select id="minutes"><option value="1">1 minute (~130 words)</option><option value="2" selected>2 minutes (~260 words)</option><option value="3">3 minutes (~390 words)</option><option value="5">5 minutes (~650 words)</option></select></div>
+</div>
+<button class="btn" id="runBtn">Write the speech</button>
+<div class="loading" id="loading" style="display:none">Drafting…</div>
+<div id="errBox" style="display:none;color:#c0392b;margin-top:10px;font-size:14px"></div>
+<div class="result" id="outBox" style="display:none"><h3>Draft</h3><p class="out" id="resultText" style="white-space:pre-wrap"></p><div class="meta" id="resultMeta"></div><div class="actions"><button class="btn" id="copyBtn">Copy</button></div></div>
+</div>
+<h2>What makes a draft usable</h2>
+<p>One concrete moment beats three adjectives. “She once drove back forty miles because a client left a jacket in the conference room” tells an audience more than “she is incredibly dedicated”. The tool is prompted to build around the detail you supply, so supply one.</p>
+<p>Then read it aloud once, standing up. Anything you stumble on, cut. A speech is finished when it is easier to say than to read.</p>
+<h2>Timing rules of thumb</h2>
+<p>130 words per minute at a relaxed pace, 150 if you are rushing because you are nervous. Wedding toasts: 90 seconds is generous. Retirement send-offs: two minutes, with one laugh and one sincere line. Keynotes: add 20% to whatever you timed in rehearsal.</p>
+<h2 id="faq">FAQ</h2>
+<div class="faq">
+<details><summary>How long is a 2-minute speech really?</summary><p>About 260–300 words — roughly one double-spaced page read aloud. Toasts should be shorter than people plan.</p></details>
+<details><summary>Will the jokes land?</summary><p>Mild humour lands; wordplay often does not when delivered nervously. Test each line on one person and cut anything that needs explaining.</p></details>
+<details><summary>Does it know about the person?</summary><p>Only what you give it. Two specific details are the difference between a draft that sounds like them and one that sounds like a template.</p></details>
+</div>
+</main>
+<footer><div class="container"><div class="links"><a href="/en/about.html">About</a><a href="/en/privacy.html">Privacy</a><a href="/en/terms.html">Terms</a><a href="/en/contact.html">Contact</a></div><p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p></div></footer>
+<script>
+(function(){
+var t=document.getElementById('inputText'),c=document.getElementById('charCount'),btn=document.getElementById('runBtn'),out=document.getElementById('outBox'),e=document.getElementById('errBox');
+function up(){c.textContent=t.value.length+' / 15000';} t.addEventListener('input',up); up();
+function show(m){e.textContent=m;e.style.display='block';}
+btn.addEventListener('click',function(){var v=t.value.trim();e.style.display='none';
+if(!v){show('Tell it who the speech is for and one detail about them.');return;}
+if(v.length<50){show('A little more context, please: at least 50 characters.');return;}
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';
+fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'speech',text:v,occasion:document.getElementById('occasion').value,minutes:parseInt(document.getElementById('minutes').value,10)})})
+.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+.then(function(res){if(!res.ok)throw new Error(res.j.error||'Something went wrong.');
+var txt=res.j.result||'';document.getElementById('resultText').textContent=txt;
+document.getElementById('resultMeta').textContent=(txt.match(/\S+/g)||[]).length+' words · about '+Math.round((txt.match(/\S+/g)||[]).length/130*10)/10+' min spoken'+(res.j.cached?' · cached':'');out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});})
+.catch(function(err){show(err.message);})
+.finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
+document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Blog Draft Writer — Outline, Sections &amp; FAQ in One Pass | AI Summary</title>
+<meta name="description" content="Draft a 600–900 word English blog post around a search question: H1, H2 sections, a practical checklist and an FAQ. Free, no signup.">
+<meta name="keywords" content="ai blog writer,blog post generator,seo blog draft,content outline generator">
+<link rel="canonical" href="https://bunsho-yoyaku.com/en/blog-writer/">
+<link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/blog-writer/">
+<link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/blog-generator/">
+<link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/blog-generator/">
+<meta property="og:type" content="website"><meta property="og:title" content="AI Blog Draft Writer"><meta property="og:locale" content="en_US">
+<link rel="stylesheet" href="/assets/style.css">
+<style>.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}.faq summary{cursor:pointer;font-weight:600;list-style:none}.faq summary::-webkit-details-marker{display:none}.faq details p{margin:8px 0 0;color:#333;line-height:1.8;font-size:14px}.trust{margin:10px 0}.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px;margin:0 6px 6px 0;display:inline-block}</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bunsho-yoyaku.com/en/"},{"@type":"ListItem","position":2,"name":"Blog Writer","item":"https://bunsho-yoyaku.com/en/blog-writer/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Blog Draft Writer","url":"https://bunsho-yoyaku.com/en/blog-writer/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this publish-ready?","acceptedAnswer":{"@type":"Answer","text":"No, and treating it as ready is how sites end up with generic pages. It gives you structure, a first answer, and an FAQ shell. Add your own numbers, examples and screenshots before publishing."}},{"@type":"Question","name":"Will it rank on Google?","acceptedAnswer":{"@type":"Answer","text":"Structure helps, but ranking comes from answering the query better than the current results, which needs specifics this tool cannot invent. Review competitors' first 100 words, then improve on them."}},{"@type":"Question","name":"What should I put in the brief?","acceptedAnswer":{"@type":"Answer","text":"The search question, who is asking it, and anything you already know that is specific — numbers, tool names, mistakes you have seen. The more specifics, the less the draft reads like everyone else's."}}]}</script>
+</head>
+<body>
+<header><div class="container bar"><a href="/en/" class="logo">AI<span>Summary</span></a>
+<nav><a href="/en/summarizer/">Summarizer</a><a href="/en/pdf-summary/">PDF</a><a href="/en/paraphrase/">Paraphrase</a><a href="/en/proofreading/">Proofread</a><a href="/en/email-writer/">Email</a><a href="/en/weekly-report/">Weekly report</a><a href="/en/speech/">Speeches</a><a href="/en/meeting-notes/">Meeting notes</a><a href="/en/blog-writer/">Blog</a></nav></div></header>
+<main class="container">
+<h1>Blog draft writer — a skeleton worth editing</h1>
+<p class="lead">Not a finished post — a 600-to-900 word draft with an H1 that promises something, sections in a sensible order, one checklist, and the FAQ a searcher would actually type. Then you add the parts only you know.</p>
+<div class="trust"><span>Free</span><span>No signup</span><span>Markdown out</span><span>No clickbait titles</span></div>
+<div class="card">
+<textarea id="inputText" placeholder="What should the post cover? Include the question a reader would search, and any specifics: numbers, tools, mistakes you have seen."></textarea>
+<div class="char-count" id="charCount">0 / 15000</div>
+<div class="row">
+<div class="field"><label for="topic">Topic / target query (optional)</label><input type="text" id="topic" maxlength="120" placeholder="e.g. how to summarize a PDF without uploading it"></div>
+<div class="field"><label for="audience">Audience (optional)</label><input type="text" id="audience" maxlength="80" placeholder="e.g. US office workers who found this on Google"></div>
+</div>
+<button class="btn" id="runBtn">Draft the post</button>
+<div class="loading" id="loading" style="display:none">Outlining and writing…</div>
+<div id="errBox" style="display:none;color:#c0392b;margin-top:10px;font-size:14px"></div>
+<div class="result" id="outBox" style="display:none"><h3>Draft (Markdown)</h3><p class="out" id="resultText" style="white-space:pre-wrap"></p><div class="meta" id="resultMeta"></div><div class="actions"><button class="btn" id="copyBtn">Copy</button></div></div>
+</div>
+<h2>What to do with the draft in the next 20 minutes</h2>
+<p>Search the target query and read the top three results' opening 100 words. Whatever they all say, say it faster. Whatever none of them say — a real number, a screenshot, a failure mode — add it. That gap is the reason a page ranks.</p>
+<p>Then cut the intro to two sentences, because the draft will have written three paragraphs of throat-clearing. Keep the FAQ: it is the cheapest way to pick up long-tail queries.</p>
+<h2>Honest limits</h2>
+<p>The draft has no data of its own, so anything that sounds like a statistic is a placeholder. Titles that promise a number (“7 ways…”) invite readers to check whether the seven are real. Publish only what you can stand behind.</p>
+<h2 id="faq">FAQ</h2>
+<div class="faq">
+<details><summary>Is this publish-ready?</summary><p>No. It gives structure, a first answer and an FAQ shell. Add your own numbers, examples and screenshots before publishing.</p></details>
+<details><summary>Will it rank on Google?</summary><p>Structure helps; ranking needs specifics this tool cannot invent. Read the top three results, then answer better.</p></details>
+<details><summary>What belongs in the brief?</summary><p>The search question, who is asking, and anything specific you already know. More specifics, less generic draft.</p></details>
+</div>
+</main>
+<footer><div class="container"><div class="links"><a href="/en/about.html">About</a><a href="/en/privacy.html">Privacy</a><a href="/en/terms.html">Terms</a><a href="/en/contact.html">Contact</a></div><p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p></div></footer>
+<script>
+(function(){
+var t=document.getElementById('inputText'),c=document.getElementById('charCount'),btn=document.getElementById('runBtn'),out=document.getElementById('outBox'),e=document.getElementById('errBox');
+function up(){c.textContent=t.value.length+' / 15000';} t.addEventListener('input',up); up();
+function show(m){e.textContent=m;e.style.display='block';}
+btn.addEventListener('click',function(){var v=t.value.trim();e.style.display='none';
+if(!v){show('Describe the post first — the question a reader would search works well.');return;}
+if(v.length<50){show('At least 50 characters of brief, please.');return;}
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';
+fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'blog',text:v,topic:document.getElementById('topic').value,audience:document.getElementById('audience').value})})
+.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+.then(function(res){if(!res.ok)throw new Error(res.j.error||'Something went wrong.');
+var txt=res.j.result||'';document.getElementById('resultText').textContent=txt;
+document.getElementById('resultMeta').textContent=(txt.match(/\S+/g)||[]).length+' words'+(res.j.cached?' · cached':'');out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});})
+.catch(function(err){show(err.message);})
+.finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
+document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
+})();
+</script>
+</body>
+</html>
