@@ -101,6 +101,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bunsho-yoyaku.com/en/weekly-report-template/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://bunsho-yoyaku.com/speech-example/</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/speech-example/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/speech/"/>
@@ -111,6 +116,11 @@
     <loc>https://bunsho-yoyaku.com/en/speech/</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/speech-example/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/speech/"/>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunsho-yoyaku.com/en/wedding-toast-examples/</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
