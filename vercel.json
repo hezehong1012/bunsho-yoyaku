@@ -31,6 +31,9 @@
     },
     "api/kousei.js": {
       "maxDuration": 60
+    },
+    "api/en-tool.js": {
+      "maxDuration": 60
     }
   }
 }
