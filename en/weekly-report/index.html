@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Weekly Report Writer — Status Update from Scattered Notes | AI Summary</title>
+<meta name="description" content="Turn a week of messy notes into a status update your manager can skim in 60 seconds: highlights, in progress, risks, next week. Free, no signup.">
+<meta name="keywords" content="weekly report generator,status update,weekly summary,ai status report,work report template">
+<link rel="canonical" href="https://bunsho-yoyaku.com/en/weekly-report/">
+<link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/weekly-report/">
+<link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/weekly-report/">
+<link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/weekly-report/">
+<meta property="og:type" content="website"><meta property="og:title" content="AI Weekly Report Writer"><meta property="og:locale" content="en_US">
+<link rel="stylesheet" href="/assets/style.css">
+<style>.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}.faq summary{cursor:pointer;font-weight:600;list-style:none}.faq summary::-webkit-details-marker{display:none}.faq details p{margin:8px 0 0;color:#333;line-height:1.8;font-size:14px}.trust{margin:10px 0}.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px;margin:0 6px 6px 0;display:inline-block}</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bunsho-yoyaku.com/en/"},{"@type":"ListItem","position":2,"name":"Weekly Report","item":"https://bunsho-yoyaku.com/en/weekly-report/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Weekly Report Writer","url":"https://bunsho-yoyaku.com/en/weekly-report/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will it make up metrics?","acceptedAnswer":{"@type":"Answer","text":"No. It only reuses numbers that are in your notes, and if a section has no material it writes “none this week” rather than filling the space."}},{"@type":"Question","name":"Do I have to write in full sentences?","acceptedAnswer":{"@type":"Answer","text":"Fragments are fine. “LM-402 fix shipped Tue, QA sign-off pending, blocked on vendor” is exactly the input this expects."}},{"@type":"Question","name":"Which format is it aimed at?","acceptedAnswer":{"@type":"Answer","text":"A Western corporate weekly: highlights, in progress, risks and blockers, next week. If your company uses a different template, paste that template into the notes and the shape will follow it."}}]}</script>
+</head>
+<body>
+<header><div class="container bar"><a href="/en/" class="logo">AI<span>Summary</span></a>
+<nav><a href="/en/summarizer/">Summarizer</a><a href="/en/pdf-summary/">PDF</a><a href="/en/paraphrase/">Paraphrase</a><a href="/en/proofreading/">Proofread</a><a href="/en/email-writer/">Email</a><a href="/en/weekly-report/">Weekly report</a><a href="/en/speech/">Speeches</a><a href="/en/meeting-notes/">Meeting notes</a><a href="/en/blog-writer/">Blog</a></nav></div></header>
+<main class="container">
+<h1>Weekly report writer — from Friday brain-dump to a 60-second read</h1>
+<p class="lead">Your notes are scattered across a notebook, two chats and a ticket queue. Paste all of it — fragments and all — and get the four sections managers actually read.</p>
+<div class="trust"><span>Free</span><span>No signup</span><span>Highlights / in progress / risks / next week</span><span>No invented metrics</span></div>
+<div class="card">
+<textarea id="inputText" placeholder="Paste the week: what shipped, what is stuck, who is blocking, what is next. Bullet fragments are fine."></textarea>
+<div class="char-count" id="charCount">0 / 15000</div>
+<button class="btn" id="runBtn">Build the update</button>
+<div class="loading" id="loading" style="display:none">Organising the week…</div>
+<div id="errBox" style="display:none;color:#c0392b;margin-top:10px;font-size:14px"></div>
+<div class="result" id="outBox" style="display:none"><h3>Weekly update</h3><p class="out" id="resultText" style="white-space:pre-wrap"></p><div class="meta" id="resultMeta"></div><div class="actions"><button class="btn" id="copyBtn">Copy</button></div></div>
+</div>
+<h2>Why this beats a form</h2>
+<p>A weekly template asks you to remember what you did before you can write about it. This asks for the raw material — ticket IDs, names, numbers, half-sentences — and does the sorting. The four sections it returns are the ones that get read: what changed, what is moving, what will slip, what happens next.</p>
+<p>Keep the risks section honest. A status update that never mentions a blocker is read as either lucky or uninformative, and the second one is worse for you.</p>
+<h2>Getting a better output</h2>
+<p>Dates beat relative words: “QA sign-off moved to Thu 12th” survives summarising, “sometime next week” does not. If your manager wants numbers, put the numbers in the notes — they will be carried over verbatim.</p>
+<h2 id="faq">FAQ</h2>
+<div class="faq">
+<details><summary>Will it make up metrics?</summary><p>No. It reuses only numbers in your notes; empty sections read “none this week” rather than being padded.</p></details>
+<details><summary>Do I have to write full sentences?</summary><p>No. Fragments like “LM-402 fix shipped Tue, QA pending, blocked on vendor” are the intended input.</p></details>
+<details><summary>Which format does it use?</summary><p>Highlights, in progress, risks and blockers, next week. Paste your company template into the notes and it will follow that shape instead.</p></details>
+</div>
+</main>
+<footer><div class="container"><div class="links"><a href="/en/about.html">About</a><a href="/en/privacy.html">Privacy</a><a href="/en/terms.html">Terms</a><a href="/en/contact.html">Contact</a></div><p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p></div></footer>
+<script>
+(function(){
+var t=document.getElementById('inputText'),c=document.getElementById('charCount'),btn=document.getElementById('runBtn'),out=document.getElementById('outBox'),e=document.getElementById('errBox');
+function up(){c.textContent=t.value.length+' / 15000';} t.addEventListener('input',up); up();
+function show(m){e.textContent=m;e.style.display='block';}
+btn.addEventListener('click',function(){var v=t.value.trim();e.style.display='none';
+if(!v){show('Paste your notes for the week first.');return;}
+if(v.length<50){show('A bit more detail, please: at least 50 characters.');return;}
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';
+fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'weekly',text:v})})
+.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+.then(function(res){if(!res.ok)throw new Error(res.j.error||'Something went wrong.');
+var txt=res.j.result||'';document.getElementById('resultText').textContent=txt;
+document.getElementById('resultMeta').textContent=(txt.match(/\S+/g)||[]).length+' words'+(res.j.cached?' · cached':'');out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});})
+.catch(function(err){show(err.message);})
+.finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
+document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
+})();
+</script>
+</body>
+</html>

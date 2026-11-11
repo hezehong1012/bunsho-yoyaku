@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDF Summarizer — Summarize a PDF with AI | AI Summary</title>
+<meta name="description" content="Summarize a PDF's text with AI in about 20 seconds: copy the text out of the PDF, paste it here, pick a length. Free, no signup, up to 15,000 characters.">
+<meta name="keywords" content="pdf summarizer,summarize pdf,ai pdf summary,free pdf summary tool">
+<link rel="canonical" href="https://bunsho-yoyaku.com/en/pdf-summary/">
+<link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/pdf-summary/">
+<link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/pdf-yoyaku/">
+<link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/pdf-yoyaku/">
+<meta property="og:type" content="website"><meta property="og:title" content="Free PDF Summarizer — Summarize a PDF with AI"><meta property="og:locale" content="en_US">
+<link rel="stylesheet" href="/assets/style.css">
+<style>.faq details{border-bottom:1px solid #e6e6e6;padding:12px 2px}.faq summary{cursor:pointer;font-weight:600;list-style:none}.faq summary::-webkit-details-marker{display:none}.faq details p{margin:8px 0 0;color:#333;line-height:1.8;font-size:14px}.trust{margin:10px 0}.trust span{background:#f2f7ff;border:1px solid #d6e4ff;color:#24406b;border-radius:999px;padding:6px 12px;font-size:13px;margin:0 6px 6px 0;display:inline-block}</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://bunsho-yoyaku.com/en/"},{"@type":"ListItem","position":2,"name":"PDF Summarizer","item":"https://bunsho-yoyaku.com/en/pdf-summary/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Summarizer","url":"https://bunsho-yoyaku.com/en/pdf-summary/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I upload the PDF file directly?","acceptedAnswer":{"@type":"Answer","text":"Not yet. Reading and OCR-ing a PDF in the browser is a different job from summarizing, and it is what most PDF tools charge for. Here you copy the text out of the PDF and paste it — about 20 seconds — and the summary itself stays free."}},{"@type":"Question","name":"What about scanned PDFs?","acceptedAnswer":{"@type":"Answer","text":"If you can select the text in your PDF viewer, it can be summarized. If the page is an image, you get no text from copying and will need an OCR step first."}},{"@type":"Question","name":"A 40-page report will not fit, right?","acceptedAnswer":{"@type":"Answer","text":"Right — the limit is 15,000 characters, roughly 20 pages of dense text. Summarize the sections you care about, or run the executive summary and the conclusion together, which is where most of the value is anyway."}}]}</script>
+</head>
+<body>
+<header><div class="container bar"><a href="/en/" class="logo">AI<span>Summary</span></a>
+<nav><a href="/en/summarizer/">Summarizer</a><a href="/en/pdf-summary/">PDF</a><a href="/en/paraphrase/">Paraphrase</a><a href="/en/proofreading/">Proofread</a><a href="/en/email-writer/">Email</a><a href="/en/weekly-report/">Weekly report</a><a href="/en/speech/">Speeches</a><a href="/en/meeting-notes/">Meeting notes</a><a href="/en/blog-writer/">Blog</a></nav></div></header>
+<main class="container">
+<h1>Summarize a PDF with AI — paste the text, get the gist</h1>
+<p class="lead">Vendor proposals, analyst reports, 30-page policy PDFs: the part you need is usually 300 words, and finding it costs 40 minutes. Copy the text, paste it here, pick a length.</p>
+<div class="trust"><span>Free</span><span>No signup</span><span>Up to 15,000 characters</span><span>US business English</span></div>
+<div class="card">
+<textarea id="inputText" placeholder="Open the PDF, select all text with Ctrl+A / Cmd+A, copy, and paste it here"></textarea>
+<div class="char-count" id="charCount">0 / 15000</div>
+<div class="row">
+<div class="field"><label for="maxWords">Summary length</label><select id="maxWords"><option value="120">120 words — the gist</option><option value="250" selected>250 words — an email</option><option value="450">450 words — a full brief</option></select></div>
+<div class="field"><label for="format">Format</label><select id="format"><option value="paragraph" selected>One paragraph</option><option value="bullets">Bullets</option></select></div>
+</div>
+<button class="btn" id="runBtn">Summarize the PDF text</button>
+<div class="loading" id="loading" style="display:none">Reading…</div>
+<div id="errBox" style="display:none;color:#c0392b;margin-top:10px;font-size:14px"></div>
+<div class="result" id="outBox" style="display:none"><h3>Summary</h3><p class="out" id="resultText"></p><div class="meta" id="resultMeta"></div><div class="actions"><button class="btn" id="copyBtn">Copy</button></div></div>
+</div>
+<h2>Why copy-paste instead of upload</h2>
+<p>The three-step version takes twenty seconds and avoids the two things that make PDF tools fail: scanned pages with no text layer, and two-column layouts where the reading order gets scrambled. When you copy the text yourself you see what the model sees, so a strange summary is explained by a strange paste rather than by a mystery.</p>
+<p>Most PDF readers give you the whole document in one selection. If the text comes out interleaved from two columns, select column by column, or use the “copy as text” option some readers hide under Export.</p>
+<h2>What it is good at</h2>
+<p>RFP responses where you need the requirements and the caveats. Analyst notes where the numbers matter more than the narrative. Contracts and policy documents where you want the obligations in plain English before you read the whole thing.</p>
+<h2 id="faq">FAQ</h2>
+<div class="faq">
+<details><summary>Can I upload the PDF file directly?</summary><p>Not yet. Extracting and OCR-ing a PDF is a different engineering job, and it is what paid PDF tools charge for. Here you paste the text; the summary stays free.</p></details>
+<details><summary>What about scanned PDFs?</summary><p>If you can select the text in your viewer, it can be summarized. If the page is a photo of paper, copying gives you nothing — run OCR first.</p></details>
+<details><summary>A 40-page report will not fit, right?</summary><p>The limit is 15,000 characters, about 20 dense pages. Summarize the sections you actually need, or feed the executive summary and the conclusion together.</p></details>
+</div>
+</main>
+<footer><div class="container"><div class="links"><a href="/en/about.html">About</a><a href="/en/privacy.html">Privacy</a><a href="/en/terms.html">Terms</a><a href="/en/contact.html">Contact</a></div><p>&copy; 2026 AI Summary. Free AI writing tools for English-speaking teams. No account, no card.</p></div></footer>
+<script>
+(function(){
+var t=document.getElementById('inputText'),c=document.getElementById('charCount'),btn=document.getElementById('runBtn'),out=document.getElementById('outBox'),e=document.getElementById('errBox');
+function up(){c.textContent=t.value.length+' / 15000';} t.addEventListener('input',up); up();
+function show(m){e.textContent=m;e.style.display='block';}
+function render(j){var txt=j.result||'';document.getElementById('resultText').textContent=txt;document.getElementById('resultMeta').textContent=(txt.match(/\S+/g)||[]).length+' words'+(j.chunked?' · '+j.chunked+' sections':'')+(j.cached?' · cached':'');out.style.display='block';}
+btn.addEventListener('click',function(){var v=t.value.trim();e.style.display='none';
+if(!v){show('Paste the PDF text first. Select all in your PDF viewer, copy, paste here.');return;}
+if(v.length<50){show('At least 50 characters, please.');return;}
+var words=parseInt(document.getElementById('maxWords').value,10)||250;
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';
+fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'summarize',text:v,max_length:Math.min(1000,words*6),scene:'general',style:'desu',format:document.getElementById('format').value})})
+.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+.then(function(res){if(!res.ok)throw new Error(res.j.error||'Something went wrong.');render(res.j);out.scrollIntoView({behavior:'smooth',block:'nearest'});})
+.catch(function(err){show(err.message);})
+.finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
+document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
+})();
+</script>
+</body>
+</html>
