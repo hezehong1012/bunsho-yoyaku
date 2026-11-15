@@ -234,6 +234,17 @@ Output the post only.`;
   } catch (e) {
     if (e && e.message === 'LLM_NO_KEY') return err(res, 503, 'AI is not configured on this deployment yet.');
     if (e && e.message === 'FETCH_NO_KEY') return err(res, 503, 'URL fetching is unavailable right now — paste the text instead.');
+    if (e && /^FETCH_HTTP_/.test(String(e.message))) {
+      const status = String(e.message).replace('FETCH_HTTP_', '');
+      const hint = (status === '401' || status === '403') ? 'the site refused automated access — open it yourself and paste the text'
+        : status === '404' ? 'that page does not exist — check the link'
+        : status === '429' ? 'the site is rate-limiting — wait a minute, or paste the text'
+        : `that page returned ${status} — if it sits behind a login, paste the text instead`;
+      return err(res, 502, `Could not read that URL: ${hint}.`);
+    }
+    if (e && /^LLM_HTTP_/.test(String(e.message))) return err(res, 502, 'The AI service returned an error. Try again in a minute.');
+    if (e && (e.message === 'LLM_TIMEOUT' || e.name === 'AbortError')) return err(res, 504, 'That took too long. Try a shorter passage, or run it again.');
+    if (e && e.message === 'LLM_EMPTY') return err(res, 502, 'The model returned nothing. Try again, or trim the input.');
     console.error('[EN_TOOL_ERROR]', action, e && e.message);
     return err(res, 500, 'Generation failed. Please try again.');
   }
