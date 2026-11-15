@@ -150,7 +150,7 @@ document.getElementById('dlCsv').addEventListener('click',function(){if(lastMeet
 document.getElementById('dlMd').addEventListener('click',function(){if(lastMeeting)download('meeting-notes.md',toMarkdown(lastMeeting),'text/markdown');});
 document.getElementById('copyStruct').addEventListener('click',function(){var b=this;if(!lastMeeting)return;if(navigator.clipboard)navigator.clipboard.writeText(toMarkdown(lastMeeting)).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
 
-btn.addEventListener('click',function(){var v=t.value.trim();e.style.display='none';
+btn.addEventListener('click',async function(){var v=t.value.trim();e.style.display='none';
 if(!v){show('Paste the transcript first.');return;}
 if(v.length<50){show('At least 50 characters, please.');return;}
 if(v.length>15000){show('Over 15,000 characters — split the meeting into sections and run each one.');return;}
@@ -159,22 +159,24 @@ var payload=mode==='structured'
   ?{action:'meeting',text:v}
   :{action:'summarize',text:v,scene:'minutes',style:'dearu',format:mode,max_length:parseInt(document.getElementById('len').value,10)};
 btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';sbox.style.display='none';
-fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
-.then(function(res){if(!res.ok)throw new Error(res.j.error||'Something went wrong.');
+try{
+var resp=await fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+var j=await resp.json();
+if(!resp.ok)throw new Error(j.error||'Something went wrong.');
 if(mode==='structured'){
-  var m=res.j.meeting;
+  var m=j.meeting;
   if(!m)throw new Error('The structured result was missing. Try again.');
   renderMeeting(m);
-  document.getElementById('mMeta').textContent=(res.j.cached?'cached':'fresh')+' · '+m.decisions.length+' decisions · '+m.action_items.length+' actions · '+m.open_questions.length+' open · '+m.risks.length+' risks';
+  document.getElementById('mMeta').textContent=(j.cached?'cached':'fresh')+' · '+m.decisions.length+' decisions · '+m.action_items.length+' actions · '+m.open_questions.length+' open · '+m.risks.length+' risks';
   sbox.style.display='block';sbox.scrollIntoView({behavior:'smooth',block:'nearest'});
 }else{
-  var txt=res.j.result||'';document.getElementById('resultText').textContent=txt;
-  var wm=(txt.match(/\S+/g)||[]).length+' words';if(res.j.chunked)wm+=' · '+res.j.chunked+' sections';if(res.j.cached)wm+=' · cached';
+  var txt=j.result||'';document.getElementById('resultText').textContent=txt;
+  var wm=(txt.match(/\S+/g)||[]).length+' words';if(j.chunked)wm+=' · '+j.chunked+' sections';if(j.cached)wm+=' · cached';
   document.getElementById('resultMeta').textContent=wm;out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});
-}}
-.catch(function(err){show(err.message);})
-.finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
+}
+}catch(err){show(err.message);}
+finally{btn.disabled=false;document.getElementById('loading').style.display='none';}
+});
 document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
 })();
 </script>
