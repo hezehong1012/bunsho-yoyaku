@@ -114,7 +114,8 @@ Rules:
 ${rules}
 
 ${chunked ? `The text below is an intermediate result: ${chunked} sections already condensed. Merge them, remove duplication, and make the final summary read as one piece.\n\n` : ''}---
-${input}---
+${input}
+---
 
 Summary:`;
         const r = await cachedLlm(SYSTEM.summarize, prompt, { maxTokens: 1200, temperature: 0.3 });
@@ -233,7 +234,7 @@ Requirements:
 - Open with a concrete moment or detail, not "Today we gather".
 - One short story or specific anecdote, then 2-3 points of appreciation or advice.
 - Close with a line the audience can raise a glass to.
-- Write for the ear: short sentences, contractions, no bullet points, no stage directions.
+- Write for the ear: short sentences, no bullet points, no stage directions.
 - Audience is a Western (US/EU) workplace or family gathering.
 
 Context the speaker gave:
