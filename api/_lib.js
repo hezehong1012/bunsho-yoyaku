@@ -1,7 +1,8 @@
 // 共通ヘルパー：URL検出・Webフェッチ・LLM呼び出し
 // 環境変数:
 //   LLM_API_URL / LLM_API_KEY / LLM_MODEL（要約・抽出に使うLLM、既定DeepSeek）
-//   FETCH_API_URL / FETCH_API_KEY（Webページ取得ゲートウェイ）
+//   FETCH_API_URL / FETCH_API_KEY（Webページ取得ゲートウェイ、直連失敗時のフォールバック）
+//   FETCH_TIMEOUT_MS（1ページあたりのタイムアウト、既定20000）
 
 export const MAX_CHARS = 5000;
 export const MIN_CHARS = 50;
@@ -57,48 +58,154 @@ function pickContent(data) {
   if (Array.isArray(data.results)) {
     return data.results.map((r) => r.content || r.text || r.markdown || '').filter(Boolean).join('\n\n');
   }
-  try { return JSON.stringify(data); } catch { return ''; }
+  return ''; // エラー応答などは本文として扱わない
 }
 
-export async function fetchWebPage(url) {
+// ---- Webページ取得：まず直連＋ローカルHTML→テキスト変換、失敗時のみゲートウェイ ----
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
+const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+const BLOCK_TAGS = /<\/?(?:p|div|section|article|header|footer|main|aside|nav|h[1-6]|li|ul|ol|tr|table|blockquote|pre|hr|figure|figcaption|dt|dd)\b[^>]*>/gi;
+
+function decodeEntities(s) {
+  return s
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#(\d+);/g, (m, d) => String.fromCharCode(Number(d)))
+    .replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCharCode(parseInt(h, 16)));
+}
+
+// HTML を読みやすいプレーンテキストにする（外部API不要・決定論的）
+export function htmlToText(html) {
+  let s = String(html || '');
+  s = s.replace(/<!--[\s\S]*?-->/g, ' ');
+  s = s.replace(/<(script|style|noscript|template|svg|iframe|head)[\s\S]*?<\/\1>/gi, ' ');
+  s = s.replace(/<br\s*\/?>/gi, '\n');
+  s = s.replace(BLOCK_TAGS, '\n');
+  s = s.replace(/<[^>]+>/g, ' ');
+  s = decodeEntities(s);
+  s = s.replace(/\r/g, '').replace(/[ \t\u00a0]+/g, ' ');
+  s = s.replace(/\n[ ]*/g, '\n').replace(/\n{3,}/g, '\n\n');
+  return s.trim();
+}
+
+async function fetchDirect(url) {
+  let r;
+  try {
+    r = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'User-Agent': BROWSER_UA,
+        'Accept': 'text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ja,en;q=0.8'
+      },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+    });
+  } catch (e) {
+    const nm = (e && e.name) || '';
+    throw new Error(nm === 'TimeoutError' || nm === 'AbortError' ? 'FETCH_TIMEOUT' : 'FETCH_NET');
+  }
+  if (!r.ok) throw new Error('FETCH_HTTP_' + r.status);
+  const ct = (r.headers.get('content-type') || '').toLowerCase();
+  const raw = await r.text();
+  const content = (ct.includes('html') || /<[a-z][^>]*>/i.test(raw.slice(0, 3000))
+    ? htmlToText(raw)
+    : raw.trim());
+  return content;
+}
+
+async function fetchViaGateway(url) {
   const endpoint =
     process.env.FETCH_API_URL ||
     'https://tokendance.space/gateway/deepseek/v1/tools/fetch';
   const key = process.env.FETCH_API_KEY || process.env.GATEWAY_API_KEY;
-  if (!key) throw new Error('FETCH_NO_KEY');
-
-  const r = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${key}`
-    },
-    body: JSON.stringify({ url })
-  });
-  if (!r.ok) throw new Error('FETCH_HTTP_' + r.status);
+  if (!key) return '';
+  let r;
+  try {
+    r = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({ url }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+    });
+  } catch (e) {
+    console.error('[FETCH_GATEWAY_NET]', (e && e.message) || '');
+    return '';
+  }
+  if (!r.ok) {
+    console.error('[FETCH_GATEWAY_HTTP]', r.status);
+    return '';
+  }
   const data = await r.json().catch(() => null);
-  let content = pickContent(data).trim();
-  if (content.length > FETCHED_MAX_CHARS) content = content.slice(0, FETCHED_MAX_CHARS);
-  return { url, content };
+  if (data && data.error) {
+    console.error('[FETCH_GATEWAY_ERROR]', JSON.stringify(data.error).slice(0, 300));
+    return '';
+  }
+  return pickContent(data).trim().slice(0, FETCHED_MAX_CHARS);
+}
+
+export async function fetchWebPage(url) {
+  if (!/^https?:\/\//i.test(url)) throw new Error('FETCH_BAD_URL');
+
+  let direct = '';
+  let directErr = null;
+  try {
+    direct = await fetchDirect(url);
+  } catch (e) {
+    directErr = e;
+    console.error('[FETCH_DIRECT_FAIL]', url, (e && e.message) || '');
+  }
+
+  // 直連で十分な本文がとれていれば、外部モデルは使わない
+  if (direct.length >= 600) {
+    return { url, content: direct.slice(0, FETCHED_MAX_CHARS), via: 'direct' };
+  }
+
+  const gateway = await fetchViaGateway(url);
+  const best = gateway.length > direct.length ? gateway : direct;
+  const via = gateway.length > direct.length ? 'gateway' : 'direct';
+
+  if (best.length >= 120) {
+    return { url, content: best.slice(0, FETCHED_MAX_CHARS), via };
+  }
+  if (directErr && !gateway) throw new Error(directErr.message || 'FETCH_FAILED');
+  throw new Error('FETCH_EMPTY');
 }
 
 // 入力にURLが含まれる場合、本文を取得して要約素材を組み立てる
+// 一部のURLが失敗しても他のURLは使う。全部失敗したときだけエラーを投げる。
 export async function resolveSourceText(rawText) {
   const urls = extractUrls(rawText);
   if (!urls.length) return { text: rawText, fetched: [] };
 
   const parts = [];
   const fetched = [];
+  let firstErr = null;
   const nonUrl = rawText.replace(URL_RE, '').trim();
   if (nonUrl) parts.push('【ユーザー入力の補足】\n' + nonUrl);
 
   for (const u of urls) {
-    // eslint-disable-next-line no-await-in-loop
-    const page = await fetchWebPage(u);
-    fetched.push({ url: u, ok: true, length: page.content.length });
-    parts.push(`【Webページ: ${u}】\n${page.content}`);
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const page = await fetchWebPage(u);
+      fetched.push({ url: u, ok: true, length: page.content.length, via: page.via });
+      parts.push(`【Webページ: ${u}】\n${page.content}`);
+    } catch (e) {
+      if (!firstErr) firstErr = e;
+      fetched.push({ url: u, ok: false, error: (e && e.message) || 'FETCH_FAILED' });
+    }
   }
-  return { text: parts.join('\n\n'), fetched };
+
+  if (!fetched.some((f) => f.ok)) throw new Error((firstErr && firstErr.message) || 'FETCH_FAILED');
+  let joined = parts.join('\n\n');
+  if (joined.length > FETCHED_MAX_CHARS + 4000) joined = joined.slice(0, FETCHED_MAX_CHARS + 4000);
+  return { text: joined, fetched };
 }
 
 export async function callLlm(system, prompt, { maxTokens = 4000, temperature = 0.2 } = {}) {
