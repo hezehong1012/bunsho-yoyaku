@@ -23,7 +23,8 @@ const SYSTEM = {
   email: 'You are an executive assistant who drafts clear, warm, professional English emails.',
   weekly: 'You are an operations lead who turns messy daily notes into a crisp weekly status update.',
   speech: 'You are a speechwriter for corporate and family occasions who writes in natural spoken English.',
-  blog: 'You are an SEO content writer who drafts helpful, specific English blog posts without hype.'
+  blog: 'You are an SEO content writer who drafts helpful, specific English blog posts without hype.',
+  meeting: 'You are a meticulous meeting analyst who turns transcripts into structured records. You never invent facts and you never promote a musing into a decision.'
 };
 
 const err = (res, code, message) => res.status(code).json({ error: message });
@@ -113,12 +114,45 @@ Rules:
 ${rules}
 
 ${chunked ? `The text below is an intermediate result: ${chunked} sections already condensed. Merge them, remove duplication, and make the final summary read as one piece.\n\n` : ''}---
-${input}
----
+${input}---
 
 Summary:`;
         const r = await cachedLlm(SYSTEM.summarize, prompt, { maxTokens: 1200, temperature: 0.3 });
         return res.status(200).json({ result: r.value, fetched, cached: cached || r.cached, chunked, chunks: chunks.length });
+      }
+
+      case 'meeting': {
+        let source = text;
+        if (urls.length) {
+          const r = await resolveSourceText(text);
+          source = r.text;
+        }
+        const prompt = `Analyze the meeting transcript below and return a structured record.
+Return valid JSON only, no markdown fence, in exactly this shape:
+{"title":"short meeting title, 8 words max","summary":"one neutral paragraph, 40-80 words","decisions":[{"text":"what was decided","condition":"the condition it depends on, or empty string"}],"action_items":[{"text":"the action starting with a verb","owner":"name or empty string","due":"date or empty string"}],"open_questions":[{"text":"question left unresolved"}],"risks":[{"text":"risk or blocker named in the meeting"}]}
+Rules:
+- Use only facts in the transcript. Never invent names, dates or decisions.
+- "We should probably" or "maybe" is NOT a decision; put it in open_questions or risks.
+- Keep every condition attached to its decision (e.g. "only if the rollback script is ready").
+- Owner and due only when the transcript actually states them; otherwise use "".
+- If a bucket has no items, return an empty array. Do not drop any key.
+- All text in English.
+
+---
+${source}
+---`;
+        const r = await cachedLlm(SYSTEM.meeting, prompt, { maxTokens: 2000, temperature: 0.2 });
+        const obj = jsonFromMarkdown(r.value);
+        const arr = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === 'object' && String(x.text || '').trim()) : []);
+        const meeting = {
+          title: String(obj.title || '').slice(0, 120),
+          summary: String(obj.summary || '').slice(0, 900),
+          decisions: arr(obj.decisions).map((x) => ({ text: String(x.text), condition: String(x.condition || '') })),
+          action_items: arr(obj.action_items).map((x) => ({ text: String(x.text), owner: String(x.owner || ''), due: String(x.due || '') })),
+          open_questions: arr(obj.open_questions).map((x) => ({ text: String(x.text) })),
+          risks: arr(obj.risks).map((x) => ({ text: String(x.text) }))
+        };
+        return res.status(200).json({ meeting, cached: r.cached });
       }
 
       case 'paraphrase': {
@@ -242,6 +276,10 @@ Output the post only.`;
         : `that page returned ${status} — if it sits behind a login, paste the text instead`;
       return err(res, 502, `Could not read that URL: ${hint}.`);
     }
+    if (e && e.message === 'FETCH_TIMEOUT') return err(res, 504, 'Reading that page timed out — paste the text instead.');
+    if (e && (e.message === 'FETCH_NET' || e.message === 'FETCH_FAILED')) return err(res, 502, 'The page could not be reached — check the link or paste the text.');
+    if (e && e.message === 'FETCH_EMPTY') return err(res, 502, 'No readable text on that page — paste the text instead.');
+    if (e && e.message === 'FETCH_BAD_URL') return err(res, 400, 'That does not look like a valid URL.');
     if (e && /^LLM_HTTP_/.test(String(e.message))) return err(res, 502, 'The AI service returned an error. Try again in a minute.');
     if (e && (e.message === 'LLM_TIMEOUT' || e.name === 'AbortError')) return err(res, 504, 'That took too long. Try a shorter passage, or run it again.');
     if (e && e.message === 'LLM_EMPTY') return err(res, 502, 'The model returned nothing. Try again, or trim the input.');
