@@ -75,7 +75,7 @@ var t=document.getElementById('inputText'),c=document.getElementById('charCount'
 var lastMeeting=null;
 function up(){c.textContent=t.value.length+' / 15000';} t.addEventListener('input',up); up();
 function show(m){e.textContent=m;e.style.display='block';}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"":'&#39;'}[ch];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function cleanTranscript(raw){
   var lines=raw.replace(/\r/g,'').split('\n');
   var keep=[],prev='';
@@ -172,7 +172,7 @@ if(mode==='structured'){
   var txt=res.j.result||'';document.getElementById('resultText').textContent=txt;
   var wm=(txt.match(/\S+/g)||[]).length+' words';if(res.j.chunked)wm+=' · '+res.j.chunked+' sections';if(res.j.cached)wm+=' · cached';
   document.getElementById('resultMeta').textContent=wm;out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});
-}})
+}}
 .catch(function(err){show(err.message);})
 .finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});});
 document.getElementById('copyBtn').addEventListener('click',function(){var b=this,x=document.getElementById('resultText').textContent;if(navigator.clipboard)navigator.clipboard.writeText(x).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);});});
