@@ -135,7 +135,8 @@ function locate(start,end){
   }
   var ts=lastFetched?'':tsAt(s0);
   sp.innerHTML=(ts?'<span class="ts">'+esc(ts)+'</span>':'')+esc(snippet);
-  sp.style.display='block';}
+  sp.style.display='block';
+}
 function renderMeeting(m){
   lastMeeting=m;
   document.getElementById('mTitle').textContent=m.title||'Meeting notes';
@@ -199,7 +200,7 @@ var mode=document.getElementById('mode').value;
 var payload=mode==='structured'
   ?{action:'meeting',text:v}
   :{action:'summarize',text:v,scene:'minutes',style:'dearu',format:mode,max_length:parseInt(document.getElementById('len').value,10)};
-btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';sbox.styledisplay='none';
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';sbox.style.display='none';
 try{
 var resp=await fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
 var j=await resp.json();
