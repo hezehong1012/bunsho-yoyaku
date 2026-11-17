@@ -3,7 +3,7 @@
 import {
   MIN_CHARS, SUMMARIZE_MAX_CHARS, CHUNK_CHARS, splitIntoChunks,
   MAX_CHARS, clientIp, extractUrls, resolveSourceText, jevGuard,
-  enforceRateLimit, cachedLlm, jsonFromMarkdown
+  enforceRateLimit, cachedLlm, jsonFromMarkdown, buildSegments
 } from './_lib.js';
 
 const SCENE = {
@@ -104,6 +104,7 @@ ${chunks[i]}
 
 Notes:`, { maxTokens: 700, temperature: 0.2 });
             if (r.cached) cached = true;
+            // eslint-disable-next-line no-await-in-loop
             notes.push(r.value);
           }
           input = notes.map((n, i) => `[Section ${i + 1} notes]\n${n}`).join('\n\n');
@@ -124,15 +125,21 @@ Summary:`;
 
       case 'meeting': {
         let source = text;
+        let fetched = [];
         if (urls.length) {
           const r = await resolveSourceText(text);
-          source = r.text;
+          source = r.text; fetched = r.fetched;
         }
+        const segments = buildSegments(source);
+        const numbered = segments.map((s) => `[${s.id}] ${s.text}`).join('\n');
         const prompt = `Analyze the meeting transcript below and return a structured record.
+The transcript lines are numbered in brackets, e.g. [1], [2].
 Return valid JSON only, no markdown fence, in exactly this shape:
-{"title":"short meeting title, 8 words max","summary":"one neutral paragraph, 40-80 words","decisions":[{"text":"what was decided","condition":"the condition it depends on, or empty string"}],"action_items":[{"text":"the action starting with a verb","owner":"name or empty string","due":"date or empty string"}],"open_questions":[{"text":"question left unresolved"}],"risks":[{"text":"risk or blocker named in the meeting"}]}
+{"title":"short meeting title, 8 words max","summary":"one neutral paragraph, 40-80 words","decisions":[{"text":"what was decided","condition":"the condition it depends on, or empty string","source_refs":[3,4]}],"action_items":[{"text":"the action starting with a verb","owner":"name or empty string","due":"date or empty string","source_refs":[5]}],"open_questions":[{"text":"question left unresolved","source_refs":[7]}],"risks":[{"text":"risk or blocker named in the meeting","source_refs":[8]}]}
 Rules:
 - Use only facts in the transcript. Never invent names, dates or decisions.
+- Every item must include "source_refs": the bracket numbers of the lines that support it, most relevant first, 1 to 3 refs.
+- Use only numbers that actually appear in the transcript. Never invent a number.
 - "We should probably" or "maybe" is NOT a decision; put it in open_questions or risks.
 - Keep every condition attached to its decision (e.g. "only if the rollback script is ready").
 - Owner and due only when the transcript actually states them; otherwise use "".
@@ -140,20 +147,42 @@ Rules:
 - All text in English.
 
 ---
-${source}
+${numbered}
 ---`;
-        const r = await cachedLlm(SYSTEM.meeting, prompt, { maxTokens: 2000, temperature: 0.2 });
+        const r = await cachedLlm(SYSTEM.meeting, prompt, { maxTokens: 2200, temperature: 0.2 });
         const obj = jsonFromMarkdown(r.value);
+        const valid = new Set(segments.map((s) => s.id));
+        const resolveRefs = (v) => {
+          if (!Array.isArray(v)) return [];
+          const ids = [];
+          for (const raw of v) {
+            const n = Number(raw);
+            if (Number.isInteger(n) && valid.has(n) && !ids.includes(n)) ids.push(n);
+            if (ids.length >= 3) break;
+          }
+          return ids.map((id) => {
+            const s = segments.find((x) => x.id === id);
+            return { ref: id, text: s.text, start: s.start, end: s.end };
+          });
+        };
         const arr = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === 'object' && String(x.text || '').trim()) : []);
         const meeting = {
           title: String(obj.title || '').slice(0, 120),
           summary: String(obj.summary || '').slice(0, 900),
-          decisions: arr(obj.decisions).map((x) => ({ text: String(x.text), condition: String(x.condition || '') })),
-          action_items: arr(obj.action_items).map((x) => ({ text: String(x.text), owner: String(x.owner || ''), due: String(x.due || '') })),
-          open_questions: arr(obj.open_questions).map((x) => ({ text: String(x.text) })),
-          risks: arr(obj.risks).map((x) => ({ text: String(x.text) }))
+          decisions: arr(obj.decisions).map((x) => ({
+            text: String(x.text), condition: String(x.condition || ''), sources: resolveRefs(x.source_refs)
+          })),
+          action_items: arr(obj.action_items).map((x) => ({
+            text: String(x.text), owner: String(x.owner || ''), due: String(x.due || ''), sources: resolveRefs(x.source_refs)
+          })),
+          open_questions: arr(obj.open_questions).map((x) => ({
+            text: String(x.text), sources: resolveRefs(x.source_refs)
+          })),
+          risks: arr(obj.risks).map((x) => ({
+            text: String(x.text), sources: resolveRefs(x.source_refs)
+          }))
         };
-        return res.status(200).json({ meeting, cached: r.cached });
+        return res.status(200).json({ meeting, fetched, cached: r.cached });
       }
 
       case 'paraphrase': {
@@ -211,11 +240,11 @@ Format:
 ## Highlights
 - 2-4 bullets: outcomes, with numbers where the notes give them
 ## In progress
-- bullets, each with the current state
+- bullets, each with current state
 ## Risks and blockers
 - bullets, or "None this week."
 ## Next week
-- 2-4 bullets, each starting with a verb
+- 2-4 bullets, with each starting with a verb
 
 Rules: use only facts in the notes, no invented metrics, no filler adjectives. Markdown only, no intro line.
 

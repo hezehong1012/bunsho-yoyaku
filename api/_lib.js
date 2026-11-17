@@ -34,6 +34,52 @@ export function splitIntoChunks(text, size = CHUNK_CHARS) {
   return chunks;
 }
 
+// ---- 溯源用：本文を番号付きセグメントに分割し、文字オフセットを保持する ----
+// 字幕は行単位が基本。長い行だけ句読点でさらに切る。決定論的・単体テスト可能。
+export const SEGMENT_LINE_MAX = 600;
+
+export function buildSegments(text) {
+  const src = String(text || '');
+  const segs = [];
+  let lineStart = 0;
+  const lines = src.split('\n');
+  // オフセットはトリム後の実際の文字位置を指す（前後の空白は span から除く）
+  const push = (start, end) => {
+    const raw = src.slice(start, end);
+    const lead = raw.match(/^\s*/)[0].length;
+    const trail = raw.match(/\s*$/)[0].length;
+    const tStart = start + lead;
+    const tEnd = end - trail;
+    if (tEnd <= tStart) return;
+    segs.push({ id: segs.length + 1, text: src.slice(tStart, tEnd), start: tStart, end: tEnd });
+  };
+  for (const line of lines) {
+    const absStart = lineStart;
+    const absEnd = lineStart + line.length;
+    lineStart = absEnd + 1;
+    if (!line.trim()) continue;
+    if (line.length <= SEGMENT_LINE_MAX) {
+      push(absStart, absEnd);
+      continue;
+    }
+    // 長い行：文の区切りで分割し、SEGMENT_LINE_MAX を超えない範囲でまとめる
+    const re = /[^.!?。！？]+[.!?。！？]?/g;
+    let m;
+    let bufRelStart = 0;
+    let bufLen = 0;
+    while ((m = re.exec(line)) !== null) {
+      if (bufLen && bufLen + m[0].length > SEGMENT_LINE_MAX) {
+        push(absStart + bufRelStart, absStart + m.index);
+        bufRelStart = m.index;
+        bufLen = 0;
+      }
+      bufLen += m[0].length;
+    }
+    if (bufLen) push(absStart + bufRelStart, absEnd);
+  }
+  return segs;
+}
+
 export function clientIp(req) {
   const xff = req.headers['x-forwarded-for'];
   if (typeof xff === 'string' && xff.length) return xff.split(',')[0].trim();
@@ -372,7 +418,7 @@ const shortHits = new Map();   // ip -> {start,count}
 const dayHits = new Map();     // ip -> {day:'YYYY-MM-DD',count}
 
 function jstDayString(d = new Date()) {
-  // JST(UTC+9) の日付。サーバーTZに依らず一定にする。
+  // JST(UTC+9) の日付。サーバTZに依らず一定にする。
   const t = d.getTime() + 9 * 3600_000;
   return new Date(t).toISOString().slice(0, 10);
 }
@@ -464,6 +510,7 @@ async function callLlmWithRetry(system, prompt, opts) {
       const m = String((e && e.message) || '');
       if (!llmRetryable(e) || i === LLM_MAX_RETRY) throw e;
       console.error('[LLM_RETRY]', m, 'attempt', i + 1);
+      // eslint-disable-next-line no-await-in-loop
       await new Promise((ok) => setTimeout(ok, LLM_RETRY_DELAY_MS * (i + 1)));
     }
   }
