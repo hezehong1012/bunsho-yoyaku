@@ -135,8 +135,7 @@ function locate(start,end){
   }
   var ts=lastFetched?'':tsAt(s0);
   sp.innerHTML=(ts?'<span class="ts">'+esc(ts)+'</span>':'')+esc(snippet);
-  sp.style.display='block';
-}
+  sp.style.display='block';}
 function renderMeeting(m){
   lastMeeting=m;
   document.getElementById('mTitle').textContent=m.title||'Meeting notes';
@@ -168,8 +167,8 @@ function toMarkdown(m){
   function refs(x){var l=(x.sources||[]).map(function(s){return '#'+s.ref;}).join(' ');return l?' (sources: '+l+')':'';}
   if(m.decisions.length){L.push('','## Decisions');m.decisions.forEach(function(d){L.push('- '+d.text+(d.condition?' (condition: '+d.condition+')':'')+refs(d));});}
   if(m.action_items.length){L.push('','## Action items','','| Action | Owner | Due | Sources |','|---|---|---|---|');m.action_items.forEach(function(a){L.push('| '+clean(a.text)+' | '+(clean(a.owner)||'—')+' | '+(clean(a.due)||'—')+' | '+clean(refs(a).replace(' (sources: ','').replace(')',''))+' |');});}
-  if(m.open_questions.length){L.push('','## Open questions');m.open_questions.forEach(function(o){L.push('- '+o.text+refs(o);});}
-  if(m.risks.length){L.push('','## Risks');m.risks.forEach(function(r){L.push('- '+r.text+refs(r);});}
+  if(m.open_questions.length){L.push('','## Open questions');m.open_questions.forEach(function(o){L.push('- '+o.text+refs(o));});}
+  if(m.risks.length){L.push('','## Risks');m.risks.forEach(function(r){L.push('- '+r.text+refs(r));});}
   return L.join('\n');
 }
 function toCsv(m){
@@ -200,7 +199,7 @@ var mode=document.getElementById('mode').value;
 var payload=mode==='structured'
   ?{action:'meeting',text:v}
   :{action:'summarize',text:v,scene:'minutes',style:'dearu',format:mode,max_length:parseInt(document.getElementById('len').value,10)};
-btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';sbox.style.display='none';
+btn.disabled=true;document.getElementById('loading').style.display='block';out.style.display='none';sbox.styledisplay='none';
 try{
 var resp=await fetch('/api/en-tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
 var j=await resp.json();
