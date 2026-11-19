@@ -483,7 +483,7 @@ export async function jevGuard(rawText) {
         questions: {
           is_spam_or_garbage: {
             type: 'noul',
-            instructions: 'Is this input spam, gibberish, random repeated characters, full punctuation, advertising, abuse, or otherwise NOT meaningful text a real person would want summarized or have fields extracted from? Return true ONLY when clearly junk/abuse. Short-but-meaningful notes, code, a URL with real context, and non-English (including Japanese) text must be false.'
+            instructions: 'Is this input spam, gibberish, random repeated characters, pure punctuation, advertising, abuse, or otherwise NOT meaningful text a real person would want summarized or have fields extracted from? Return true ONLY when clearly junk/abuse. Short-but-meaningful notes, code, a URL with real context, and non-English (including Japanese) text must be false.'
           }
         }
       })
@@ -584,7 +584,7 @@ const LLM_RETRY_DELAY_MS = Number(process.env.LLM_RETRY_DELAY_MS || 1200);
 
 // 上流ゲートウェイの一時障害だけを再試行する（キー未設定・4xx は即失敗）
 function llmRetryable(err) {
-  const m = String((err && err.message) || '';
+  const m = String((err && err.message) || '');
   if (m === 'LLM_NO_KEY') return false;
   const http = /^LLM_HTTP_(\d+)$/.exec(m);
   if (http) {
