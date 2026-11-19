@@ -80,6 +80,100 @@ export function buildSegments(text) {
   return segs;
 }
 
+// ---- 说话人维度：从 "Name: ..." 前缀解析发言人（确定性、可单测）----
+// 仅接受模型确认的参与者名，避免把 "Agenda:" / "NOTE:" 之类标签误判为发言人。
+export const SPEAKER_PREFIX_MAX = 30;
+const SPEAKER_NAME_RE = /^[A-Za-z][A-Za-z0-9 .]{0,29}$/;
+
+// 模型给出的参与者名 → 规范名索引（同时收录全名与首词，兼容 "Dana" ↔ "Dana Lee"）
+function buildNameIndex(names) {
+  const idx = new Map();
+  for (const raw of names || []) {
+    const canon = String(raw || '').trim();
+    if (!canon) continue;
+    const low = canon.toLowerCase();
+    if (!idx.has(low)) idx.set(low, canon);
+    const first = low.split(/\s+/)[0];
+    if (first && !idx.has(first)) idx.set(first, canon);
+  }
+  return idx;
+}
+
+export function annotateSpeakers(segments, confirmedNames) {
+  const idx = buildNameIndex(confirmedNames);
+  let last = null;
+  return segments.map((s) => {
+    let speaker = null;
+    let spoken = s.text;
+    const ci = s.text.indexOf(':');
+    if (ci > 0 && ci <= SPEAKER_PREFIX_MAX) {
+      const pre = s.text.slice(0, ci).trim();
+      if (SPEAKER_NAME_RE.test(pre)) {
+        const canon = idx.get(pre.toLowerCase()) || idx.get(pre.toLowerCase().split(/\s+/)[0]);
+        if (canon) {
+          speaker = canon;
+          spoken = s.text.slice(ci + 1).trim();
+          last = speaker;
+        }
+      }
+    }
+    if (!speaker) speaker = last;
+    return { ...s, speaker: speaker || 'Unknown', spoken };
+  });
+}
+
+// 按发言人聚合：行数与对应 segment id（确定性）
+export function buildRoster(annotated) {
+  const map = new Map();
+  for (const s of annotated) {
+    if (!map.has(s.speaker)) map.set(s.speaker, { name: s.speaker, lines: 0, refs: [] });
+    const r = map.get(s.speaker);
+    r.lines += 1;
+    r.refs.push(s.id);
+  }
+  return [...map.values()];
+}
+
+// ---- 行内引用：把正文里的 [n] / [n,m] 标记解析为可校验的 parts ----
+// 有效编号 → {cite:n} 并收集去重；无效编号 → 原样保留为普通文本，杜绝编造。
+export function parseInlineCites(raw, validIds) {
+  const s = String(raw || '');
+  const valid = new Set(validIds);
+  const parts = [];
+  const refs = [];
+  const re = /\[(\d+(?:\s*,\s*\d+)*)\]/g;
+  let last = 0;
+  let m;
+  while ((m = re.exec(s))) {
+    if (m.index > last) parts.push({ text: s.slice(last, m.index) });
+    const nums = m[1].split(',').map((x) => Number(x.trim()));
+    const good = [];
+    for (const n of nums) {
+      if (valid.has(n)) {
+        if (!refs.includes(n)) refs.push(n);
+        good.push(n);
+      }
+    }
+    if (good.length) {
+      for (const n of good) parts.push({ cite: n });
+    } else {
+      parts.push({ text: m[0] }); // 全部无效 → 原样保留
+    }
+    last = re.lastIndex;
+  }
+  if (last < s.length) parts.push({ text: s.slice(last) });
+  // 干净文本：移除有效标记、保留无效标记，收紧空白与标点间距
+  const clean = s
+    .replace(/\s*\[(\d+(?:\s*,\s*\d+)*)\]\s*/g, (mm, inner) => {
+      const ok = inner.split(',').some((x) => valid.has(Number(x.trim())));
+      return ok ? ' ' : mm;
+    })
+    .replace(/\s+([.,;:!?])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return { parts, refs, clean };
+}
+
 export function clientIp(req) {
   const xff = req.headers['x-forwarded-for'];
   if (typeof xff === 'string' && xff.length) return xff.split(',')[0].trim();
@@ -98,7 +192,7 @@ function pickContent(data) {
     if (typeof v === 'string' && v.trim()) return v;
     if (v && typeof v === 'object') {
       const inner = v.content || v.text || v.markdown || v.result;
-      if (typeof inner === 'string' && inner.trim()) return inner;
+      if (typeof inner === 'string' && inner.trim()) return v;
     }
   }
   if (Array.isArray(data.results)) {
@@ -178,7 +272,7 @@ async function fetchViaGateway(url) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
       body: JSON.stringify({ url }),
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+      signal: AbortTimeout.timeout(FETCH_TIMEOUT_MS)
     });
   } catch (e) {
     console.error('[FETCH_GATEWAY_NET]', (e && e.message) || '');
@@ -356,7 +450,7 @@ function clamp01(n) {
 function stringToProb(s) {
   const t = String(s).trim();
   const n = Number(t);
-  if (!Number.isNaN(n)) return n;
+  if (!Number.isNaN(t)) return n;
   if (/^(true|yes|はい|該当|スパム|ゴミ)/i.test(t)) return 1;
   if (/^(false|no|いいえ)/i.test(t)) return 0;
   return null;
@@ -454,7 +548,7 @@ export function enforceRateLimit(ip, {
 
   // 定期的に古いエントリを掃除
   if (shortHits.size > 5000) {
-    for (const [k, v] of shortHits) if (now - v.start > RATE_LIMIT_WINDOW_MS * 10) shortHits.delete(k);
+    for (const [k, v] of shortHits) if (now - v.start > RATE_LIMIT_WINDOW * 10) shortHits.delete(k);
   }
   if (dayHits.size > 5000) {
     for (const [k, v] of dayHits) if (v.day !== today) dayHits.delete(k);
@@ -486,7 +580,7 @@ function hashString(str) {
 
 const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 25000);
 const LLM_MAX_RETRY = Number(process.env.LLM_MAX_RETRY || 1);
-const LLM_RETRY_DELAY_MS = Number(process.env.LLM_RETRY_DELAY_MS || 1200);
+const LLM_RETRY_DELAY_MS = 1200;
 
 // 上流ゲートウェイの一時障害だけを再試行する（キー未設定・4xx は即失敗）
 function llmRetryable(err) {
