@@ -3,7 +3,8 @@
 import {
   MIN_CHARS, SUMMARIZE_MAX_CHARS, CHUNK_CHARS, splitIntoChunks,
   MAX_CHARS, clientIp, extractUrls, resolveSourceText, jevGuard,
-  enforceRateLimit, cachedLlm, jsonFromMarkdown, buildSegments
+  enforceRateLimit, cachedLlm, jsonFromMarkdown, buildSegments,
+  annotateSpeakers, buildRoster, parseInlineCites
 } from './_lib.js';
 
 const SCENE = {
@@ -131,15 +132,18 @@ Summary:`;
           source = r.text; fetched = r.fetched;
         }
         const segments = buildSegments(source);
+        const validIds = segments.map((s) => s.id);
+        const byId = new Map(segments.map((s) => [s.id, s]));
         const numbered = segments.map((s) => `[${s.id}] ${s.text}`).join('\n');
         const prompt = `Analyze the meeting transcript below and return a structured record.
 The transcript lines are numbered in brackets, e.g. [1], [2].
 Return valid JSON only, no markdown fence, in exactly this shape:
-{"title":"short meeting title, 8 words max","summary":"one neutral paragraph, 40-80 words","decisions":[{"text":"what was decided","condition":"the condition it depends on, or empty string","source_refs":[3,4]}],"action_items":[{"text":"the action starting with a verb","owner":"name or empty string","due":"date or empty string","source_refs":[5]}],"open_questions":[{"text":"question left unresolved","source_refs":[7]}],"risks":[{"text":"risk or blocker named in the meeting","source_refs":[8]}]}
+{"title":"short meeting title, 8 words max","speakers":["Dana","Priya"],"summary":"one neutral paragraph, 40-80 words, with inline citations","decisions":[{"text":"what was decided, with inline [n] citations","condition":"the condition it depends on, or empty string"}],"action_items":[{"text":"the action starting with a verb, with inline [n]","owner":"name or empty string","due":"date or empty string"}],"open_questions":[{"text":"question left unresolved, with inline [n]"}],"risks":[{"text":"risk or blocker named in the meeting, with inline [n]"}]}
 Rules:
 - Use only facts in the transcript. Never invent names, dates or decisions.
-- Every item must include "source_refs": the bracket numbers of the lines that support it, most relevant first, 1 to 3 refs.
-- Use only numbers that actually appear in the transcript. Never invent a number.
+- "speakers" lists every distinct participant (the names before the colons), in order of first appearance.
+- Put citations directly in the text as bracket numbers placed after each claim: [3] for one line, [3,5] for several, most relevant first. Use only numbers that actually appear in the transcript.
+- The summary and every item must carry at least one inline citation.
 - "We should probably" or "maybe" is NOT a decision; put it in open_questions or risks.
 - Keep every condition attached to its decision (e.g. "only if the rollback script is ready").
 - Owner and due only when the transcript actually states them; otherwise use "".
@@ -149,38 +153,65 @@ Rules:
 ---
 ${numbered}
 ---`;
-        const r = await cachedLlm(SYSTEM.meeting, prompt, { maxTokens: 2200, temperature: 0.2 });
+        const r = await cachedLlm(SYSTEM.meeting, prompt, { maxTokens: 2500, temperature: 0.2 });
         const obj = jsonFromMarkdown(r.value);
-        const valid = new Set(segments.map((s) => s.id));
-        const resolveRefs = (v) => {
-          if (!Array.isArray(v)) return [];
-          const ids = [];
-          for (const raw of v) {
-            const n = Number(raw);
-            if (Number.isInteger(n) && valid.has(n) && !ids.includes(n)) ids.push(n);
-            if (ids.length >= 3) break;
-          }
-          return ids.map((id) => {
-            const s = segments.find((x) => x.id === id);
-            return { ref: id, text: s.text, start: s.start, end: s.end };
-          });
+        const valid = new Set(validIds);
+        const srcOf = (id) => {
+          const s = byId.get(id);
+          return { ref: id, text: s.text, start: s.start, end: s.end };
         };
+        const enrichParts = (parts) => parts.map((p) => {
+          if (!p.cite) return p;
+          const s = byId.get(p.cite);
+          return { cite: p.cite, start: s.start, end: s.end };
+        });
         const arr = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === 'object' && String(x.text || '').trim()) : []);
+        const toItem = (x, extra) => {
+          const inline = parseInlineCites(String(x.text || ''), validIds);
+          return { text: inline.clean, parts: enrichParts(inline.parts), sources: inline.refs.map(srcOf), ...extra };
+        };
+
+        const decisions = arr(obj.decisions).map((x) => toItem(x, { condition: String(x.condition || '') }));
+        const actionItems = arr(obj.action_items).map((x) => toItem(x, { owner: String(x.owner || ''), due: String(x.due || '') }));
+        const openQuestions = arr(obj.open_questions).map((x) => toItem(x, {}));
+        const risks = arr(obj.risks).map((x) => toItem(x, {}));
+
+        const confirmed = [
+          ...(Array.isArray(obj.speakers) ? obj.speakers : []),
+          ...arr(obj.action_items).map((x) => x.owner)
+        ];
+        const annotated = annotateSpeakers(segments, confirmed);
+        const speakerOf = new Map(annotated.map((s) => [s.id, s.speaker]));
+
+        const sumInline = parseInlineCites(String(obj.summary || ''), validIds);
+        // 说话人花名册（确定性聚合）+ 关联 LLM 结构化条目
+        const speakers = buildRoster(annotated).map((ro) => {
+          const nameLow = ro.name.toLowerCase();
+          return {
+            name: ro.name,
+            lines: ro.lines,
+            actions: actionItems
+              .filter((a) => a.owner && a.owner.toLowerCase() === nameLow)
+              .map((a) => ({ text: a.text, due: a.due })),
+            opens: openQuestions
+              .filter((q) => q.sources.some((c) => speakerOf.get(c.ref) === ro.name))
+              .map((q) => q.text),
+            sources: ro.refs.map((id) => {
+              const s = byId.get(id);
+              return { ref: id, start: s.start, end: s.end };
+            })
+          };
+        });
+
         const meeting = {
           title: String(obj.title || '').slice(0, 120),
-          summary: String(obj.summary || '').slice(0, 900),
-          decisions: arr(obj.decisions).map((x) => ({
-            text: String(x.text), condition: String(x.condition || ''), sources: resolveRefs(x.source_refs)
-          })),
-          action_items: arr(obj.action_items).map((x) => ({
-            text: String(x.text), owner: String(x.owner || ''), due: String(x.due || ''), sources: resolveRefs(x.source_refs)
-          })),
-          open_questions: arr(obj.open_questions).map((x) => ({
-            text: String(x.text), sources: resolveRefs(x.source_refs)
-          })),
-          risks: arr(obj.risks).map((x) => ({
-            text: String(x.text), sources: resolveRefs(x.source_refs)
-          }))
+          summary: sumInline.clean,
+          summary_parts: enrichParts(sumInline.parts),
+          decisions,
+          action_items: actionItems,
+          open_questions: openQuestions,
+          risks,
+          speakers
         };
         return res.status(200).json({ meeting, fetched, cached: r.cached });
       }
