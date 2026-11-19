@@ -13,6 +13,8 @@ header .bar{display:flex;align-items:center;justify-content:space-between;height
 .logo span{color:#3fd3c6}
 nav a{margin-left:16px;text-decoration:none;color:var(--brand);font-size:14px}
 nav a:hover{text-decoration:underline}
+nav a.lang-link{border:1px solid var(--brand);border-radius:6px;padding:3px 10px;white-space:nowrap}
+nav a.lang-link:hover{background:var(--brand);color:#fff;text-decoration:none}
 .hero{padding:34px 0 8px}
 h1{font-size:27px;line-height:1.35;margin-bottom:10px}
 .lead{color:var(--muted);font-size:15px;margin-bottom:16px}
