@@ -4,7 +4,7 @@ import {
   MIN_CHARS, SUMMARIZE_MAX_CHARS, CHUNK_CHARS, splitIntoChunks,
   MAX_CHARS, clientIp, extractUrls, resolveSourceText, jevGuard,
   enforceRateLimit, cachedLlm, jsonFromMarkdown, buildSegments,
-  annotateSpeakers, buildRoster, parseInlineCites
+  annotateSpeakers, buildRoster, parseInlineCites, createRequestLogger
 } from './_lib.js';
 
 const SCENE = {
@@ -37,6 +37,26 @@ function toInt(v, d) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return err(res, 405, 'Method not allowed');
+  const body = req.body || {};
+  const log = createRequestLogger(req, `en:${typeof body.action === 'string' ? body.action.slice(0, 24) : 'unknown'}`);
+  // One structured line per request; never the input text or the result.
+  const rawJson = res.json.bind(res);
+  let logged = false;
+  const rawChars = typeof body.text === 'string' ? body.text.trim().length : 0;
+  res.json = (payload) => {
+    if (!logged) {
+      logged = true;
+      log.emit(res.statusCode, {
+        chars: rawChars,
+        has_url: rawChars > 0 && extractUrls(String(body.text || '')).length > 0,
+        cached: !!payload?.cached,
+        demo: !!payload?.demo,
+        structured: !!payload?.meeting,
+        speakers: payload?.meeting?.speakers?.length
+      });
+    }
+    return rawJson(payload);
+  };
   const limit = enforceRateLimit(clientIp(req));
   if (!limit.allowed) {
     return err(res, 429, limit.reason === 'day'
@@ -44,7 +64,6 @@ export default async function handler(req, res) {
       : 'Too many requests in a short window. Give it a few seconds and try again.');
   }
 
-  const body = req.body || {};
   const action = typeof body.action === 'string' ? body.action : '';
   const text = typeof body.text === 'string' ? body.text.trim() : '';
   const urls = extractUrls(text || '');

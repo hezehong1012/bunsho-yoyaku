@@ -7,6 +7,9 @@
 <meta name="description" content="会議メモを貼るだけで、AIが議事録を決定事項・宿題・期限・次回予定の形に整理。登録不要・無料、最大15,000文字の長い会議ログにも対応。">
 <meta name="keywords" content="議事録,議事録 AI,議事録 自動作成,会議メモ 整理,議事録 まとめ方,無料">
 <link rel="canonical" href="https://bunsho-yoyaku.com/minutes-summary/">
+<link rel="alternate" hreflang="ja" href="https://bunsho-yoyaku.com/minutes-summary/">
+<link rel="alternate" hreflang="en" href="https://bunsho-yoyaku.com/en/meeting-notes/">
+<link rel="alternate" hreflang="x-default" href="https://bunsho-yoyaku.com/minutes-summary/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="議事録AI｜会議メモから決定事項・宿題・期限を自動整理【無料】">
 <meta property="og:description" content="会議メモを貼るだけで議事録を自動整理。登録不要・無料ですぐ使えます。">
@@ -43,7 +46,10 @@
 {"@type":"Question","name":"議事録AIは無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。登録もクレジットカードも不要で無料です。1つのIPあたり1日60回までご利用いただけます。"}},
 {"@type":"Question","name":"会議の録音データをそのまま入れられますか？","acceptedAnswer":{"@type":"Answer","text":"音声ファイルのままでは要約できません。文字起こし（音声のテキスト化）を行ったうえで、そのテキストを貼り付けてください。"}},
 {"@type":"Question","name":"どれくらいの長さの会議メモまで対応していますか？","acceptedAnswer":{"@type":"Answer","text":"50文字から15,000文字まで対応しています。15,000文字を超える場合は、前半・後半などに分けて2回処理してください。"}},
-{"@type":"Question","name":"出力はどんな形式になりますか？","acceptedAnswer":{"@type":"Answer","text":"初期設定では「・」始まりのリスト形式で、決定事項・宿題・期限が見分けやすく出力されます。設定を切り替えると、ひとつながりの文章形式でも出力できます。"}},
+{"@type":"Question","name":"出力はどんな形式になりますか？","acceptedAnswer":{"@type":"Answer","text":"初期設定は構造化議事録で、決定事項・宿題（担当・期限）・未解決の論点・リスクを区分けして表示します。各項目には根拠の行番号が付き、発言者ごとの一覧も確認できます。リスト形式・文章形式にも切り替えられます。"}},
+{"@type":"Question","name":"話者ごとの発言や担当は分かりますか？","acceptedAnswer":{"@type":"Answer","text":"文字起こしが「田中：」「佐藤：」のように話者名で始まっていれば、発言者ごとに発言行数・担当アクション・提起した論点を一覧表示します。話者名が書かれていないメモでは話者を推定しません。"}},
+{"@type":"Question","name":"項目の横にある [3] のような数字は何ですか？","acceptedAnswer":{"@type":"Answer","text":"その記述を裏づける文字起こしの行番号です。クリックすると該当行を選択して原文を確認できます。実在しない番号は引用として扱わず、そのままの文字として残します。"}},
+{"@type":"Question","name":"宿題の進捗は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"はい。宿題のチェック状態はお使いのブラウザ（localStorage）に保存され、同じ議事録を開き直しても復元されます。サーバーには送信しません。"}},
 {"@type":"Question","name":"入力した会議メモは保存されますか？","acceptedAnswer":{"@type":"Answer","text":"入力内容は処理にのみ使用します。結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。"}},
 {"@type":"Question","name":"社外秘の会議でも使えますか？","acceptedAnswer":{"@type":"Answer","text":"機密性の高い会議では、社内規定を確認のうえご利用ください。本ツールは入力内容をサーバーに恒久保存しませんが、外部LLM APIに処理を依頼する構成です。"}}
   ]
@@ -60,6 +66,28 @@
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::before{content:"Q. ";color:#2a5bd7}
 .faq details p{margin:10px 0 0;color:#333;line-height:1.8;font-size:14px}
+.sbox h3{margin:0 0 4px}
+.sbox h4{margin:18px 0 6px;font-size:14px}
+.sbox p.m-summary{line-height:1.8;margin:6px 0 0;color:#333}
+.sbox table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.sbox th,.sbox td{border:1px solid #e2e6ee;padding:7px 9px;text-align:left;vertical-align:top}
+.sbox ul{margin:4px 0 0;padding-left:20px}
+.sbox li{margin:5px 0;line-height:1.7;font-size:14px}
+.cond{color:#7a5a10;font-size:13px;margin-top:2px}
+.src{margin-top:5px}
+.chip{border:1px solid #b9c7de;background:#f2f7ff;color:#24406b;border-radius:6px;font-size:12px;padding:2px 7px;margin:0 4px 4px 0;cursor:pointer}
+.chip:hover{background:#e1edff}
+#srcPop{display:none;border:1px solid #b9c7de;background:#f8fbff;border-radius:8px;padding:9px 11px;margin-top:10px;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.muted{color:#7a7a7a;font-size:12px}
+.person{margin-top:6px}
+.person h4{margin:16px 0 6px;font-size:14px}
+.track{display:flex;align-items:center;gap:10px;margin:8px 0 0;font-size:13px;color:#24406b}
+.track .bar{flex:1;height:6px;background:#e6ecf6;border-radius:999px;overflow:hidden}
+.track .bar i{display:block;height:100%;background:#2a5bd7;width:0;transition:width .2s}
+.track input[type=checkbox]{width:16px;height:16px;cursor:pointer}
+.done-text{text-decoration:line-through;color:#98a2b3}
+.form-error{display:none;margin-top:10px;color:#c0392b;font-size:14px}
+.form-error.show{display:block}
 </style>
 </head>
 <body>
@@ -82,9 +110,9 @@
 
 <div class="container">
   <section class="hero">
-    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">4項目に整理</span><span class="badge">最大15,000文字</span></div>
+    <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">4項目に整理</span><span class="badge">根拠の行番号付き</span><span class="badge">話者別ビュー</span><span class="badge">最大15,000文字</span></div>
     <h1>会議メモを貼るだけで、AIが議事録を整理</h1>
-    <p class="lead">会議で取ったメモや文字起こしを貼り付けると、決定事項・宿題・期限・次回の予定が見分けやすい形でまとまります。議事録づくりに使う時間を、そのまま議論の質に回せます。</p>
+    <p class="lead">会議で取ったメモや文字起こしを貼り付けると、決定事項・宿題・期限・未解決の論点・リスクが見分けやすい形でまとまります。各項目には根拠の行番号が付き、クリックすれば原文の該当行へ戻れるので、書き足しや確認の手間が減ります。「田中：」「佐藤：」のように話者名が書かれていれば、誰が何を担当するかの一覧も自動で作ります。</p>
   </section>
 
   <div class="trust">
@@ -92,16 +120,25 @@
   </div>
 
   <div class="card">
-    <textarea id="inputText" placeholder="会議のメモ・文字起こしをここに貼り付けてください（50〜15,000文字）&#10;例）・参加者：営業部3名、開発2名　・決定：リリース日を12月10日に変更　・宿題：Aさんが価格表を修正（期限：11月20日）"></textarea>
+    <textarea id="inputText" placeholder="会議のメモ・文字起こしをここに貼り付けてください（50〜15,000文字）&#10;例）田中：リリース日は12月10日で確定ですね。&#10;　　佐藤：価格表の修正は11月20日までに終わらせます。"></textarea>
     <div class="char-count" id="charCount">0 / 15000文字</div>
-
-    <input type="hidden" id="scene" value="minutes">
 
     <div class="row">
       <div class="field">
-        <label for="maxLength">要約の長さ（文字）</label>
+        <label for="mode">出力モード</label>
+        <select id="mode">
+          <option value="structured" selected>構造化議事録（決定・宿題・論点・リスク＋話者別）</option>
+          <option value="bullets">リスト形式（決定事項・宿題・期限）</option>
+          <option value="paragraph">文章形式（メール添付・共有向け）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="maxLength">要約の長さ（リスト・文章時）</label>
         <input type="number" id="maxLength" min="50" max="1000" step="10" value="400">
       </div>
+    </div>
+
+    <div class="row" id="textOpts">
       <div class="field">
         <label>文体</label>
         <div class="seg">
@@ -109,23 +146,10 @@
           <label><input type="radio" name="tone" value="dearu"><span>常体（だ・である）</span></label>
         </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="field">
-        <label>出力形式</label>
-        <div class="seg">
-          <label><input type="radio" name="outputform" value="bullets" checked><span>リスト形式</span></label>
-          <label><input type="radio" name="outputform" value="paragraph"><span>文章形式</span></label>
-        </div>
-      </div>
       <div class="field">
         <label for="keyword">必ず残したいキーワード（任意）</label>
         <input type="text" id="keyword" maxlength="30" placeholder="例：リリース日、担当者名">
       </div>
-    </div>
-
-    <div class="row">
       <div class="field">
         <label for="ngword">NGワード（任意）</label>
         <input type="text" id="ngword" maxlength="30" placeholder="例：推測">
@@ -134,8 +158,23 @@
 
     <button class="btn" id="submitBtn">議事録を整理する</button>
     <div class="loading" id="loading">⏳ AIが議事録を整理しています…数秒お待ちください</div>
+    <div class="form-error" id="formError"></div>
 
-    <div class="result" id="resultBox">
+    <div class="result sbox" id="structBox" style="display:none">
+      <h3 id="mTitle"></h3>
+      <p class="m-summary" id="mSummary"></p>
+      <div id="mBody"></div>
+      <div id="mSpeakers" class="person"></div>
+      <div class="meta" id="mMeta"></div>
+      <div class="actions">
+        <button class="btn" id="dlMd">Markdownで保存</button>
+        <button class="btn secondary" id="dlJson">JSONで保存</button>
+        <button class="btn secondary" id="copyStruct">コピー</button>
+        <button class="btn secondary" id="retryBtn2">やり直す</button>
+      </div>
+    </div>
+
+    <div class="result" id="resultBox" style="display:none">
       <h3>整理された議事録</h3>
       <p class="out" id="resultText"></p>
       <div class="meta" id="resultCount"></div>
@@ -144,6 +183,7 @@
         <button class="btn secondary" id="retryBtn">やり直す</button>
       </div>
     </div>
+    <div id="srcPop"></div>
   </div>
 
   <h2>議事録AIが整理する4項目</h2>
@@ -241,7 +281,10 @@
     <details><summary>議事録AIは無料で使えますか？</summary><p>はい。登録もクレジットカードも不要で無料です。1つのIPあたり1日60回までご利用いただけます。</p></details>
     <details><summary>会議の録音データをそのまま入れられますか？</summary><p>音声ファイルのままでは要約できません。文字起こし（音声のテキスト化）を行ったうえで、そのテキストを貼り付けてください。</p></details>
     <details><summary>どれくらいの長さの会議メモまで対応していますか？</summary><p>50文字から15,000文字まで対応しています。15,000文字を超える場合は、前半・後半などに分けて2回処理してください。</p></details>
-    <details><summary>出力はどんな形式になりますか？</summary><p>初期設定では「・」始まりのリスト形式で、決定事項・宿題・期限が見分けやすく出力されます。設定を切り替えると、ひとつながりの文章形式でも出力できます。</p></details>
+    <details><summary>出力はどんな形式になりますか？</summary><p>初期設定は「構造化議事録」で、決定事項・宿題（担当・期限）・未解決の論点・リスクを区分けして表示します。各項目には根拠の行番号が付き、発言者ごとの一覧も確認できます。リスト形式・文章形式にも切り替えられます。</p></details>
+    <details><summary>話者ごとの発言や担当は分かりますか？</summary><p>文字起こしが「田中：」「佐藤：」のように話者名で始まっていれば、発言者ごとに発言行数・担当アクション・提起した論点を一覧表示します。話者名が書かれていないメモでは話者を推定しません。</p></details>
+    <details><summary>項目の横にある [3] のような数字は何ですか？</summary><p>その記述を裏づける文字起こしの行番号です。クリックすると該当行を選択して原文を確認できます。実在しない番号は引用として扱わず、そのままの文字として残します。</p></details>
+    <details><summary>宿題の進捗は保存されますか？</summary><p>はい。宿題のチェック状態はお使いのブラウザ（localStorage）に保存され、同じ議事録を開き直しても復元されます。サーバーには送信しません。</p></details>
     <details><summary>入力した会議メモは保存されますか？</summary><p>入力内容は処理にのみ使用します。結果は同一リクエストの高速化のため一定時間（最大6時間）一時的に保持され、その後は破棄されます。</p></details>
     <details><summary>社外秘の会議でも使えますか？</summary><p>機密性の高い会議では、社内規定を確認のうえご利用ください。本ツールは入力内容をサーバーに恒久保存しませんが、外部LLM APIに処理を依頼する構成です。</p></details>
   </div>
@@ -262,6 +305,231 @@
   </div>
 </footer>
 
-<script src="/assets/tool.js"></script>
+<script>
+(function(){
+var MAX=15000;
+var t=document.getElementById('inputText'),c=document.getElementById('charCount'),btn=document.getElementById('submitBtn');
+var out=document.getElementById('resultBox'),sbox=document.getElementById('structBox'),err=document.getElementById('formError');
+var sp=document.getElementById('srcPop');
+var lastMeeting=null,lastFetched=false;
+
+function up(){ if(t.value.length>MAX)t.value=t.value.substring(0,MAX); c.textContent=t.value.length+' / 15000文字'; }
+t.addEventListener('input',function(){up();err.classList.remove('show');}); up();
+
+function show(m){err.textContent=m;err.classList.add('show');err.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+function inlineHtml(parts,fallback){
+  if(!parts||!parts.length)return esc(fallback==null?'':fallback);
+  return parts.map(function(p){
+    if(p.cite)return '<button type="button" class="chip" data-start="'+p.start+'" data-end="'+p.end+'" title="根拠の行 '+p.cite+' へ">['+p.cite+']</button>';
+    return esc(p.text);
+  }).join('');
+}
+function section(title,node){var w=document.createElement('div');var h=document.createElement('h4');h.textContent=title;w.appendChild(h);w.appendChild(node);return w;}
+function bulletList(items,fn){var u=document.createElement('ul');items.forEach(function(x){var li=document.createElement('li');li.innerHTML=fn(x);u.appendChild(li);});return u;}
+function srcChips(x){
+  if(!x.sources||!x.sources.length)return '';
+  return '<div class="src">'+x.sources.map(function(s){return '<button type="button" class="chip" data-start="'+s.start+'" data-end="'+s.end+'">#'+s.ref+'</button>';}).join('')+'</div>';
+}
+function locate(start,end){
+  var s0=Math.max(0,start||0),s1=Math.min(t.value.length,end||0);
+  var snippet=t.value.slice(s0,s1);
+  if(!lastFetched){
+    t.focus();
+    if(t.setSelectionRange){t.setSelectionRange(s0,s1);}
+    try{t.scrollIntoView({block:'center'});}catch(_){}
+  }
+  sp.textContent=lastFetched?('（取り込んだページ本文）'+snippet):snippet;
+  sp.style.display='block';
+}
+
+// ---- #29 行動項の追跡（localStorage・議事録ごとに独立）----
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=h*16777619;}return (h>>>0).toString(36);}
+function trackKey(m){return 'aiyoyaku_acts_'+hashStr((m.title||'')+'|'+m.action_items.map(function(a){return a.text;}).join('|'));}
+function loadDone(m){try{var raw=localStorage.getItem(trackKey(m));var o=raw?JSON.parse(raw):null;return (o&&Array.isArray(o.done))?o.done:[];}catch(e){return [];}}
+function saveDone(m,done){try{localStorage.setItem(trackKey(m),JSON.stringify({done:done,ts:Date.now()}));}catch(e){}}
+function paintTrack(m){
+  var done=loadDone(m),total=m.action_items.length;
+  var box=document.getElementById('mTrack');
+  if(!box)return;
+  var n=done.filter(function(i){return i>=0&&i<total;}).length;
+  document.getElementById('mTrackTxt').textContent='完了 '+n+' / '+total;
+  document.getElementById('mTrackBar').style.width=total?(n/total*100)+'%':'0';
+  var rows=box.parentNode.querySelectorAll('input[data-idx]');
+  rows.forEach(function(cb){
+    var i=Number(cb.getAttribute('data-idx'));
+    cb.checked=done.indexOf(i)>=0;
+    var cell=cb.closest('tr');
+    if(cell)cell.querySelector('td.act-text').classList.toggle('done-text',cb.checked);
+  });
+}
+function onToggle(idx,checked,m){
+  var done=loadDone(m).filter(function(i){return i!==idx;});
+  if(checked)done.push(idx);
+  saveDone(m,done);
+  paintTrack(m);
+}
+
+function renderSpeakers(list){
+  var box=document.getElementById('mSpeakers');box.innerHTML='';
+  if(!list||!list.length)return;
+  var h=document.createElement('h4');h.textContent='担当者別';box.appendChild(h);
+  var tb=document.createElement('table');
+  tb.innerHTML='<tr><th>発言者</th><th>担当アクション</th><th>提起した論点</th><th>発言行</th></tr>';
+  list.forEach(function(s){
+    var tr=document.createElement('tr');
+    var acts=(s.actions&&s.actions.length)?'<ul>'+s.actions.map(function(a){return '<li>'+esc(a.text)+(a.due?' <em>（'+esc(a.due)+'）</em>':'')+'</li>';}).join('')+'</ul>':'<span class="muted">—</span>';
+    var opens=(s.opens&&s.opens.length)?'<ul>'+s.opens.map(function(o){return '<li>'+esc(o)+'</li>';}).join('')+'</ul>':'<span class="muted">—</span>';
+    var refs=(s.sources||[]).map(function(x){return '<button type="button" class="chip" data-start="'+x.start+'" data-end="'+x.end+'">#'+x.ref+'</button>';}).join('');
+    tr.innerHTML='<td><strong>'+esc(s.name)+'</strong><div class="muted">'+s.lines+'行</div></td><td>'+acts+'</td><td>'+opens+'</td><td>'+refs+'</td>';
+    tb.appendChild(tr);
+  });
+  box.appendChild(tb);
+}
+
+function renderMeeting(m){
+  lastMeeting=m;
+  document.getElementById('mTitle').textContent=m.title||'議事録';
+  document.getElementById('mSummary').innerHTML=inlineHtml(m.summary_parts,m.summary);
+  var body=document.getElementById('mBody');body.innerHTML='';
+  if(m.decisions.length)body.appendChild(section('決定事項',bulletList(m.decisions,function(d){
+    return inlineHtml(d.parts,d.text)+(d.condition?'<div class="cond">前提条件：'+esc(d.condition)+'</div>':'')+srcChips(d);
+  })));
+  if(m.action_items.length){
+    var wrap=document.createElement('div');
+    var track=document.createElement('div');
+    track.className='track';track.id='mTrack';
+    track.innerHTML='<span id="mTrackTxt">完了 0 / 0</span><div class="bar"><i id="mTrackBar"></i></div><button type="button" class="chip" id="mReset">リセット</button>';
+    wrap.appendChild(track);
+    var tb=document.createElement('table');
+    tb.innerHTML='<tr><th style="width:52px">完了</th><th>アクション</th><th style="width:96px">担当</th><th style="width:96px">期限</th><th style="width:80px">根拠</th></tr>';
+    m.action_items.forEach(function(a,i){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><input type="checkbox" data-idx="'+i+'"></td>'+
+        '<td class="act-text">'+inlineHtml(a.parts,a.text)+'</td>'+
+        '<td>'+esc(a.owner||'—')+'</td><td>'+esc(a.due||'—')+'</td>'+
+        '<td>'+(a.sources||[]).map(function(s){return '<button type="button" class="chip" data-start="'+s.start+'" data-end="'+s.end+'">#'+s.ref+'</button>';}).join('')+'</td>';
+      tb.appendChild(tr);
+    });
+    wrap.appendChild(tb);
+    wrap.addEventListener('change',function(ev){
+      var cb=ev.target;
+      if(cb&&cb.matches&&cb.matches('input[data-idx]'))onToggle(Number(cb.getAttribute('data-idx')),cb.checked,lastMeeting);
+    });
+    wrap.addEventListener('click',function(ev){
+      if(ev.target&&ev.target.id==='mReset'){
+        saveDone(lastMeeting,[]);
+        paintTrack(lastMeeting);
+      }
+    });
+    body.appendChild(section('宿題・ToDo（チェックで進捗を保存）',wrap));
+  }
+  if(m.open_questions.length)body.appendChild(section('未解決の論点',bulletList(m.open_questions,function(o){return inlineHtml(o.parts,o.text)+srcChips(o);})));
+  if(m.risks.length)body.appendChild(section('リスク・懸念',bulletList(m.risks,function(r){return inlineHtml(r.parts,r.text)+srcChips(r);})));
+  renderSpeakers(m.speakers);
+  paintTrack(m);
+}
+
+sbox.addEventListener('click',function(ev){
+  var b=ev.target.closest?ev.target.closest('.chip'):null;
+  if(!b||b.id==='mReset')return;
+  locate(Number(b.dataset.start),Number(b.dataset.end));
+});
+
+function toMarkdown(m){
+  var L=['# '+(m.title||'議事録')];
+  if(m.summary)L.push('',m.summary);
+  function clean(s){return String(s||'').replace(/\|/g,'\\|');}
+  function refs(x){var l=(x.sources||[]).map(function(s){return '#'+s.ref;}).join(' ');return l?' (根拠: '+l+')':'';}
+  if(m.decisions.length){L.push('','## 決定事項');m.decisions.forEach(function(d){L.push('- '+d.text+(d.condition?'（前提条件：'+d.condition+'）':'')+refs(d));});}
+  if(m.action_items.length){
+    var done=loadDone(m);
+    L.push('','## 宿題・ToDo','','| 完了 | アクション | 担当 | 期限 | 根拠 |','|---|---|---|---|---|');
+    m.action_items.forEach(function(a,i){
+      L.push('| '+(done.indexOf(i)>=0?'✔':'')+' | '+clean(a.text)+' | '+(clean(a.owner)||'—')+' | '+(clean(a.due)||'—')+' | '+clean((a.sources||[]).map(function(s){return '#'+s.ref;}).join(' '))+' |');
+    });
+  }
+  if(m.open_questions.length){L.push('','## 未解決の論点');m.open_questions.forEach(function(o){L.push('- '+o.text+refs(o));});}
+  if(m.risks.length){L.push('','## リスク・懸念');m.risks.forEach(function(r){L.push('- '+r.text+refs(r));});}
+  if(m.speakers&&m.speakers.length){
+    L.push('','## 担当者別');
+    m.speakers.forEach(function(s){
+      L.push('- **'+s.name+'**（'+s.lines+'行）');
+      (s.actions||[]).forEach(function(a){L.push('  - アクション: '+a.text+(a.due?'（期限: '+a.due+'）':''));});
+      (s.opens||[]).forEach(function(o){L.push('  - 論点: '+o);});
+    });
+  }
+  return L.join('\n');
+}
+function download(name,content,mime){
+  var u=URL.createObjectURL(new Blob([content],{type:mime}));
+  var a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(u);a.remove();},400);
+}
+document.getElementById('dlJson').addEventListener('click',function(){if(lastMeeting)download('gijiroku.json',JSON.stringify(lastMeeting,null,2),'application/json');});
+document.getElementById('dlMd').addEventListener('click',function(){if(lastMeeting)download('gijiroku.md',toMarkdown(lastMeeting),'text/markdown');});
+document.getElementById('copyStruct').addEventListener('click',function(){
+  var b=this;if(!lastMeeting||!navigator.clipboard)return;
+  navigator.clipboard.writeText(toMarkdown(lastMeeting)).then(function(){b.textContent='コピー済み ✓';setTimeout(function(){b.textContent='コピー';},1500);});
+});
+
+function run(){
+  err.classList.remove('show');sp.style.display='none';
+  var v=t.value.trim();
+  if(!v){show('会議メモまたはURLを入力してください。');return;}
+  if(v.length<50&&!/https?:\/\//.test(v)){show('50文字以上入力してください（現在 '+v.length+' 文字）。');return;}
+  if(v.length>MAX){show('15,000文字以内で入力してください（現在 '+v.length.toLocaleString()+' 文字）。');return;}
+  var mode=document.getElementById('mode').value;
+  var payload;
+  if(mode==='structured'){
+    payload={action:'meeting',text:v};
+  }else{
+    var toneEl=document.querySelector('input[name="tone"]:checked');
+    payload={
+      text:v,
+      scene:'minutes',
+      tone:toneEl?toneEl.value:'desu',
+      output_form:mode==='bullets'?'bullets':'paragraph',
+      max_length:parseInt(document.getElementById('maxLength').value,10)||400,
+      keyword:document.getElementById('keyword').value||'',
+      ngword:document.getElementById('ngword').value||''
+    };
+  }
+  btn.disabled=true;document.getElementById('loading').style.display='block';
+  out.style.display='none';sbox.style.display='none';
+  fetch('/api/summarize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+    .then(function(res){
+      if(!res.ok)throw new Error(res.j.error||'エラーが発生しました。');
+      var j=res.j;
+      if(mode==='structured'){
+        if(!j.meeting)throw new Error('構造化された議事録を取得できませんでした。もう一度お試しください。');
+        lastFetched=Array.isArray(j.fetched)&&j.fetched.some(function(f){return f.ok;});
+        renderMeeting(j.meeting);
+        document.getElementById('mMeta').textContent=(j.cached?'キャッシュ':'新規')+' · 決定 '+j.meeting.decisions.length+' · 宿題 '+j.meeting.action_items.length+' · 論点 '+j.meeting.open_questions.length+' · リスク '+j.meeting.risks.length+' · 話者 '+(j.meeting.speakers?j.meeting.speakers.length:0);
+        sbox.style.display='block';sbox.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }else{
+        var txt=j.summary||'';
+        document.getElementById('resultText').textContent=txt;
+        var meta=txt.length+'文字';
+        if(j.chunked)meta+=' · '+j.chunked+'分割で要約';
+        if(j.cached)meta+=' · キャッシュ';
+        document.getElementById('resultCount').textContent=meta;
+        out.style.display='block';out.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }
+    })
+    .catch(function(e){show(e.message||'エラーが発生しました。');})
+    .finally(function(){btn.disabled=false;document.getElementById('loading').style.display='none';});
+}
+btn.addEventListener('click',run);
+document.getElementById('retryBtn').addEventListener('click',run);
+document.getElementById('retryBtn2').addEventListener('click',run);
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var b=this,x=document.getElementById('resultText').textContent;
+  if(!navigator.clipboard)return;
+  navigator.clipboard.writeText(x).then(function(){b.textContent='コピー済み ✓';setTimeout(function(){b.textContent='コピーする';},1500);});
+});
+})();
+</script>
 </body>
 </html>

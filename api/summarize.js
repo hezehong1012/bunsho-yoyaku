@@ -1,6 +1,7 @@
-// Vercel Serverless Function: AI要約 API（URL自動取得／長文分割要約対応 V1.3）
+// Vercel Serverless Function: AI要約 API（URL自動取得／長文分割要約／構造化議事録対応 V1.4）
 import {
-  MIN_CHARS, SUMMARIZE_MAX_CHARS, CHUNK_CHARS, splitIntoChunks,
+  MIN_CHARS, SUMMARIZE_MAX_CHARS, CHUNK_CHARS, splitIntoChunks, buildSegments,
+  assembleMeeting, jsonFromMarkdown, createRequestLogger,
   clientIp, extractUrls, resolveSourceText, jevGuard,
   enforceRateLimit, cachedLlm
 } from './_lib.js';
@@ -15,9 +16,32 @@ const sceneMap = {
 
 const SYSTEM_SUMMARY = 'あなたは日本語の要約専門家で、正確で読みやすい要約を書きます。';
 const SYSTEM_PARTIAL = 'あなたは日本語の要約専門家です。長い文章の一部分を、後で全体統合する前提で正確に要約します。';
+const SYSTEM_MEETING = 'あなたは日本語の議事録作成の専門家で、文字起こしを事実にもとづく構造化された議事録に変換します。推測で人名・日付・決定を補うことは決してしません。';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const body = req.body || {};
+  const isMeeting = body.action === 'meeting' || body.structured === 'meeting';
+  const log = createRequestLogger(req, isMeeting ? 'meeting_ja' : `summarize_ja:${sceneMap[body.scene] ? body.scene : 'general'}`);
+  // 1リクエスト1行のログ（入力本文や結果は出さない）
+  const rawJson = res.json.bind(res);
+  let logged = false;
+  const stats = {};
+  res.json = (payload) => {
+    if (!logged) {
+      logged = true;
+      log.emit(res.statusCode, {
+        chars: stats.chars || 0,
+        has_url: !!stats.hasUrl,
+        cached: !!payload?.cached,
+        demo: !!payload?.demo,
+        structured: !!payload?.meeting,
+        speakers: payload?.meeting?.speakers?.length
+      });
+    }
+    return rawJson(payload);
+  };
+
   const limit = enforceRateLimit(clientIp(req));
   if (!limit.allowed) {
     const msg = limit.reason === 'day'
@@ -26,8 +50,8 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: msg });
   }
 
-  const body = req.body || {};
   const rawText = typeof body.text === 'string' ? body.text.trim() : '';
+  stats.chars = rawText.length;
   const maxLength = Number(body.max_length);
   const tone = body.tone === 'dearu' ? 'dearu' : 'desu';
   const keyword = typeof body.keyword === 'string' ? body.keyword.trim().slice(0, 30) : '';
@@ -36,13 +60,14 @@ export default async function handler(req, res) {
   const outputForm = body.output_form === 'bullets' ? 'bullets' : 'paragraph';
 
   const hasUrl = extractUrls(rawText).length > 0;
+  stats.hasUrl = hasUrl;
   if (!rawText || (rawText.length < MIN_CHARS && !hasUrl)) {
     return res.status(400).json({ error: `要約する文章またはURLを${MIN_CHARS}文字以上入力してください。URLのみの場合は短くても構いません。` });
   }
   if (rawText.length > SUMMARIZE_MAX_CHARS && !hasUrl) {
     return res.status(400).json({ error: `${SUMMARIZE_MAX_CHARS}文字以内で入力してください。それ以上の資料は章ごとに分けてご利用ください。` });
   }
-  if (!Number.isFinite(maxLength) || maxLength < 50 || maxLength > 1000) {
+  if (!isMeeting && (!Number.isFinite(maxLength) || maxLength < 50 || maxLength > 1000)) {
     return res.status(400).json({ error: '要約字数は50〜1000文字の間で指定してください。' });
   }
 
@@ -68,6 +93,46 @@ export default async function handler(req, res) {
         return res.status(503).json({ error: 'URL取得機能が現在利用できません（サーバー設定不足）。URLを除いて文章だけを入力してください。' });
       }
       return res.status(502).json({ error: 'URLの内容を取得できませんでした。公開されているページか確認してください。' });
+    }
+  }
+
+  // ---- 構造化議事録（日本語）: 話者・行内引用・決定/宿題/未解決/リスクの4区分 ----
+  if (isMeeting) {
+    try {
+      const segments = buildSegments(source);
+      const numbered = segments.map((s) => `[${s.id}] ${s.text}`).join('\n');
+      const prompt = `次の会議の文字起こしを解析し、構造化された議事録として返してください。
+各行には [1] [2] のような行番号が付いています。
+マークダウンのコードフェンスを付けず、有効なJSONのみを次の形で返してください:
+{"title":"会議タイトル（20文字以内）","speakers":["田中","佐藤"],"summary":"中立な1段落（80〜150文字、根拠の行番号を [n] で文中に付ける）","decisions":[{"text":"決定事項（根拠を [n] で付ける）","condition":"その決定が依存する前提条件。無ければ空文字"}],"action_items":[{"text":"動詞で始まるアクション（根拠を [n]）","owner":"担当者名または空文字","due":"期限または空文字"}],"open_questions":[{"text":"未解決の論点（根拠を [n]）"}],"risks":[{"text":"会議で挙がったリスクや懸念（根拠を [n]）"}]}
+ルール:
+- 文字起こしに書かれていない人名・日付・決定を創作しない。
+- "speakers" には、コロンの前の話者名（「田中：」の「田中」）を初出順に列挙する。日本語名はそのまま表記する。
+- 根拠は主張の直後に [3]、複数なら [3,5] の形で付ける。文字起こしに出ている番号だけを使う。
+- summary と各項目には必ず1つ以上の根拠番号を付ける。
+- 「〜かもしれない」「たぶん」「検討したい」は決定ではない。open_questions か risks に入れる。
+- 決定に付随する条件（「〜が終わるまで」「〜の場合のみ」）は必ず condition に残す。
+- owner と due は文字起こしに明記されている場合のみ。無ければ ""。
+- 項目が無い区分は空配列を返す。キーは省略しない。
+- 出力はすべて日本語。
+
+---
+${numbered}
+---`;
+
+      const r = await cachedLlm(SYSTEM_MEETING, prompt, { maxTokens: 2500, temperature: 0.2 });
+      const obj = jsonFromMarkdown(r.value);
+      const meeting = assembleMeeting(obj, segments);
+      return res.status(200).json({ meeting, fetched, cached: r.cached });
+    } catch (e) {
+      if (e.message === 'LLM_NO_KEY') {
+        return res.status(200).json({
+          error: '[デモモード] LLM APIキーが未設定です。Vercel環境変数 LLM_API_KEY を設定すると本番の議事録作成が有効になります。',
+          demo: true, fetched
+        });
+      }
+      console.error('[MEETING_JA_ERROR]', e && e.message);
+      return res.status(500).json({ error: '議事録の生成に失敗しました。再度お試しください。' });
     }
   }
 

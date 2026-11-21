@@ -4,6 +4,8 @@
 //   FETCH_API_URL / FETCH_API_KEY（Webページ取得ゲートウェイ、直連失敗時のフォールバック）
 //   FETCH_TIMEOUT_MS（1ページあたりのタイムアウト、既定20000）
 
+import { createHash } from 'node:crypto';
+
 export const MAX_CHARS = 5000;
 export const MIN_CHARS = 50;
 // 要約APIのみ上限を拡張（内部で分割要約→統合する）
@@ -83,9 +85,13 @@ export function buildSegments(text) {
 // ---- 说话人维度：从 "Name: ..." 前缀解析发言人（确定性、可单测）----
 // 仅接受模型确认的参与者名，避免把 "Agenda:" / "NOTE:" 之类标签误判为发言人。
 export const SPEAKER_PREFIX_MAX = 30;
-const SPEAKER_NAME_RE = /^[A-Za-z][A-Za-z0-9 .]{0,29}$/;
+// ラテン文字または日本語（ひらがな・カタカナ・漢字）で始まる名前のみ許可。
+// 日本語の議事録は「田中：」「店長：」のように全角コロンで話者が付くことが多い。
+// 「ー」(U+30FC) と「々」(U+3005) は長音・繰り返し記号として名前内で頻出するため明示的に許可する。
+const SPEAKER_NAME_RE = /^(?:[A-Za-z\u3041-\u3096\u30A1-\u30FC\u4E00-\u9FFF])[A-Za-z0-9 .\-\u3041-\u3096\u30A1-\u30FC\u4E00-\u9FFF\u30FB\u3005]{0,29}$/;
 
-// 模型给出的参与者名 → 规范名索引（同时收录全名与首词，兼容 "Dana" ↔ "Dana Lee"）
+// モデル给出的参与者名 → 规范名索引（同时收录全名与首词，兼容 "Dana" ↔ "Dana Lee"）
+// 日本語は分かち書きをしないため、全名の先頭2〜6文字も索引に入れ「田中」↔「田中太郎」を吸収する。
 function buildNameIndex(names) {
   const idx = new Map();
   for (const raw of names || []) {
@@ -95,8 +101,26 @@ function buildNameIndex(names) {
     if (!idx.has(low)) idx.set(low, canon);
     const first = low.split(/\s+/)[0];
     if (first && !idx.has(first)) idx.set(first, canon);
+    // 日本語名（空白なし・非ラテン）の先頭部分を索引化
+    if (!/\s/.test(low) && !/^[a-z]/.test(low) && low.length >= 3) {
+      for (let n = 2; n <= Math.min(6, low.length - 1); n++) {
+        const head = low.slice(0, n);
+        if (!idx.has(head)) idx.set(head, canon);
+      }
+    }
   }
   return idx;
+}
+
+// 文頭の話者プレフィックスを切り出す。ASCIIコロン「:」と全角コロン「：」の両対応。
+function splitSpeakerPrefix(text) {
+  const a = text.indexOf(':');
+  const b = text.indexOf('：');
+  let ci;
+  if (a >= 0 && b >= 0) ci = Math.min(a, b);
+  else ci = a >= 0 ? a : b;
+  if (ci <= 0 || ci > SPEAKER_PREFIX_MAX) return null;
+  return { pre: text.slice(0, ci).trim(), rest: text.slice(ci + 1).trim() };
 }
 
 export function annotateSpeakers(segments, confirmedNames) {
@@ -105,16 +129,14 @@ export function annotateSpeakers(segments, confirmedNames) {
   return segments.map((s) => {
     let speaker = null;
     let spoken = s.text;
-    const ci = s.text.indexOf(':');
-    if (ci > 0 && ci <= SPEAKER_PREFIX_MAX) {
-      const pre = s.text.slice(0, ci).trim();
-      if (SPEAKER_NAME_RE.test(pre)) {
-        const canon = idx.get(pre.toLowerCase()) || idx.get(pre.toLowerCase().split(/\s+/)[0]);
-        if (canon) {
-          speaker = canon;
-          spoken = s.text.slice(ci + 1).trim();
-          last = speaker;
-        }
+    const cut = splitSpeakerPrefix(s.text);
+    if (cut && SPEAKER_NAME_RE.test(cut.pre)) {
+      // 確認済み参加者にしか紐づけない（"議題：" "NOTE：" 等のラベル誤判定を防ぐ）
+      const canon = idx.get(cut.pre.toLowerCase()) || idx.get(cut.pre.toLowerCase().split(/\s+/)[0]);
+      if (canon) {
+        speaker = canon;
+        spoken = cut.rest;
+        last = speaker;
       }
     }
     if (!speaker) speaker = last;
@@ -174,10 +196,125 @@ export function parseInlineCites(raw, validIds) {
   return { parts, refs, clean };
 }
 
+// ---- 議事録の組み立て：LLM の生JSON + 番号付きセグメント → 検証済みの契約 ----
+// 日英の meeting が同じ形（decisions/action_items/open_questions/risks/speakers + 行内引用）を返すための単一実装。
+export function assembleMeeting(obj, segments) {
+  const validIds = segments.map((s) => s.id);
+  const byId = new Map(segments.map((s) => [s.id, s]));
+  const srcOf = (id) => {
+    const s = byId.get(id);
+    return s ? { ref: id, text: s.text, start: s.start, end: s.end } : null;
+  };
+  const enrichParts = (parts) => parts.map((p) => {
+    if (!p.cite) return p;
+    const s = byId.get(p.cite);
+    return s ? { cite: p.cite, start: s.start, end: s.end } : p;
+  });
+  const arr = (v) => (Array.isArray(v)
+    ? v.filter((x) => x && typeof x === 'object' && String(x.text || '').trim())
+    : []);
+  const toItem = (x, extra) => {
+    const inline = parseInlineCites(String(x.text || ''), validIds);
+    return {
+      text: inline.clean,
+      parts: enrichParts(inline.parts),
+      sources: inline.refs.map(srcOf).filter(Boolean),
+      ...extra
+    };
+  };
+
+  const decisions = arr(obj.decisions).map((x) => toItem(x, { condition: String(x.condition || '') }));
+  const actionItems = arr(obj.action_items).map((x) => toItem(x, { owner: String(x.owner || ''), due: String(x.due || '') }));
+  const openQuestions = arr(obj.open_questions).map((x) => toItem(x, {}));
+  const risks = arr(obj.risks).map((x) => toItem(x, {}));
+
+  const confirmed = [
+    ...(Array.isArray(obj.speakers) ? obj.speakers : []),
+    ...arr(obj.action_items).map((x) => x.owner)
+  ];
+  const annotated = annotateSpeakers(segments, confirmed);
+  const speakerOf = new Map(annotated.map((s) => [s.id, s.speaker]));
+
+  const sumInline = parseInlineCites(String(obj.summary || ''), validIds);
+  const speakers = buildRoster(annotated).map((ro) => {
+    const nameLow = ro.name.toLowerCase();
+    return {
+      name: ro.name,
+      lines: ro.lines,
+      actions: actionItems
+        .filter((a) => a.owner && a.owner.toLowerCase() === nameLow)
+        .map((a) => ({ text: a.text, due: a.due })),
+      opens: openQuestions
+        .filter((q) => q.sources.some((c) => speakerOf.get(c.ref) === ro.name))
+        .map((q) => q.text),
+      sources: ro.refs.map((id) => {
+        const s = byId.get(id);
+        return s ? { ref: id, start: s.start, end: s.end } : null;
+      }).filter(Boolean)
+    };
+  });
+
+  return {
+    title: String(obj.title || '').slice(0, 120),
+    summary: sumInline.clean,
+    summary_parts: enrichParts(sumInline.parts),
+    decisions,
+    action_items: actionItems,
+    open_questions: openQuestions,
+    risks,
+    speakers
+  };
+}
+
 export function clientIp(req) {
   const xff = req.headers['x-forwarded-for'];
   if (typeof xff === 'string' && xff.length) return xff.split(',')[0].trim();
   return req.socket?.remoteAddress || 'unknown';
+}
+
+// ---- 可観測性：構造化ログ（Vercel Logs が stdout を収集する）----
+// 方針: 入力本文・要約結果は絶対に出さない。IP は salt 付き SHA-256 の先頭12桁のみ。
+const IP_HASH_SALT = process.env.LOG_IP_SALT || 'bunsho-yoyaku-2026';
+function hashIp(ip) {
+  try {
+    return createHash('sha256').update(`${IP_HASH_SALT}:${ip}`).digest('hex').slice(0, 12);
+  } catch (e) {
+    return 'unavailable';
+  }
+}
+
+// 1リクエスト＝1行の JSON。action / 成否 / 所要時間 / 文字数だけを残す。
+export function createRequestLogger(req, action) {
+  const started = Date.now();
+  const h = req.headers || {};
+  const referer = String(h.referer || h.referrer || '').slice(0, 200);
+  const ua = String(h['user-agent'] || '').slice(0, 160);
+  const host = String(h.host || '').slice(0, 80);
+  const ipHash = hashIp(clientIp(req));
+  let finished = false;
+
+  function emit(status, extra) {
+    if (finished) return;
+    finished = true;
+    const line = {
+      evt: 'api_request',
+      ts: new Date().toISOString(),
+      action,
+      host,
+      status: Number(status) || 0,
+      ms: Date.now() - started,
+      ip_h: ipHash,
+      referer,
+      ua,
+      region: String(h['x-vercel-ip-country'] || ''),
+      ...extra
+    };
+    try {
+      console.log(JSON.stringify(line));
+    } catch (e) { /* ログ失敗は本処理に影響させない */ }
+  }
+
+  return { emit };
 }
 
 // ゲートウェイのレスポンスから本文らしい文字列を頑張って取り出す
