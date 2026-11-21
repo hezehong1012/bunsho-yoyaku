@@ -190,7 +190,20 @@ ${numbered}
           return { text: inline.clean, parts: enrichParts(inline.parts), sources: inline.refs.map(srcOf), ...extra };
         };
 
-        const decisions = arr(obj.decisions).map((x) => toItem(x, { condition: String(x.condition || '') }));
+        // 条件文の [n] も解析して本文から除去し、根拠としてソースに統合（日本語版と同一挙動）
+        const decisions = arr(obj.decisions).map((x) => {
+          const condRaw = String(x.condition || '');
+          const condInline = condRaw ? parseInlineCites(condRaw, validIds) : null;
+          const item = toItem(x, { condition: condInline ? condInline.clean : '' });
+          if (condInline && condInline.refs.length) {
+            const extra = condInline.refs
+              .map(srcOf)
+              .filter(Boolean)
+              .filter((s) => !item.sources.some((o) => o.ref === s.ref));
+            item.sources = item.sources.concat(extra);
+          }
+          return item;
+        });
         const actionItems = arr(obj.action_items).map((x) => toItem(x, { owner: String(x.owner || ''), due: String(x.due || '') }));
         const openQuestions = arr(obj.open_questions).map((x) => toItem(x, {}));
         const risks = arr(obj.risks).map((x) => toItem(x, {}));
