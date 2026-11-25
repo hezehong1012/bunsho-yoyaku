@@ -612,11 +612,37 @@ function toProb(v) {
   return null;
 }
 
-export async function jevGuard(rawText) {
-  if (!jevConfigured()) return { blocked: false };
-  const preview = rawText.replace(URL_RE, ' ').replace(/\s+/g, ' ').trim().slice(0, 1500);
-  if (!preview) return { blocked: false };
+// ---- 本番LLM（deepseek-v4.1-flash 等）によるフォールバック判定 ----
+//   JEV 不通・タイムアウト・非200・不正JSONで判定できないとき、本番LLMへ最小トークンで
+//   ゴミ判定を問い合わせる。GUARD_LLM_FALLBACK=0 で無効化。LLM も失敗したら放行し、
+//   ユーザーの通常利用を絶対に止めない（fail-open）。
+async function llmGuard(preview) {
+  if (process.env.GUARD_LLM_FALLBACK === '0' || process.env.GUARD_LLM_FALLBACK === 'false') return null;
+  if (!process.env.LLM_API_KEY) return null;
 
+  const system = [
+    'You are a strict content classifier for an AI summarization / information-extraction tool.',
+    'Decide whether the user input is spam, gibberish, random repeated characters, pure punctuation,',
+    'advertising, abuse, or otherwise NOT meaningful text that a real person would want summarized.',
+    'Short but meaningful notes, code, URLs with real context, and non-English (including Japanese)',
+    'text are NOT junk. Answer with JSON only: {"junk":true} or {"junk":false}. No other text.'
+  ].join(' ');
+  const prompt = 'Input to classify:\n\n' + preview;
+
+  try {
+    const raw = await callLlm(system, prompt, { maxTokens: 50, temperature: 0 });
+    const obj = jsonFromMarkdown(raw);
+    const v = obj.junk;
+    const junk = v === true || v === 1 || (typeof v === 'string' && /^(true|yes|1)$/i.test(v.trim()));
+    return { blocked: junk, via: 'llm' };
+  } catch (e) {
+    console.error('[GUARD_LLM_ERROR]', e && e.message);
+    return null;
+  }
+}
+
+// JEV へ1回だけ問い合わせ。判定不能（ネットワーク異常・タイムアウト・非200・不正JSON）なら null。
+async function tryJevGuard(preview) {
   const endpoint = process.env.JEV_API_URL || 'https://tokendance.space/gateway/typesafe/v1/systemone';
   const key = process.env.JEV_API_KEY || process.env.GATEWAY_API_KEY;
   const controller = new AbortController();
@@ -638,17 +664,39 @@ export async function jevGuard(rawText) {
         }
       })
     });
-    if (!r.ok) return { blocked: false };
+    if (!r.ok) return null;
     const data = await r.json().catch(() => null);
+    if (!data || typeof data !== 'object') return null;
     const prob = extractProb(data, 'is_spam_or_garbage');
     const t = Number(process.env.JEV_BLOCK_PROB);
     const threshold = Number.isFinite(t) && t > 0 && t <= 1 ? t : 0.8;
-    return { blocked: prob >= threshold, prob };
+    return { blocked: prob >= threshold, prob, via: 'jev' };
   } catch {
-    return { blocked: false };
+    return null;
   } finally {
     clearTimeout(timer);
   }
+}
+
+export async function jevGuard(rawText) {
+  // 明示的なオフ（JEV_ENABLED=0/false）の場合はフォールバックも含めて判定しない
+  if (process.env.JEV_ENABLED === '0' || process.env.JEV_ENABLED === 'false') return { blocked: false };
+
+  const preview = rawText.replace(URL_RE, ' ').replace(/\s+/g, ' ').trim().slice(0, 1500);
+  if (!preview) return { blocked: false };
+
+  // 1) JEV が設定済みなら先に JEV で判定。成功すればその結果を採用
+  if (jevConfigured()) {
+    const verdict = await tryJevGuard(preview);
+    if (verdict) return verdict;
+  }
+
+  // 2) JEV が判定できなかった（または未設定）場合、本番LLMで同じ判定を行う
+  const fallback = await llmGuard(preview);
+  if (fallback) return fallback;
+
+  // 3) 両方とも使えなければ放行（利用を止めない）
+  return { blocked: false };
 }
 
 // ---- コスト対策：短時間レート制限 ＋ 1IP/日の回数上限 ＋ LLM結果キャッシュ ----
