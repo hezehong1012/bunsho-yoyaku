@@ -67,13 +67,15 @@
 </header>
 
 <div class="container">
-  <section class="hero">
+  <section class="hero-x">
+    <div class="hero-icon">✍️</div>
     <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">意味を変えない</span><span class="badge">日本語特化</span></div>
     <h1>文章の意味を保ったまま無料で言い換えできるAI</h1>
     <p class="lead">メールや報告書の下書きを貼るだけで、語句と語順を自然に組み替えて読みやすく整えます。「標準」「丁寧（ビジネス）」「やさしく」の3モード。登録不要で、入力内容は保存しません。</p>
+    <a class="hero-cta" href="#tool">▼ 今すぐ言い換えする</a>
   </section>
 
-  <div class="card">
+  <div class="card" id="tool">
     <textarea id="inputText" placeholder="言い換えしたい文章をここに貼り付けてください（50〜5000文字）&#10;例）ビジネスメールの本文、報告書の下書き、硬すぎる／分かりにくい表現 など"></textarea>
     <div class="char-count" id="charCount">0 / 5000文字</div>
 
@@ -103,6 +105,28 @@
     <li>✅ 登録不要</li><li>✅ 意味・数値を変えない</li>
     <li>✅ ビジネス丁寧モード</li><li>✅ データ保存なし</li>
   </ul>
+
+  <h2>言い換えの使い方（3ステップ）</h2>
+  <div class="stepgrid">
+    <div class="sg"><div class="n">1</div><b>文章を貼る</b><span>言い換えたいメールや報告書の本文を貼り付けます（50〜5,000文字）。</span></div>
+    <div class="sg"><div class="n">2</div><b>モードを選ぶ</b><span>標準・丁寧（ビジネス）・やさしくから、目的に合わせて選びます。</span></div>
+    <div class="sg"><div class="n">3</div><b>結果をコピー</b><span>数秒で言い換え文が表示され、そのままコピーして使えます。</span></div>
+  </div>
+
+  <h2>あわせて使える関連ツール</h2>
+  <div class="related">
+    <a href="/kousei/">文章校正AIで誤字脱字をチェック</a>
+    <a href="/bunsho-yoyaku/">文章要約AIで長文を短くまとめる</a>
+    <a href="/mail-generator/">AIビジネスメールを自動生成</a>
+  </div>
+
+  <h2>こんな方に使われています</h2>
+  <div class="persona">
+    <div class="pa"><span class="pi">💼</span><b>ビジネスパーソン</b><span>メールや連絡文を柔らかく丁寧な表現に整えたい方。</span></div>
+    <div class="pa"><span class="pi">📝</span><b>ライター</b><span>同じ言葉の繰り返しや硬い表現を自然に直したい方。</span></div>
+    <div class="pa"><span class="pi">🎓</span><b>学生</b><span>レポートの言い回しを読みやすく調整したい方。</span></div>
+    <div class="pa"><span class="pi">🌐</span><b>日本語学習者</b><span>難しい表現をやさしい日本語に直したい方。</span></div>
+  </div>
 
   <h2>3つの言い換えモード</h2>
   <div class="scenes">
@@ -170,9 +194,10 @@
   </div>
 
   <h2 id="faq">よくある質問</h2>
-  <details><summary>言い換えと要約はどう違いますか？</summary><p>言い換えは長さと情報量を保ったまま表現だけを整え、要約は内容を短く縮めます。長文をまとめたい場合は<a href="/">AI要約</a>、PDFなら<a href="/pdf-yoyaku/">PDF要約</a>が便利です。</p></details>
-  <details><summary>元の意味は変わりませんか？</summary><p>論点・事実・数値を保つよう設計していますが、AI出力のため社外送付前には内容をご確認ください。</p></details>
-  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。登録不要・無料で、入力内容は処理にのみ使用し保存しません。</p></details>
+  <details><summary>言い換えと要約の違いは何ですか？</summary><p>言い換え（リライト）は元の文章の長さと情報量をおおむね保ったまま表現だけを自然に整えます。要約は内容を短く縮めます。長文をまとめたい場合は<a href="/bunsho-yoyaku/">文章要約AI</a>、PDFなら<a href="/pdf-yoyaku/">PDF要約</a>をご利用ください。</p></details>
+  <details><summary>どんな文章を言い換えられますか？</summary><p>ビジネスメール、報告書、チャットの連絡、案内文、自分で書いた下書きなど、日本語の文章全般に使えます。標準・丁寧（ビジネス）・やさしくの3モードがあります。</p></details>
+  <details><summary>元の意味は変わりませんか？</summary><p>元の論点・事実・数値を保ち、表現だけを整えるよう設計しています。ただしAI出力のため、社外送付や契約に関わる文面では必ずご自身で内容を確認してください。</p></details>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。会員登録不要で無料でご利用いただけます。入力内容は言い換え処理にのみ使用し保存しません。</p></details>
 
   <div class="cta">
     <a class="btn" href="#inputText">↑ この場で言い換えする</a>

@@ -43,7 +43,8 @@
     {"@type":"Question","name":"お礼メールの書き方のポイントは？","acceptedAnswer":{"@type":"Answer","text":"お礼メールは、感謝の気持ちを具体的なエピソードと共に伝えるのがポイントです。「いつもお世話になっております」から始め、何に対するお礼なのかを明確にし、今後もよろしくお願いします、で締めくくると自然です。"}},
     {"@type":"Question","name":"お詫びメールでやってはいけないことは？","acceptedAnswer":{"@type":"Answer","text":"お詫びメールでは、言い訳や責任転嫁、「しかし」「ただし」といった反論の言葉を避け、まず誠実に謝罪することが最優先です。その後で原因と今後の対応策を簡潔に示します。"}},
     {"@type":"Question","name":"催促メールはどのように書けば角が立たないですか？","acceptedAnswer":{"@type":"Answer","text":"催促メールは「確認のお願い」というニュアンスで柔らかく伝えるのがコツです。「お忙しいところ恐れ入りますが」「その後いかがでしょうか」といったクッション言葉を使い、相手を責める表現を避けます。"}},
-    {"@type":"Question","name":"無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録不要で無料でご利用いただけます。入力内容はメール生成処理にのみ使用し、保存しません。"}}
+    {"@type":"Question","name":"無料ですか？登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録不要で無料でご利用いただけます。入力内容はメール生成処理にのみ使用し、保存しません。"}},
+    {"@type":"Question","name":"生成したメールはそのまま送ってもいいですか？","acceptedAnswer":{"@type":"Answer","text":"下書きとしてすぐ活用できますが、送信前には内容をご確認ください。誤字や敬語が気になる場合は、文章校正AIにかけてから送るのがおすすめです。"}}
   ]
 }
 </script>
@@ -67,13 +68,15 @@
 </header>
 
 <div class="container">
-  <section class="hero">
+  <section class="hero-x">
+    <div class="hero-icon">📧</div>
     <div class="badges"><span class="badge">無料</span><span class="badge">登録不要</span><span class="badge">7シーン対応</span><span class="badge">日本語特化</span></div>
     <h1>シーンを選んで入力するだけ。AIが自然なビジネスメールを自動作成</h1>
     <p class="lead">お礼・お詫び・依頼・催促・謝罪・お願い・返信の7シーンに対応。宛名と要件を入力するだけで、そのまま使える丁寧なメール文が生成されます。登録不要・無料で、入力内容は保存しません。</p>
+    <a class="hero-cta" href="#tool">▼ 今すぐメールを作成する</a>
   </section>
 
-  <div class="card">
+  <div class="card" id="tool">
     <div class="tabs" role="tablist" id="sceneTabs">
       <button type="button" data-scene="orei" class="active">🙏 お礼</button>
       <button type="button" data-scene="owabi">🙇 お詫び</button>
@@ -111,6 +114,28 @@
     <li>✅ です・ます調の丁寧な文章</li>
     <li>✅ そのままコピーして使えます</li>
   </ul>
+
+  <h2>メール作成の使い方（3ステップ）</h2>
+  <div class="stepgrid">
+    <div class="sg"><div class="n">1</div><b>シーンを選ぶ</b><span>お礼・お詫び・依頼・催促など、作りたいメールのシーンをタブから選びます。</span></div>
+    <div class="sg"><div class="n">2</div><b>宛名と要件を入力</b><span>送り先の名前と伝えたい要件を入力。補足情報があれば一緒に書きます。</span></div>
+    <div class="sg"><div class="n">3</div><b>生成してコピー</b><span>数秒で完成したメール文が表示され、そのままコピーして送信できます。</span></div>
+  </div>
+
+  <h2>あわせて使える関連ツール</h2>
+  <div class="related">
+    <a href="/kousei/">文章校正AIで誤字・敬語をチェック</a>
+    <a href="/paraphrase/">AI言い換えでメール表現を調整</a>
+    <a href="/bunsho-yoyaku/">文章要約AIで長いメールを把握</a>
+  </div>
+
+  <h2>こんな方に使われています</h2>
+  <div class="persona">
+    <div class="pa"><span class="pi">💼</span><b>若手社員</b><span>敬語の使い方に不安があり、メール作成時間を短くしたい方。</span></div>
+    <div class="pa"><span class="pi">🏢</span><b>営業・人事</b><span>1日に何通ものメールを送り、型文を効率よく用意したい方。</span></div>
+    <div class="pa"><span class="pi">🌐</span><b>外国人スタッフ</b><span>日本語のビジネスメールの文面を正確に用意したい方。</span></div>
+    <div class="pa"><span class="pi">🚀</span><b>個人事業主</b><span>取引先との連絡を丁寧に、時間をかけずに行いたい方。</span></div>
+  </div>
 
   <section style="margin-top:40px;">
     <h2>ビジネスメールの書き方ガイド</h2>
@@ -197,6 +222,13 @@
       <span>字幕のコピーから分割・形式指定・数字の照合までの5ステップ。</span>
     </a>
   </div>
+
+  <h2 id="faq">よくある質問（FAQ）</h2>
+  <details><summary>無料ですか？登録は必要ですか？</summary><p>はい。会員登録不要で無料でご利用いただけます。入力内容はメール生成処理にのみ使用し、保存しません。</p></details>
+  <details><summary>お礼メールの書き方のポイントは？</summary><p>お礼メールは、感謝の気持ちを具体的なエピソードと共に伝えるのがポイントです。「いつもお世話になっております」から始め、何に対するお礼なのかを明確にし、今後もよろしくお願いします、で締めくくると自然です。</p></details>
+  <details><summary>お詫びメールでやってはいけないことは？</summary><p>お詫びメールでは、言い訳や責任転嫁、「しかし」「ただし」といった反論の言葉を避け、まず誠実に謝罪することが最優先です。その後で原因と今後の対応策を簡潔に示します。</p></details>
+  <details><summary>催促メールはどのように書けば角が立たないですか？</summary><p>催促メールは「確認のお願い」というニュアンスで柔らかく伝えるのがコツです。「お忙しいところ恐れ入りますが」「その後いかがでしょうか」といったクッション言葉を使い、相手を責める表現を避けます。</p></details>
+  <details><summary>生成したメールはそのまま送ってもいいですか？</summary><p>下書きとしてすぐ活用できますが、送信前には内容をご確認ください。誤字や敬語が気になる場合は、<a href="/kousei/">文章校正AI</a>にかけてから送るのがおすすめです。</p></details>
 </div>
 
 <footer>

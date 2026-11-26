@@ -109,3 +109,48 @@ footer .links a{margin:0 8px;text-decoration:none}
   .btn{width:100%}
   .result .actions{flex-direction:column}
 }
+
+/* ===== V2.9 リッチコンポーネント（新規追加・既存ルールは変更なし） ===== */
+html{scroll-behavior:smooth}
+.hero-x{position:relative;overflow:hidden;background:linear-gradient(135deg,#125c6e 0%,#1d6f83 45%,#2c89a0 100%);color:#fff;border-radius:20px;padding:42px 38px 38px;margin:22px 0 26px;box-shadow:0 12px 30px rgba(15,70,85,.22)}
+.hero-x::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 70%)}
+.hero-x .hero-icon{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px}
+.hero-x h1{color:#fff;font-size:29px;line-height:1.4;margin:6px 0 12px;max-width:760px}
+.hero-x .lead{color:rgba(255,255,255,.88);font-size:15.5px;max-width:720px;margin-bottom:20px}
+.hero-x .badges .badge{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.28)}
+.hero-x .hero-cta{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#125c6e;font-weight:800;font-size:15px;padding:12px 26px;border-radius:999px;text-decoration:none;box-shadow:0 6px 16px rgba(10,50,60,.25);transition:transform .15s,box-shadow .15s}
+.hero-x .hero-cta:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(10,50,6,.3);color:#125c6e}
+.stepgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+.stepgrid .sg{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 18px 16px}
+.stepgrid .sg .n{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand2),var(--accent));color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.stepgrid .sg b{display:block;font-size:15.5px;color:var(--brand);margin-bottom:5px}
+.stepgrid .sg span{font-size:13.5px;color:var(--muted);line-height:1.65}
+.featuregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}
+.featuregrid .fg{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.featuregrid .fg .fi{font-size:26px;display:block;margin-bottom:9px}
+.featuregrid .fg b{display:block;font-size:15px;margin-bottom:5px;color:var(--ink)}
+.featuregrid .fg span{font-size:13px;color:var(--muted);line-height:1.6}
+.persona{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.persona .pa{background:linear-gradient(180deg,#f4fafb,#fff);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+.persona .pa .pi{font-size:28px;display:block;margin-bottom:7px}
+.persona .pa b{display:block;font-size:14.5px;color:var(--brand);margin-bottom:4px}
+.persona .pa span{font-size:12.5px;color:var(--muted);line-height:1.55}
+.related{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 8px}
+.related a{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:600;text-decoration:none;color:var(--brand);transition:border-color .15s,background .15s}
+.related a:hover{border-color:var(--brand2);background:#eef7fa}
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.stat-strip .st{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+.stat-strip .st b{display:block;font-size:22px;color:var(--brand2)}
+.stat-strip .st span{font-size:12.5px;color:var(--muted)}
+.compare-wrap{overflow-x:auto;margin:14px 0}
+.compare-wrap table{min-width:560px}
+.compare-wrap .yes{color:#15704a;font-weight:700}
+.compare-wrap .no{color:#c0392b;font-weight:700}
+@media(max-width:600px){
+  .hero-x{padding:30px 20px 24px}
+  .hero-x h1{font-size:21px}
+  .stepgrid{grid-template-columns:1fr}
+  .bar{flex-wrap:wrap}
+  .bar nav{width:100%;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .bar nav::-webkit-scrollbar{display:none}
+}
