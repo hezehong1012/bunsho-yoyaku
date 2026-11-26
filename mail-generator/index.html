@@ -87,6 +87,7 @@
       <button type="button" data-scene="henshin">💬 返信</button>
     </div>
 
+    <button type="button" class="sample-fill">📋 サンプルを自動入力</button>
     <input type="text" id="toName" placeholder="宛名（例：〇〇株式会社 佐藤様）" style="margin-bottom:12px;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:15px;width:100%;box-sizing:border-box;">
 
     <textarea id="bodyText" placeholder="要件・内容を入力してください&#10;例：先日はお忙しい中、お時間をいただきありがとうございました。&#10;例：納品物に不備がありました。至急再送します。&#10;例：〇月〇日までに見積書を送っていただきたいです。" style="min-height:120px;"></textarea>
@@ -135,6 +136,12 @@
     <div class="pa"><span class="pi">🏢</span><b>営業・人事</b><span>1日に何通ものメールを送り、型文を効率よく用意したい方。</span></div>
     <div class="pa"><span class="pi">🌐</span><b>外国人スタッフ</b><span>日本語のビジネスメールの文面を正確に用意したい方。</span></div>
     <div class="pa"><span class="pi">🚀</span><b>個人事業主</b><span>取引先との連絡を丁寧に、時間をかけずに行いたい方。</span></div>
+  </div>
+
+  <h2>生成イメージ（入力 → 出力の例）</h2>
+  <div class="ex">
+    <div class="ex-col"><div class="ex-label">入力（宛名＋要件）</div><p>宛名：株式会社サンプル 田中様<br>要件：先日の打ち合わせのお礼と、来週見積書を送ることを伝えたい。</p></div>
+    <div class="ex-col"><div class="ex-label">出力（生成メール）</div><p>田中様<br><br>いつもお世話になっております。先日はお忙しい中お時間をいただき、誠にありがとうございました。ご相談内容の見積書を来週月曜までにお送りいたします。<br>取り急ぎ、お礼まで申し上げます。</p></div>
   </div>
 
   <section style="margin-top:40px;">
@@ -230,6 +237,8 @@
   <details><summary>催促メールはどのように書けば角が立たないですか？</summary><p>催促メールは「確認のお願い」というニュアンスで柔らかく伝えるのがコツです。「お忙しいところ恐れ入りますが」「その後いかがでしょうか」といったクッション言葉を使い、相手を責める表現を避けます。</p></details>
   <details><summary>生成したメールはそのまま送ってもいいですか？</summary><p>下書きとしてすぐ活用できますが、送信前には内容をご確認ください。誤字や敬語が気になる場合は、<a href="/kousei/">文章校正AI</a>にかけてから送るのがおすすめです。</p></details>
 </div>
+
+<div class="sticky-cta"><a href="#tool">📧 メールを今すぐ作成する</a></div>
 
 <footer>
   <div class="container">
@@ -331,5 +340,6 @@
   });
 })();
 </script>
+<script src="/assets/sample-fill.js"></script>
 </body>
 </html>

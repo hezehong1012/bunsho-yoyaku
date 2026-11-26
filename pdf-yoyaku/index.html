@@ -95,6 +95,7 @@
     </label>
     <div id="fileName" class="filename"></div>
 
+    <button type="button" class="sample-fill">📋 サンプルを自動入力</button>
     <textarea id="inputText" placeholder="PDFをアップロードすると、ここに抽出した本文が入ります。手動で文章を貼り付けて要約することも可能です。"></textarea>
     <div class="char-count" id="charCount">0 / 15000文字</div>
 
@@ -175,10 +176,16 @@
   <p style="font-size:12.5px;color:#5b6470">※ 各社の料金・仕様は変更される場合があります。最新情報は公式サイトでご確認ください。</p>
 
   <h2>PDF要約の使い方（3ステップ）</h2>
-  <div class="steps">
-    <div class="step"><div><b>PDFを選択</b><br><span style="color:#5b6470;font-size:14px">論文・レポート・議事録など、文字が埋め込まれたPDFを選びます。ブラウザ内で本文を抽出します。</span></div></div>
-    <div class="step"><div><b>形式を指定</b><br><span style="color:#5b6470;font-size:14px">リスト形式か段落か、字数と文体、用途シーンを選びます。キーワード指定も可能です。</span></div></div>
-    <div class="step"><div><b>要約をコピー</b><br><span style="color:#5b6470;font-size:14px">数秒で要点が出力され、レポートや社内共有にそのまま貼り付けられます。</span></div></div>
+  <div class="stepgrid">
+    <div class="sg"><div class="n">1</div><b>PDFを選択</b><span>論文・レポート・議事録など、文字が埋め込まれたPDFを選びます。ブラウザ内で本文を抽出します。</span></div>
+    <div class="sg"><div class="n">2</div><b>形式を指定</b><span>リスト形式か段落か、字数と文体、用途シーンを選びます。キーワード指定も可能です。</span></div>
+    <div class="sg"><div class="n">3</div><b>要約をコピー</b><span>数秒で要点が出力され、レポートや社内共有にそのまま貼り付けられます。</span></div>
+  </div>
+
+  <h2>PDF要約イメージ（入力 → 出力の例）</h2>
+  <div class="ex">
+    <div class="ex-col"><div class="ex-label">入力（抽出本文の抜粋）</div><p>市場規模は前年比105%に拡大し、特に若年層の利用が増加しています。競合の新製品投入が相次ぎ、差別化が課題です。</p></div>
+    <div class="ex-col"><div class="ex-label">出力（PDF要約）</div><p>市場は前年比105%で拡大、若年層の利用が増加。競合の新製品参入が続く中、差別化が今後の課題です。</p></div>
   </div>
 
   <h2>PDF要約が役立つ場面</h2>
@@ -301,7 +308,10 @@
   </div>
 </footer>
 
+<div class="sticky-cta"><a href="#tool">📄 無料でPDFを要約する</a></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="/assets/pdf.js"></script>
+<script src="/assets/sample-fill.js"></script>
 </body>
 </html>

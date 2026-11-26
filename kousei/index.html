@@ -83,6 +83,7 @@
   </section>
 
   <div class="card" id="tool">
+    <button type="button" class="sample-fill">📋 サンプルを自動入力</button>
     <textarea id="inputText" placeholder="校正したい文章をここに貼り付けてください（50〜5000文字）&#10;例）ビジネスメール、報告書、願書・自己PR、ブログ記事の下書き など"></textarea>
     <div class="char-count" id="charCount">0 / 5000文字</div>
 
@@ -162,6 +163,12 @@
     <p><strong>2. 長文は分割してかける。</strong>5,000文字を超える文書は、章・節ごとに分けて校正してください。</p>
     <p><strong>3. 固有名詞と数字は必ず原文と照合する。</strong>AIは表記を整えますが、社名・型番・金額の正しさまでは保証しません。</p>
     <p><strong>4. 最終判断は人が行う。</strong>願書・契約・社外文書は、AIの添削結果をそのまま使わず必ずご自身で確認してください。</p>
+  </div>
+
+  <h2>校正イメージ（入力 → 添削後の例）</h2>
+  <div class="ex">
+    <div class="ex-col"><div class="ex-label">入力（校正前）</div><p>来週までに資料をまとめて、お客様に送る予定です。優先順位をつけて進めたいとおもいます。</p></div>
+    <div class="ex-col"><div class="ex-label">出力（添削後）</div><p>来週までに資料をまとめて、お客様に送る予定です。優先順位をつけて進めたいと思います。</p></div>
   </div>
 
   <h2>関連記事：校正のやり方をまとめて読む</h2>
@@ -244,6 +251,9 @@
   </div>
 </footer>
 
+<div class="sticky-cta"><a href="#tool">🔍 文章を今すぐ校正する</a></div>
+
 <script src="/assets/kousei.js"></script>
+<script src="/assets/sample-fill.js"></script>
 </body>
 </html>

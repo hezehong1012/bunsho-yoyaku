@@ -154,3 +154,18 @@ html{scroll-behavior:smooth}
   .bar nav{width:100%;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}
   .bar nav::-webkit-scrollbar{display:none}
 }
+
+/* ===== V3.0 留存強化：吸底CTA・サンプル填充・Before/After ===== */
+.sticky-cta{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(20,50,60,.1)}
+.sticky-cta a{display:block;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;text-align:center;font-weight:800;padding:13px;border-radius:999px;text-decoration:none;font-size:15px}
+.sample-fill{display:inline-flex;align-items:center;gap:6px;background:#eef7fa;border:1px solid #cfe4ea;color:var(--brand);font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:999px;cursor:pointer;margin-bottom:10px}
+.sample-fill:hover{background:#e0f1f5}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.ex-col{background:#fafafa;border:1px solid #e6e6e6;border-radius:10px;padding:14px}
+.ex-label{font-size:12px;color:#666;margin-bottom:6px;font-weight:700}
+.ex-col p{margin:0;font-size:13.5px;line-height:1.7}
+@media(max-width:720px){.ex{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .sticky-cta{display:block}
+  body{padding-bottom:76px}
+}
